@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { makeStyles, useTheme, Theme } from "@material-ui/core/styles";
 
-import useStore from "../../hooks/useStore";
 import useUser from "../../hooks/useUser";
 
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
+import { emailSignIn, signOut } from "../../firebase/auth/index";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -30,29 +30,42 @@ const Login = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const isSignedIn = useUser();
-  const callStore = useStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showLogin, setShowLogin] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  const [error, setError] = useState(false);
 
   const handleSubmit = async () => {
     setDisabled(true);
-    await callStore("SIGN_IN", { email, password });
+
+    if (!email || !password) {
+      setError(true);
+      setDisabled(false);
+      return;
+    }
+
+    const response = await emailSignIn(email, password);
+    if (response?.error) {
+      setError(true);
+      setDisabled(false);
+      return;
+    }
+
     setDisabled(false);
     setShowLogin(false);
   };
 
   const toggleShowLogin = () => {
-    // TODO: Sign out user here
     if (isSignedIn) {
-      callStore("SIGN_OUT", {});
+      signOut();
       return;
     }
     setShowLogin(!showLogin);
   };
 
   const handleChange = (field: string) => (event: any) => {
+    setError(false);
     if (field === "Password") setPassword(event.target.value);
     else setEmail(event.target.value);
   };
@@ -66,19 +79,25 @@ const Login = () => {
   return (
     <div className={classes.root}>
       <div className={classes.itemContainer}>
-        <div className={showLogin ? classes.input : classes.hidden}>
+        <div
+          className={showLogin && !isSignedIn ? classes.input : classes.hidden}
+        >
           <Input
             label="Email"
             onChange={handleChange("Email")}
             type="text"
             value={email}
+            error={error}
           />
         </div>
-        <div className={showLogin ? classes.input : classes.hidden}>
+        <div
+          className={showLogin && !isSignedIn ? classes.input : classes.hidden}
+        >
           <Input
             label="Password"
             onChange={handleChange("Password")}
             type="password"
+            error={error}
             value={password}
           />
         </div>

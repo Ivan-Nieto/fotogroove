@@ -1,16 +1,22 @@
 import { useState } from "react";
-
-import store from "../store/index";
+import { auth } from "../firebase/init";
+import useStore from "./useStore";
 
 const useUser = () => {
-  const [user, setUser] = useState(false);
+  const [user, setUser]: any = useState(undefined);
+  const store = useStore();
 
-  const checkUserStatue = () => {
-    const state = store.getState();
-    if (Boolean(state?.user)) setUser(state?.user);
-    else setUser(false);
-  };
-  store.subscribe(checkUserStatue);
+  auth.onAuthStateChanged((usr) => {
+    if (usr) {
+      // User is signed in.
+      setUser(usr);
+      store("SIGN_IN", usr);
+    } else {
+      // No user is signed in.
+      setUser(undefined);
+      store("SIGN_OUT", {});
+    }
+  });
 
   return user;
 };
