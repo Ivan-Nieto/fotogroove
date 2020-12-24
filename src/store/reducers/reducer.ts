@@ -1,4 +1,4 @@
-import { SIGN_IN } from "../actions/user.actions";
+import { SIGN_IN, SIGN_OUT } from "../actions/user.actions";
 import { combineReducers } from "redux";
 
 const User = {
@@ -10,11 +10,13 @@ interface Action {
   value: any;
 }
 
-const signInUser = (user = User, action: Action) => {
+const handleUser = (user = User, action: Action) => {
   switch (action.type) {
     case SIGN_IN:
-      console.log(`Signing in ${action.value?.email}`);
-      return { ...user, ...action.value };
+      return action.value;
+
+    case SIGN_OUT:
+      return false;
 
     default:
       return user;
@@ -22,7 +24,7 @@ const signInUser = (user = User, action: Action) => {
 };
 
 const reducers = combineReducers({
-  user: signInUser,
+  user: handleUser,
 });
 
 export default reducers;
