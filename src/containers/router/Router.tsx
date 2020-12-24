@@ -8,12 +8,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: "flex",
     flexFlow: "column",
-    minHeight: "100%",
-    width: "100%",
+    minHeight: "100vh",
+    width: "100vw",
     overflow: "auto",
   },
   flexChild: {
-    flexGrow: 2,
+    flexGrow: 1,
+    backgroundColor: theme.palette.common.black,
   },
 }));
 

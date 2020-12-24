@@ -13,6 +13,7 @@ interface Action {
 const signInUser = (user = User, action: Action) => {
   switch (action.type) {
     case SIGN_IN:
+      console.log(`Signing in ${action.value?.email}`);
       return { ...user, ...action.value };
 
     default:
