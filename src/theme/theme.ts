@@ -2,6 +2,9 @@ import { createMuiTheme } from "@material-ui/core/styles";
 
 export const customTheme = createMuiTheme({
   palette: {
+    grey: {
+      "100": "#25282b",
+    },
     common: {
       black: "#161616",
       white: "#E8E8E8",

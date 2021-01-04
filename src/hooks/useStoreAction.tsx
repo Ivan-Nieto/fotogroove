@@ -3,7 +3,7 @@ import * as user from "../store/actions/user.actions";
 
 type Type = "SIGN_IN" | "SIGN_OUT";
 
-const useStore = () => {
+const useStoreAction = () => {
   const runAction = async (type: Type, payload: any) => {
     switch (type) {
       case "SIGN_IN":
@@ -19,4 +19,4 @@ const useStore = () => {
   return runAction;
 };
 
-export default useStore;
+export default useStoreAction;

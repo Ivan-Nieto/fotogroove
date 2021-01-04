@@ -2,36 +2,48 @@ import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { makeStyles, useTheme, Theme } from "@material-ui/core/styles";
 
+import useUser from "../../hooks/useUser";
+
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
+import Upload from "../upload/Upload";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: "flex",
-    flexFlow: "column",
-    minHeight: "100vh",
+    height: "100vh",
     width: "100vw",
-    overflow: "auto",
   },
   flexChild: {
+    padding: "70px",
     flexGrow: 1,
     backgroundColor: theme.palette.common.black,
   },
 }));
 
 const Router = () => {
+  const isSignedIn = useUser();
   const theme = useTheme();
   const { root, flexChild } = useStyles(theme);
 
   return (
     <div className={root}>
-      <div className={flexChild}>
-        <BrowserRouter>
-          <NavigationBar />
-          <Switch>
-            <Route path="/" component={() => <div>test</div>} />
-          </Switch>
-        </BrowserRouter>
-      </div>
+      <BrowserRouter>
+        {isSignedIn !== undefined && (
+          <div className={flexChild}>
+            <NavigationBar />
+            <Switch>
+              <Route
+                path="/"
+                exact
+                component={() => {
+                  return <div></div>;
+                }}
+              />
+              <Route exact path="/upload" component={Upload} />
+            </Switch>
+          </div>
+        )}
+      </BrowserRouter>
     </div>
   );
 };

@@ -10,7 +10,6 @@ import {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: "100%",
-    maxWidth: "250px",
   },
 }));
 
@@ -48,6 +47,7 @@ interface InputProps {
   label?: string;
   defaultValue?: string | number;
   onChange: (event: any) => void | undefined;
+  [key: string]: any;
 }
 
 const Input = (props: InputProps) => {
@@ -57,6 +57,7 @@ const Input = (props: InputProps) => {
   return (
     <div className={classes.root}>
       <CustomTextField
+        {...props}
         label={props.label}
         onChange={props.onChange}
         type={props.type}

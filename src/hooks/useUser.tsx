@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { auth } from "../firebase/init";
-import useStore from "./useStore";
+import useStore from "./useStoreAction";
 
 const useUser = () => {
   const [user, setUser]: any = useState(undefined);
@@ -13,7 +13,7 @@ const useUser = () => {
       store("SIGN_IN", usr);
     } else {
       // No user is signed in.
-      setUser(undefined);
+      setUser(false);
       store("SIGN_OUT", {});
     }
   });
