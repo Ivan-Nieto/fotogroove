@@ -6,6 +6,7 @@ import useUser from "../../hooks/useUser";
 
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Upload from "../upload/Upload";
+import MainPage from "../mainPage/MainPage";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -32,13 +33,7 @@ const Router = () => {
           <div className={flexChild}>
             <NavigationBar />
             <Switch>
-              <Route
-                path="/"
-                exact
-                component={() => {
-                  return <div></div>;
-                }}
-              />
+              <Route exact path="/" component={MainPage} />
               <Route exact path="/upload" component={Upload} />
             </Switch>
           </div>

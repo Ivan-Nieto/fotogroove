@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Theme, makeStyles, useTheme } from "@material-ui/core/styles";
+import { useHistory } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 
 import store from "../../store/index";
@@ -51,9 +52,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Upload = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
+  const history = useHistory();
   const [uploading, setUploading] = useState(false);
   const [fileProgress, setFileProgress] = useState({});
   const [progress, setProgress] = useState(0);
+  const [error, setError] = useState(false);
 
   const handleProgress = (index: string) => (snapshot: any) => {
     const newFileProgress: any = {
@@ -81,8 +84,13 @@ const Upload = () => {
     setProgress((transferred / total) * 100);
   };
 
+  const handleError = () => {
+    setError(true);
+  };
+
   const handleComplete = () => {
     setUploading(false);
+    history.push("/");
   };
 
   const handleFile = (event: any) => {
@@ -92,7 +100,13 @@ const Upload = () => {
     const tempObj: any = {};
     event?.forEach((e: any, index: number) => {
       tempObj[`img_${index}`] = { total: 0, transferred: 0 };
-      uploadImage(e, userID, handleProgress(`img_${index}`), handleComplete);
+      uploadImage(
+        e,
+        userID,
+        handleProgress(`img_${index}`),
+        handleComplete,
+        handleError
+      );
     });
     setFileProgress(tempObj);
   };
@@ -106,6 +120,7 @@ const Upload = () => {
         <DropZone
           onDrop={handleFile}
           message="Drag 'n' drop image here, or click to select files"
+          error={error}
         />
       </div>
       <div>{uploading && <LoadingBar progress={progress} />}</div>

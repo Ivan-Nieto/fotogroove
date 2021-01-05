@@ -18,15 +18,30 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
     alignItems: "center",
   },
+  error: {
+    display: "flex",
+    border: `3px dashed ${theme.palette.error.main}`,
+
+    height: "200px",
+
+    width: "600px",
+
+    margin: "auto",
+    padding: "20px",
+
+    justifyContent: "center",
+    alignItems: "center",
+  },
 }));
 
 interface DropZoneProps {
   onDrop: (event: any) => void | undefined;
   message?: string;
   dropMessage?: string;
+  error: boolean;
 }
 
-const DropZone = ({ onDrop, message, dropMessage }: DropZoneProps) => {
+const DropZone = ({ onDrop, message, dropMessage, error }: DropZoneProps) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -34,7 +49,7 @@ const DropZone = ({ onDrop, message, dropMessage }: DropZoneProps) => {
   });
 
   return (
-    <div className={classes.root}>
+    <div className={error ? classes.error : classes.root}>
       <div {...getRootProps()}>
         <input {...getInputProps()} />
         {isDragActive ? (
