@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTheme, Theme, makeStyles } from "@material-ui/core/styles";
 import { useSpring, animated as a } from "react-spring";
 
@@ -29,19 +29,70 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface DisplayImageProps {
-  size?: "small" | "large";
+interface Image {
+  thumbUrl: {
+    portrait: {
+      small: string;
+      large: string;
+    };
+    landscape: {
+      small: string;
+      large: string;
+    };
+  };
+  url: string;
+  resolution: { width: number; height: number; ratio: string };
+  tags: string[];
+  collection: string[];
+  visibility: string;
+  rating: number;
+  description: string;
+  name: string;
+  author: string;
+  createDate: any;
+  favorites: number;
+  views: number;
+  allowDownload: boolean;
+  metadata: Record<string, any>;
 }
 
-const DisplayImage = ({ size }: DisplayImageProps) => {
+interface DisplayImageProps {
+  size?: "small" | "large";
+  image: Image;
+}
+
+const DisplayImage = ({ size, image }: DisplayImageProps) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const [flipped, setFlipped] = useState(false);
+  const [url, setUrl] = useState("");
+
   const { transform, opacity } = useSpring({
     opacity: flipped ? 1 : 0,
     transform: `perspective(300px) rotateX(${flipped ? 180 : 0}deg)`,
     config: { mass: 5, tension: 500, friction: 80 },
   });
+
+  useEffect(() => {
+    const portraitLarge = image?.thumbUrl?.portrait?.large;
+    const portraitSmall = image?.thumbUrl?.portrait?.small;
+    const landscapeLarge = image?.thumbUrl?.landscape?.large;
+    const landscapeSmall = image?.thumbUrl?.landscape?.small;
+
+    const defaultImage =
+      portraitSmall || portraitLarge || landscapeLarge || landscapeSmall;
+
+    switch (size) {
+      case "large":
+        setUrl(portraitLarge || defaultImage);
+        break;
+      case "small":
+        setUrl(portraitSmall || defaultImage);
+        break;
+      default:
+        setUrl(defaultImage);
+    }
+  }, [size, setUrl, image]);
 
   return (
     <div onClick={() => setFlipped(!flipped)} className={classes.root}>
@@ -53,9 +104,7 @@ const DisplayImage = ({ size }: DisplayImageProps) => {
         }}
       >
         <img
-          src={
-            "https://firebasestorage.googleapis.com/v0/b/photogruve.appspot.com/o/images%2F2lstY6QHUvfOsxdfglJdEOfJf1f2%2Fckjjej2jo000g3a63pwhj5e85%2F2lstY6QHUvfOsxdfglJdEOfJf1f2ckjjej2jo000h3a63hzbiqpp7?alt=media&token=8e2f89ce-8ffb-4f99-9526-5ec156ac561d"
-          }
+          src={url}
           alt={""}
           width={size === "small" ? 300 : 450}
           height={size === "small" ? 200 : 300}
@@ -69,9 +118,7 @@ const DisplayImage = ({ size }: DisplayImageProps) => {
         }}
       >
         <img
-          src={
-            "https://firebasestorage.googleapis.com/v0/b/photogruve.appspot.com/o/images%2F2lstY6QHUvfOsxdfglJdEOfJf1f2%2Fckjjej2jo00083a63ujy1z67p%2F2lstY6QHUvfOsxdfglJdEOfJf1f2ckjjej2jo00093a63bt1hbmu5?alt=media&token=1b73a437-78a0-4da6-836a-42c07abfde40"
-          }
+          src={url}
           alt={""}
           width={size === "small" ? 300 : 450}
           height={size === "small" ? 200 : 300}

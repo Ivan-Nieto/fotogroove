@@ -1,55 +1,44 @@
 import { firestore } from "../init";
 import { storage } from "../init";
 
-export const getImages = async (uid: string) => {
-  try {
-    const snapshot = await firestore
-      .collection("images")
-      .where("author", "==", uid)
-      .get();
+export const getUsersImages = async (uid: string) => {
+  const snapshot: any = await firestore
+    .collection("images")
+    .where("author", "==", uid)
+    .get()
+    .catch(() => ({ error: true }));
 
-    if (snapshot.empty) return { error: false, empty: true };
+  if (snapshot.empty) return { error: true };
 
-    const images: any = [];
-    await Promise.all(
-      snapshot.docs.map(async (e) => {
-        const data = e.data() || {};
-        const thumbUrl = data?.thumbs || {};
+  const images = snapshot.docs.map((doc: any) => {
+    const data = doc.data();
+    return data || {};
+  });
 
-        await Promise.all(
-          Object.keys({ ...data?.thumbs?.landscape }).map(async (e) => {
-            if (!data?.thumbs?.landscape?.large?.startsWith("http"))
-              thumbUrl.landscape.large = await storage
-                .ref(data?.thumbs?.landscape?.large)
-                .getDownloadURL();
+  const promises: any = [];
+  images.forEach((e: Record<string, any>, index: number) => {
+    Object.keys(e?.thumbUrl || {}).forEach((i) => {
+      Object.keys(e?.thumbUrl[i]).forEach((k: any) => {
+        if (!e.thumbUrl[i][k] || e.thumbUrl[i][k].startsWith("http")) {
+          return;
+        }
 
-            if (!data?.thumbs?.landscape?.small?.startsWith("http"))
-              thumbUrl.landscape.small = await storage
-                .ref(data?.thumbs?.landscape.small)
-                .getDownloadURL();
-          })
+        promises.push(
+          storage
+            .ref(e.thumbUrl[i][k])
+            .getDownloadURL()
+            .then((url: any) => {
+              images[index].thumbUrl[i][k] = url;
+              return url;
+            })
+            .catch((error) => {
+              console.log(error);
+            })
         );
+      });
+    });
+  });
+  await Promise.allSettled(promises);
 
-        await Promise.all(
-          Object.keys({ ...data?.thumbs?.portrait }).map(async (e) => {
-            if (!data?.thumbs?.portrait[e].large?.startsWith("http"))
-              thumbUrl.portrait.large = await storage
-                .ref(data?.thumbs?.portrait.large)
-                .getDownloadURL();
-
-            if (!data?.thumbs?.portrait?.small?.startsWith("http"))
-              thumbUrl.portrait.small = await storage
-                .ref(data?.thumbs?.portrait.small)
-                .getDownloadURL();
-          })
-        );
-
-        images.push(data);
-      })
-    );
-
-    return { error: false, images };
-  } catch (error) {
-    return { error: true };
-  }
+  return { error: false, images };
 };

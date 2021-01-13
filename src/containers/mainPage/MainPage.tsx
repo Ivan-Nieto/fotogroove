@@ -31,11 +31,9 @@ const MainPage = () => {
   return (
     <div className={classes.root}>
       <div className={classes.mainContent}>
-        {[0, 1, 2].map((e) => (
-          <div key={e} className={classes.item}>
-            <Gallery />
-          </div>
-        ))}
+        <div className={classes.item}>
+          <Gallery />
+        </div>
       </div>
     </div>
   );
