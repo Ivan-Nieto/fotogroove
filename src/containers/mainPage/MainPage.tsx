@@ -5,22 +5,19 @@ import Gallery from "../gallery/Gallery";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: "100%",
-    height: "calc(100% - 40px)",
+    minWidth: "100%",
+    minHeight: "100%",
 
     padding: "0px 20px 0px 0px",
   },
   mainContent: {
-    width: "100%",
-    height: "100%",
+    minWidth: "100%",
+    minHeight: "100%",
     backgroundColor: theme.palette.grey[100],
     borderRadius: "10px",
   },
   item: {
-    display: "inline-block",
     padding: "15px",
-    width: "300px",
-    height: "200px",
   },
 }));
 

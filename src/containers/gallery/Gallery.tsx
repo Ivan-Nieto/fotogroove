@@ -3,14 +3,25 @@ import { useTheme, Theme, makeStyles } from "@material-ui/core/styles";
 
 import DisplayImage from "../../components/DisplayImage/DisplayImage";
 import { getUsersImages } from "../../firebase/firestore/firestore";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    flex: 1,
-    width: "100%",
+    minHeight: "400px",
   },
-  item: {
-    display: "inline",
+  container: {
+    display: "flex",
+    flexWrap: "wrap",
+    alignItems: "flex-start",
+  },
+  img: {
+    padding: "10px",
+  },
+  message: {
+    width: "100%",
+    paddingTop: "200px",
+    color: theme.palette.grey[400],
+    textAlign: "center",
   },
 }));
 
@@ -29,11 +40,23 @@ const Gallery = () => {
 
   return (
     <div className={classes.root}>
-      {images.map((img: any, index: number) => (
-        <div className={classes.item}>
-          <DisplayImage key={`img${index}`} size="small" image={img} />
+      {images.length > 0 && (
+        <div className={classes.container}>
+          {images.map((img: any, index: number) => (
+            <div key={`img${index}`} className={classes.img}>
+              <DisplayImage size="small" image={img} />
+            </div>
+          ))}
         </div>
-      ))}
+      )}
+
+      {images.length === 0 && (
+        <div className={classes.message}>
+          <Typography variant="body1" color="inherit">
+            This user hasn't uploaded any images.
+          </Typography>
+        </div>
+      )}
     </div>
   );
 };

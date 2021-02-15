@@ -4,6 +4,8 @@ export const customTheme = createMuiTheme({
   palette: {
     grey: {
       "100": "#25282b",
+      "200": "#353739",
+      "400": "#888888",
     },
     common: {
       black: "#161616",

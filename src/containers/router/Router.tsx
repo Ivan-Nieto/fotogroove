@@ -9,14 +9,10 @@ import Upload from "../upload/Upload";
 import MainPage from "../mainPage/MainPage";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: "flex",
-    height: "100vh",
-    width: "100vw",
-  },
   flexChild: {
+    minHeight: "calc(100vh - 140px)",
+    maxWidth: "100vw",
     padding: "70px",
-    flexGrow: 1,
     backgroundColor: theme.palette.common.black,
   },
 }));
@@ -24,10 +20,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Router = () => {
   const isSignedIn = useUser();
   const theme = useTheme();
-  const { root, flexChild } = useStyles(theme);
+  const { flexChild } = useStyles(theme);
 
   return (
-    <div className={root}>
+    <div>
       <BrowserRouter>
         {isSignedIn !== undefined && (
           <div className={flexChild}>

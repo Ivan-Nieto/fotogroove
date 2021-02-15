@@ -6,39 +6,41 @@ export const getUsersImages = async (uid: string) => {
     .collection("images")
     .where("author", "==", uid)
     .get()
-    .catch(() => ({ error: true }));
+    .catch((err) => ({ error: err }));
 
   if (snapshot.empty) return { error: true };
 
-  const images = snapshot.docs.map((doc: any) => {
+  if (snapshot.error) {
+    console.error(snapshot.error);
+    return snapshot;
+  }
+
+  const images = snapshot.docs?.map((doc: any) => {
     const data = doc.data();
     return data || {};
   });
 
   const promises: any = [];
-  images.forEach((e: Record<string, any>, index: number) => {
+  images?.forEach((e: Record<string, any>, index: number) => {
     Object.keys(e?.thumbUrl || {}).forEach((i) => {
-      Object.keys(e?.thumbUrl[i]).forEach((k: any) => {
-        if (!e.thumbUrl[i][k] || e.thumbUrl[i][k].startsWith("http")) {
-          return;
-        }
+      if (!e.thumbUrl[i] || e.thumbUrl[i].startsWith("http")) {
+        return;
+      }
 
-        promises.push(
-          storage
-            .ref(e.thumbUrl[i][k])
-            .getDownloadURL()
-            .then((url: any) => {
-              images[index].thumbUrl[i][k] = url;
-              return url;
-            })
-            .catch((error) => {
-              console.log(error);
-            })
-        );
-      });
+      promises.push(
+        storage
+          .ref(e.thumbUrl[i])
+          .getDownloadURL()
+          .then((url: any) => {
+            images[index].thumbUrl[i] = url;
+            return url;
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+      );
     });
   });
   await Promise.allSettled(promises);
-
   return { error: false, images };
 };
