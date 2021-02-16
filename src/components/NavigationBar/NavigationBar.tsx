@@ -40,7 +40,7 @@ export default function NavigationBar() {
             variant="h5"
             className={classes.title}
           >
-            Photogruve
+            Fotogroove
           </Typography>
           <Login />
           {user && (
