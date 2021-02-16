@@ -16,18 +16,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: "70px",
     backgroundColor: theme.palette.common.black,
   },
+  link: {
+    textDecoration: "none",
+    color: "black",
+  },
 }));
 
 const Router = () => {
   const isSignedIn = useUser();
   const theme = useTheme();
-  const { flexChild } = useStyles(theme);
+  const { flexChild, link } = useStyles(theme);
 
   return (
-    <div>
+    <div className={flexChild}>
       <BrowserRouter>
         {isSignedIn !== undefined && (
-          <div className={flexChild}>
+          <div>
             <NavigationBar />
             <Switch>
               <Route exact path="/" component={MainPage} />
@@ -37,6 +41,16 @@ const Router = () => {
           </div>
         )}
       </BrowserRouter>
+      <div>
+        Icons made by
+        <a href="https://www.freepik.com" className={link} title="Freepik">
+          Freepik
+        </a>
+        from
+        <a href="https://www.flaticon.com/" className={link} title="Flaticon">
+          www.flaticon.com
+        </a>
+      </div>
     </div>
   );
 };
