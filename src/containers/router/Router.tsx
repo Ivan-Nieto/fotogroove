@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.common.black,
     maxWidth: "100vw",
     minHeight: "100vh",
-    overflow: "hidden",
   },
   link: {
     textDecoration: "none",

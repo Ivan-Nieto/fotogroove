@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.grey[400],
     textAlign: "center",
   },
+  scroll: {
+    overflowY: "scroll",
+  },
 }));
 
 const Gallery = () => {
@@ -36,13 +39,17 @@ const Gallery = () => {
   const classes = useStyles(theme);
   const query = useQuery();
   const user = useUser();
+
   const [images, setImages] = useState([]);
   const [account, setAccount] = useState("");
+  const [lastEntry, setLastEntry] = useState();
+  const [paginating, setPaginating] = useState(false);
 
   useEffect(() => {
     const getImages = async () => {
       const images = await getUsersImages(account);
       setImages(images?.images || []);
+      setLastEntry(images?.images[images?.images.length - 1]);
     };
 
     if (account !== "") getImages();
@@ -69,10 +76,23 @@ const Gallery = () => {
     win?.focus();
   };
 
+  const handleScroll = async (e: any) => {
+    const bottom =
+      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    if (bottom && !paginating) {
+      setPaginating(true);
+      const newImgs = await getUsersImages(account, lastEntry);
+      setImages(images.concat(newImgs.images || []));
+      setLastEntry(newImgs.images[newImgs.images.length - 1]);
+
+      setPaginating(false);
+    }
+  };
+
   return (
     <div className={classes.root}>
       {images.length > 0 && (
-        <div className={classes.container}>
+        <div className={classes.container} onScroll={handleScroll}>
           {images.map((img: any, index: number) => (
             <div
               key={`img${index}`}

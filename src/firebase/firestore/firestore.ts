@@ -1,12 +1,21 @@
 import { firestore } from "../init";
 import { storage } from "../init";
 
-export const getUsersImages = async (uid: string) => {
-  const snapshot: any = await firestore
+export const getUsersImages = async (uid: string, lastEntry?: any) => {
+  let query = firestore
     .collection("images")
     .where("author", "==", uid)
-    .get()
-    .catch((err) => ({ error: err }));
+    .where("visibility", "==", "PUBLIC")
+    .orderBy("rating", "desc")
+    .orderBy("createDate", "desc")
+    .limit(15);
+
+  if (lastEntry)
+    query = query.startAfter(lastEntry.rating, lastEntry.createDate);
+
+  const snapshot: any = await query.get().catch((err) => {
+    return { error: err };
+  });
 
   if (snapshot.empty) return { error: true };
 

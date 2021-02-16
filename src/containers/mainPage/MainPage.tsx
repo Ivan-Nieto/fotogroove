@@ -6,13 +6,13 @@ import Gallery from "../gallery/Gallery";
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     minWidth: "100%",
-    minHeight: "100%",
+    minHeight: "100vh",
 
-    padding: "0px 20px 0px 0px",
+    height: "100%",
   },
   mainContent: {
     minWidth: "100%",
-    minHeight: "100%",
+    minHeight: "100vh",
     backgroundColor: theme.palette.grey[100],
     borderRadius: "10px",
   },
