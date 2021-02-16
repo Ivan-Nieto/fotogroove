@@ -1,10 +1,10 @@
 steps:
   # Install node modules
-  - name: node:$_NODE_VERSION
+  - name: node:12
     entrypoint: npm
     args: ["install"]
   # Build
-  - name: node:$_NODE_VERSION
+  - name: node:12
     entrypoint: npm
     args: ["run", "build"]
   # Deploy
