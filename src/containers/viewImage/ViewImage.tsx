@@ -7,21 +7,21 @@ import { getDownloadURL } from "../../firebase/firestore/firestore";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: "100%",
-    marginTop: "-30px",
+    maxWidth: "100%",
+    padding: "30px",
+    display: "block",
   },
   container: {
     backgroundColor: theme.palette.grey[100],
     borderRadius: "10px",
     display: "flex",
-    padding: "20px",
+    padding: "20px 0px",
   },
   img: {
     margin: "auto",
     padding: "auto",
-    maxWidth: "calc(100% - 20px)",
-    maxHeight: "calc(100vh - 160px)",
-    width: "auto",
+    maxWidth: "calc(100vw - 100px)",
+    maxHeight: "calc(100vh - 100px)",
     height: "auto",
   },
 }));

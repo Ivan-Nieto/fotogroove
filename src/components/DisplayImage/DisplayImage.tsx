@@ -3,7 +3,7 @@ import { useTheme, Theme, makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.palette.grey[100],
+    border: `1px solid ${theme.palette.grey[200]}`,
   },
 }));
 
@@ -60,14 +60,13 @@ const DisplayImage = ({ size, image }: DisplayImageProps) => {
   }, [size, setUrl, image]);
 
   return (
-    <div className={classes.root}>
-      <img
-        src={url}
-        alt={""}
-        width={size === "small" ? 300 : 680}
-        height={size === "small" ? 200 : 400}
-      />
-    </div>
+    <img
+      src={url}
+      alt={""}
+      className={classes.root}
+      width={size === "small" ? 300 : 680}
+      height={size === "small" ? 200 : 400}
+    />
   );
 };
 

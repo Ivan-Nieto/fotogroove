@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useTheme, Theme, makeStyles } from "@material-ui/core/styles";
-import { useHistory } from "react-router-dom";
 
 import useQuery from "../../hooks/useQuery";
 import useUser from "../../hooks/useUser";
@@ -35,7 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Gallery = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const history = useHistory();
   const query = useQuery();
   const user = useUser();
   const [images, setImages] = useState([]);
@@ -67,7 +65,8 @@ const Gallery = () => {
   }, [user]);
 
   const handleClick = (img: string) => () => {
-    history.push(`/view-image?url=${img}`);
+    const win = window.open(`/view-image?url=${img}`);
+    win?.focus();
   };
 
   return (

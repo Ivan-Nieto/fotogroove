@@ -12,9 +12,13 @@ import ViewImage from "../viewImage/ViewImage";
 const useStyles = makeStyles((theme: Theme) => ({
   flexChild: {
     minHeight: "calc(100vh - 140px)",
-    maxWidth: "100vw",
     padding: "70px",
+  },
+  color: {
     backgroundColor: theme.palette.common.black,
+    maxWidth: "100vw",
+    minHeight: "100vh",
+    overflow: "hidden",
   },
   link: {
     textDecoration: "none",
@@ -25,17 +29,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Router = () => {
   const isSignedIn = useUser();
   const theme = useTheme();
-  const { flexChild, link } = useStyles(theme);
+  const { flexChild, link, color } = useStyles(theme);
+
+  const withNav = (Page: any) => () => {
+    return (
+      <div className={flexChild}>
+        <NavigationBar />
+        <Page />
+      </div>
+    );
+  };
 
   return (
-    <div className={flexChild}>
+    <div className={color}>
       <BrowserRouter>
         {isSignedIn !== undefined && (
           <div>
-            <NavigationBar />
             <Switch>
-              <Route exact path="/" component={MainPage} />
-              <Route exact path="/upload" component={Upload} />
+              <Route exact path="/" component={withNav(MainPage)} />
+              <Route exact path="/upload" component={withNav(Upload)} />
               <Route exact path="/view-image" component={ViewImage} />
             </Switch>
           </div>
