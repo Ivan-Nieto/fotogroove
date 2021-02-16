@@ -64,8 +64,8 @@ const DisplayImage = ({ size, image }: DisplayImageProps) => {
       <img
         src={url}
         alt={""}
-        width={size === "small" ? 300 : 450}
-        height={size === "small" ? 200 : 300}
+        width={size === "small" ? 300 : 680}
+        height={size === "small" ? 200 : 400}
       />
     </div>
   );

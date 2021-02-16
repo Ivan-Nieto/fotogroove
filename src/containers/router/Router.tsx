@@ -7,6 +7,7 @@ import useUser from "../../hooks/useUser";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Upload from "../upload/Upload";
 import MainPage from "../mainPage/MainPage";
+import ViewImage from "../viewImage/ViewImage";
 
 const useStyles = makeStyles((theme: Theme) => ({
   flexChild: {
@@ -31,6 +32,7 @@ const Router = () => {
             <Switch>
               <Route exact path="/" component={MainPage} />
               <Route exact path="/upload" component={Upload} />
+              <Route exact path="/view-image" component={ViewImage} />
             </Switch>
           </div>
         )}

@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(2),
     },
     title: {
+      cursor: "pointer",
       flexGrow: 1,
     },
     offset: theme.mixins.toolbar,

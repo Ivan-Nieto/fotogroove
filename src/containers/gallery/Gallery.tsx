@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTheme, Theme, makeStyles } from "@material-ui/core/styles";
+import { useHistory } from "react-router-dom";
 
 import DisplayImage from "../../components/DisplayImage/DisplayImage";
 import { getUsersImages } from "../../firebase/firestore/firestore";
@@ -12,10 +13,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     display: "flex",
     flexWrap: "wrap",
-    alignItems: "flex-start",
+    padding: "auto",
+    margin: "auto",
   },
   img: {
     padding: "10px",
+    margin: "auto",
+    cursor: "pointer",
   },
   message: {
     width: "100%",
@@ -28,6 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Gallery = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
+  const history = useHistory();
   const [images, setImages] = useState([]);
 
   useEffect(() => {
@@ -38,13 +43,21 @@ const Gallery = () => {
     getImages();
   }, []);
 
+  const handleClick = (img: string) => () => {
+    history.push(`/view-image?url=${img}`);
+  };
+
   return (
     <div className={classes.root}>
       {images.length > 0 && (
         <div className={classes.container}>
           {images.map((img: any, index: number) => (
-            <div key={`img${index}`} className={classes.img}>
-              <DisplayImage size="small" image={img} />
+            <div
+              key={`img${index}`}
+              className={classes.img}
+              onClick={handleClick(img?.url)}
+            >
+              <DisplayImage size="large" image={img} />
             </div>
           ))}
         </div>

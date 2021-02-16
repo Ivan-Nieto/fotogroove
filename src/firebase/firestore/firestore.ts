@@ -44,3 +44,15 @@ export const getUsersImages = async (uid: string) => {
   await Promise.allSettled(promises);
   return { error: false, images };
 };
+
+export const getDownloadURL = async (fileLocation: string) => {
+  return storage
+    .ref(fileLocation)
+    .getDownloadURL()
+    .then((url: any) => {
+      return url;
+    })
+    .catch((error) => {
+      return "";
+    });
+};
