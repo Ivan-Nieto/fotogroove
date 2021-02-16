@@ -1,0 +1,14 @@
+steps:
+  # Install node modules
+  - name: node:$_NODE_VERSION
+    entrypoint: npm
+    args: ["install"]
+  # Build
+  - name: node:$_NODE_VERSION
+    entrypoint: npm
+    args: ["run", "build"]
+  # Deploy
+  - name: "gcr.io/cloud-builders/gcloud"
+    args: ["app", "deploy"]
+
+timeout: "1600s"

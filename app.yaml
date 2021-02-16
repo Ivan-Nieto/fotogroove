@@ -1,0 +1,15 @@
+runtime: nodejs12
+handlers:
+  - url: /(.*\..+)$
+    static_files: build/\1
+    upload: build/(.*\..+)$
+
+  - url: /(.*\.(html|css|js|png|jpg|woff|json))
+    static_files: build/\1
+    upload: build/(.*\.(html|css|js|png|jpg|woff|json))
+
+  - url: /.*
+    static_files: build/index.html
+    upload: build/index.html
+    http_headers:
+      Access-Control-Allow-Origin: https://r.lr-ingest.io/*

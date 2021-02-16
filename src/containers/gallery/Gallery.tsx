@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useTheme, Theme, makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 
+import useQuery from "../../hooks/useQuery";
+import useUser from "../../hooks/useUser";
+
 import DisplayImage from "../../components/DisplayImage/DisplayImage";
 import { getUsersImages } from "../../firebase/firestore/firestore";
 import { Typography } from "@material-ui/core";
@@ -33,15 +36,35 @@ const Gallery = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const history = useHistory();
+  const query = useQuery();
+  const user = useUser();
   const [images, setImages] = useState([]);
+  const [account, setAccount] = useState("");
 
   useEffect(() => {
     const getImages = async () => {
-      const images = await getUsersImages("2lstY6QHUvfOsxdfglJdEOfJf1f2");
+      const images = await getUsersImages(account);
       setImages(images?.images || []);
     };
-    getImages();
-  }, []);
+
+    if (account !== "") getImages();
+    // eslint-disable-next-line
+  }, [account]);
+
+  useEffect(() => {
+    const chooseAccount = async () => {
+      const urlParam = query.get("user");
+      if (urlParam) {
+        setAccount(urlParam);
+      } else {
+        if (user) setAccount(user?.uid);
+        else setAccount("2lstY6QHUvfOsxdfglJdEOfJf1f2");
+      }
+    };
+
+    if (user !== null) chooseAccount();
+    // eslint-disable-next-line
+  }, [user]);
 
   const handleClick = (img: string) => () => {
     history.push(`/view-image?url=${img}`);

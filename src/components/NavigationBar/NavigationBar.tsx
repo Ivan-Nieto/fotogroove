@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function NavigationBar() {
   const classes = useStyles();
   const history = useHistory();
-  const isSigendIn = useUser();
+  const user = useUser();
 
   const pushHistory = (url: string) => () => {
     history.push(url);
@@ -36,14 +36,14 @@ export default function NavigationBar() {
       <AppBar position="fixed">
         <Toolbar>
           <Typography
-            onClick={pushHistory("/")}
+            onClick={pushHistory(user ? `/?user=${user.uid}` : "/")}
             variant="h5"
             className={classes.title}
           >
             Photogruve
           </Typography>
           <Login />
-          {isSigendIn && (
+          {user && (
             <Button variant="outlined" onClick={pushHistory("/upload")}>
               Upload
             </Button>
