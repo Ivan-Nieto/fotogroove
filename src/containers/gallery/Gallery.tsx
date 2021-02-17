@@ -56,7 +56,8 @@ const Gallery = () => {
     const getImages = async () => {
       const images = await getUsersImages(account);
       setImages(images?.images || []);
-      setLastEntry(images?.images[images?.images.length - 1]);
+      if (images?.images)
+        setLastEntry(images?.images[images?.images?.length - 1]);
     };
 
     if (account !== "") getImages();

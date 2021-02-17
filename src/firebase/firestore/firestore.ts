@@ -1,19 +1,9 @@
 import { firestore } from "../init";
 import { storage } from "../init";
 
-export const getUsersImages = async (uid: string, lastEntry?: any) => {
-  let query = firestore
-    .collection("images")
-    .where("author", "==", uid)
-    .where("visibility", "==", "PUBLIC")
-    .orderBy("rating", "desc")
-    .orderBy("createDate", "desc")
-    .limit(15);
-
-  if (lastEntry)
-    query = query.startAfter(lastEntry.rating, lastEntry.createDate);
-
-  const snapshot: any = await query.get().catch((err) => {
+export const runImageQuery = async (query: any) => {
+  const snapshot: any = await query.get().catch((err: any) => {
+    console.log(err);
     return { error: err };
   });
 
@@ -44,14 +34,41 @@ export const getUsersImages = async (uid: string, lastEntry?: any) => {
             images[index].thumbUrl[i] = url;
             return url;
           })
-          .catch((error) => {
-            console.log(error);
-          })
+          .catch()
       );
     });
   });
   await Promise.allSettled(promises);
   return { error: false, images };
+};
+
+export const getUsersImages = async (uid: string, lastEntry?: any) => {
+  let query = firestore
+    .collection("images")
+    .where("author", "==", uid)
+    .where("visibility", "==", "PUBLIC")
+    .orderBy("rating", "desc")
+    .orderBy("createDate", "desc")
+    .limit(15);
+
+  if (lastEntry)
+    query = query.startAfter(lastEntry.rating, lastEntry.createDate);
+
+  return runImageQuery(query);
+};
+
+export const getLatestImages = (lastEntry?: any) => {
+  let query = firestore
+    .collection("images")
+    .where("visibility", "==", "PUBLIC")
+    .orderBy("rating", "desc")
+    .orderBy("createDate", "desc")
+    .limit(15);
+
+  if (lastEntry)
+    query = query.startAfter(lastEntry.rating, lastEntry.createDate);
+
+  return runImageQuery(query);
 };
 
 export const getDownloadURL = async (fileLocation: string) => {
