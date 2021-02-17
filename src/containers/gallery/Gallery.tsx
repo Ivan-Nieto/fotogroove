@@ -11,6 +11,7 @@ import { Typography } from "@material-ui/core";
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     overflowY: "hidden",
+    minHeight: "600px",
     overflowX: "hidden",
     padding: "30px",
     backgroundColor: theme.palette.grey[100],

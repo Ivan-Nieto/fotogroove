@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTheme, Theme, makeStyles } from "@material-ui/core/styles";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -37,6 +38,7 @@ const DisplayImage = ({ size, image }: DisplayImageProps) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const [url, setUrl] = useState("");
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const portraitLarge = image?.thumbUrl?.portrait;
@@ -60,13 +62,24 @@ const DisplayImage = ({ size, image }: DisplayImageProps) => {
   }, [size, setUrl, image]);
 
   return (
-    <img
-      src={url}
-      alt={""}
-      className={classes.root}
-      width={size === "small" ? 300 : 680}
-      height={size === "small" ? 200 : 400}
-    />
+    <div>
+      <img
+        src={url}
+        alt={image?.description || ""}
+        onLoad={() => setLoaded(true)}
+        className={classes.root}
+        width={size === "small" ? 300 : 680}
+        height={size === "small" ? 200 : 400}
+      />
+
+      {!loaded && (
+        <Skeleton
+          variant="rect"
+          width={size === "small" ? 300 : 680}
+          height={size === "small" ? 200 : 400}
+        />
+      )}
+    </div>
   );
 };
 
