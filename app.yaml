@@ -3,11 +3,14 @@ handlers:
   - url: /(.*\..+)$
     static_files: build/\1
     upload: build/(.*\..+)$
+    secure: always
 
   - url: /(.*\.(html|css|js|png|jpg|woff|json))
     static_files: build/\1
     upload: build/(.*\.(html|css|js|png|jpg|woff|json))
+    secure: always
 
   - url: /.*
     static_files: build/index.html
     upload: build/index.html
+    secure: always
