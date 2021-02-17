@@ -12,8 +12,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   mainContent: {
     minWidth: "100%",
-    minHeight: "100vh",
-    backgroundColor: theme.palette.grey[100],
     borderRadius: "10px",
   },
   item: {

@@ -26,7 +26,7 @@ export const getUsersImages = async (uid: string, lastEntry?: any) => {
 
   const images = snapshot.docs?.map((doc: any) => {
     const data = doc.data();
-    return data || {};
+    return { ...data, id: doc.id };
   });
 
   const promises: any = [];

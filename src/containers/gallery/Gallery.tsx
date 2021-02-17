@@ -10,13 +10,19 @@ import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    minHeight: "400px",
+    overflowY: "hidden",
+    overflowX: "hidden",
+    padding: "30px",
+    backgroundColor: theme.palette.grey[100],
   },
   container: {
+    height: "100vh",
+    overflowY: "scroll",
+    marginRight: "-50px",
+    paddingRight: "50px",
+
     display: "flex",
     flexWrap: "wrap",
-    padding: "auto",
-    margin: "auto",
   },
   img: {
     padding: "10px",
@@ -40,10 +46,11 @@ const Gallery = () => {
   const query = useQuery();
   const user = useUser();
 
-  const [images, setImages] = useState([]);
+  const [images, setImages]: any = useState(false);
   const [account, setAccount] = useState("");
-  const [lastEntry, setLastEntry] = useState();
+  const [lastEntry, setLastEntry]: any = useState(false);
   const [paginating, setPaginating] = useState(false);
+  const [endReached, setEndReached] = useState(false);
 
   useEffect(() => {
     const getImages = async () => {
@@ -76,14 +83,27 @@ const Gallery = () => {
     win?.focus();
   };
 
+  // Paginates when bottom of page is reached.
   const handleScroll = async (e: any) => {
+    // True if bottom was reached
     const bottom =
       e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    if (bottom && !paginating) {
+    if (bottom && !paginating && !endReached) {
       setPaginating(true);
+      // Get new set of images
       const newImgs = await getUsersImages(account, lastEntry);
-      setImages(images.concat(newImgs.images || []));
-      setLastEntry(newImgs.images[newImgs.images.length - 1]);
+
+      // Add new images to current set
+      const newImages = images.concat(newImgs.images || []);
+      setImages(newImages);
+
+      // Decide weather or not this is the end of the list
+      const newLastEntry = newImgs.images
+        ? newImgs.images[newImgs?.images?.length - 1]
+        : false;
+      if (lastEntry && (!newLastEntry || newLastEntry.id === lastEntry.id)) {
+        setEndReached(true);
+      } else setLastEntry(newLastEntry);
 
       setPaginating(false);
     }
@@ -105,7 +125,7 @@ const Gallery = () => {
         </div>
       )}
 
-      {images.length === 0 && (
+      {images && images.length === 0 && (
         <div className={classes.message}>
           <Typography variant="body1" color="inherit">
             This user hasn't uploaded any images.
