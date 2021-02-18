@@ -12,29 +12,38 @@ import ViewImage from "../viewImage/ViewImage";
 const useStyles = makeStyles((theme: Theme) => ({
   flexChild: {
     minHeight: "calc(100vh - 140px)",
-    padding: "70px",
   },
   color: {
     backgroundColor: theme.palette.common.black,
-    maxWidth: "100vw",
+    maxWidth: "calc(100vw - 17px)",
     minHeight: "100vh",
   },
   link: {
     textDecoration: "none",
     color: "black",
   },
+  navBar: {
+    height: "80px",
+  },
+  content: {
+    height: "100%",
+  },
 }));
 
 const Router = () => {
   const isSignedIn = useUser();
   const theme = useTheme();
-  const { flexChild, link, color } = useStyles(theme);
+  const { flexChild, link, color, navBar, content } = useStyles(theme);
 
   const withNav = (Page: any) => () => {
     return (
       <div className={flexChild}>
-        <NavigationBar />
-        <Page />
+        <div className={navBar}>
+          <NavigationBar />
+        </div>
+        <div className={content}>
+          <Page />
+        </div>
       </div>
     );
   };

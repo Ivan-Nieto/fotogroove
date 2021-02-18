@@ -13,11 +13,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflowY: "hidden",
     minHeight: "600px",
     overflowX: "hidden",
-    padding: "30px",
+    padding: "30px 30px 0px 30px",
     backgroundColor: theme.palette.grey[100],
   },
   container: {
-    height: "100vh",
+    height: "calc(100vh - 140px)",
     overflowY: "scroll",
     marginRight: "-50px",
     paddingRight: "50px",

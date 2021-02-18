@@ -5,17 +5,21 @@ import Gallery from "../gallery/Gallery";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    minWidth: "100%",
-    minHeight: "100vh",
-
+    minHeight: "100%",
     height: "100%",
-  },
-  mainContent: {
+
     minWidth: "100%",
-    borderRadius: "10px",
+
+    overflowY: "hidden",
+    overflowX: "hidden",
   },
   item: {
+    height: "calc(100vh - 140px)",
     padding: "15px",
+
+    overflowY: "scroll",
+    marginRight: "-50px",
+    paddingRight: "50px",
   },
 }));
 
@@ -25,10 +29,8 @@ const MainPage = () => {
 
   return (
     <div className={classes.root}>
-      <div className={classes.mainContent}>
-        <div className={classes.item}>
-          <Gallery />
-        </div>
+      <div className={classes.item}>
+        <Gallery />
       </div>
     </div>
   );
