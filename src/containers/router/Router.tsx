@@ -8,6 +8,7 @@ import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Upload from "../upload/Upload";
 import MainPage from "../mainPage/MainPage";
 import ViewImage from "../viewImage/ViewImage";
+import Gallery from "../gallery/Gallery";
 
 const useStyles = makeStyles((theme: Theme) => ({
   flexChild: {
@@ -55,6 +56,7 @@ const Router = () => {
           <div>
             <Switch>
               <Route exact path="/" component={withNav(MainPage)} />
+              <Route exact path="/gallery" component={withNav(Gallery)} />
               <Route exact path="/upload" component={withNav(Upload)} />
               <Route exact path="/view-image" component={ViewImage} />
             </Switch>

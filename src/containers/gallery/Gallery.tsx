@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Gallery = () => {
+const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const query = useQuery();
@@ -66,17 +66,18 @@ const Gallery = () => {
   }, [account]);
 
   useEffect(() => {
-    const chooseAccount = async () => {
-      const urlParam = query.get("user");
-      if (urlParam) {
-        setAccount(urlParam);
-      } else {
-        if (user) setAccount(user?.uid);
-        else setAccount("2lstY6QHUvfOsxdfglJdEOfJf1f2");
-      }
-    };
+    // If account was already set abort
+    if (account !== "" || user == null) return;
 
-    if (user !== null) chooseAccount();
+    // Get images from appropriate account
+    const urlParam = query.get("user");
+    // From url parameter
+    if (urlParam) setAccount(urlParam);
+    // From prop
+    else if (targetAccount) setAccount(targetAccount);
+    // From current signed in account
+    else if (user) setAccount(user?.uid);
+    else setAccount("2lstY6QHUvfOsxdfglJdEOfJf1f2"); // From my account
     // eslint-disable-next-line
   }, [user]);
 
