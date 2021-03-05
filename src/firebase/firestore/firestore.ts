@@ -43,6 +43,8 @@ export const runImageQuery = async (query: any) => {
 };
 
 export const getUsersImages = async (uid: string, lastEntry?: any) => {
+  if (uid === "all" || !uid) return getLatestImages(lastEntry);
+
   let query = firestore
     .collection("images")
     .where("author", "==", uid)

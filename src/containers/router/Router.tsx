@@ -6,9 +6,10 @@ import useUser from "../../hooks/useUser";
 
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import Upload from "../upload/Upload";
-import MainPage from "../mainPage/MainPage";
+// import MainPage from "../mainPage/MainPage";
 import ViewImage from "../viewImage/ViewImage";
 import Gallery from "../gallery/Gallery";
+import WelcomePage from "../welcomePage/WelcomePage";
 
 const useStyles = makeStyles((theme: Theme) => ({
   flexChild: {
@@ -55,7 +56,7 @@ const Router = () => {
         {isSignedIn !== undefined && (
           <div>
             <Switch>
-              <Route exact path="/" component={withNav(MainPage)} />
+              <Route exact path="/" component={withNav(WelcomePage)} />
               <Route exact path="/gallery" component={withNav(Gallery)} />
               <Route exact path="/upload" component={withNav(Upload)} />
               <Route exact path="/view-image" component={ViewImage} />
