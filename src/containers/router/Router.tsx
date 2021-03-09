@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '80px',
   },
   content: {
-    height: '100%',
+    minHeight: '100%',
   },
 }));
 

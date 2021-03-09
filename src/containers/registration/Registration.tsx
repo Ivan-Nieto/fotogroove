@@ -7,7 +7,7 @@ import RenderSingUp from './RenderSignUp';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   blind: {
-    backgroundColor: 'white',
+    backgroundColor: theme.palette.common.white,
     width: '100vw',
     height: '100vh',
   },
@@ -17,11 +17,7 @@ const Blind = () => {
   const theme = useTheme();
   const { blind } = useStyles(theme);
 
-  return (
-    <div className={blind}>
-      <p>this is a test</p>
-    </div>
-  );
+  return <div className={blind} />;
 };
 
 const Registration = () => {

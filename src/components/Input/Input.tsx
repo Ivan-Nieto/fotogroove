@@ -1,38 +1,38 @@
-import React from "react";
-import TextField from "@material-ui/core/TextField";
+import React from 'react';
+import TextField from '@material-ui/core/TextField';
 import {
   makeStyles,
   useTheme,
   Theme,
   withStyles,
-} from "@material-ui/core/styles";
+} from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: "100%",
+    width: '100%',
   },
 }));
 
 const CustomTextField = withStyles((theme: Theme) => ({
   root: {
-    "& .MuiInputBase-root": {
+    '& .MuiInputBase-root': {
       color: theme.palette.primary.main,
     },
-    "& label.Mui-focused": {
+    '& label.Mui-focused': {
       color: theme.palette.primary.main,
     },
-    "& .MuiInput-underline:after": {
+    '& .MuiInput-underline:after': {
       borderBottomColor: theme.palette.primary.dark,
     },
-    "& .MuiOutlinedInput-root": {
-      "& fieldset": {
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
         borderColor: theme.palette.primary.dark,
       },
-      "&:hover fieldset": {
+      '&:hover fieldset': {
         borderColor: theme.palette.primary.light,
         boxShadow: `1px 1px 5px ${theme.palette.primary.main}`,
       },
-      "&.Mui-focused fieldset": {
+      '&.Mui-focused fieldset': {
         borderColor: theme.palette.primary.dark,
       },
     },
@@ -41,7 +41,7 @@ const CustomTextField = withStyles((theme: Theme) => ({
 
 interface InputProps {
   value: any;
-  type: "text" | "password" | "number";
+  type: 'text' | 'password' | 'number';
   disabled?: boolean;
   error?: boolean;
   label?: string;
@@ -64,7 +64,7 @@ const Input = (props: InputProps) => {
         error={props.error}
         defaultValue={props.defaultValue}
         disabled={props.disabled}
-        variant="outlined"
+        variant='outlined'
       />
     </div>
   );

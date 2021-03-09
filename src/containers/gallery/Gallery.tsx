@@ -1,43 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { useTheme, Theme, makeStyles } from "@material-ui/core/styles";
+import React, { useEffect, useState } from 'react';
+import { useTheme, Theme, makeStyles } from '@material-ui/core/styles';
 
-import useQuery from "../../hooks/useQuery";
-import useUser from "../../hooks/useUser";
+import useQuery from '../../hooks/useQuery';
+import useUser from '../../hooks/useUser';
 
-import DisplayImage from "../../components/DisplayImage/DisplayImage";
-import { getUsersImages } from "../../firebase/firestore/firestore";
-import { Typography } from "@material-ui/core";
+import DisplayImage from '../../components/DisplayImage/DisplayImage';
+import { getUsersImages } from '../../firebase/firestore/firestore';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    overflowY: "hidden",
-    minHeight: "600px",
-    overflowX: "hidden",
-    padding: "30px 30px 0px 30px",
+    overflowY: 'hidden',
+    minHeight: '600px',
+    overflowX: 'hidden',
+    padding: '30px 30px 0px 30px',
     backgroundColor: theme.palette.grey[100],
   },
   container: {
-    height: "calc(100vh - 140px)",
-    overflowY: "scroll",
-    marginRight: "-50px",
-    paddingRight: "50px",
+    height: 'calc(100vh - 140px)',
+    overflowY: 'scroll',
+    marginRight: '-50px',
+    paddingRight: '50px',
 
-    display: "flex",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexWrap: 'wrap',
   },
   img: {
-    padding: "10px",
-    margin: "auto",
-    cursor: "pointer",
+    padding: '10px',
+    margin: 'auto',
+    cursor: 'pointer',
   },
   message: {
-    width: "100%",
-    paddingTop: "200px",
+    width: '100%',
+    paddingTop: '200px',
     color: theme.palette.grey[400],
-    textAlign: "center",
+    textAlign: 'center',
   },
   scroll: {
-    overflowY: "scroll",
+    overflowY: 'scroll',
   },
 }));
 
@@ -48,7 +48,7 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
   const user = useUser();
 
   const [images, setImages]: any = useState(false);
-  const [account, setAccount] = useState("");
+  const [account, setAccount] = useState('');
   const [lastEntry, setLastEntry]: any = useState(false);
   const [paginating, setPaginating] = useState(false);
   const [endReached, setEndReached] = useState(false);
@@ -61,23 +61,23 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
         setLastEntry(images?.images[images?.images?.length - 1]);
     };
 
-    if (account !== "") getImages();
+    if (account !== '') getImages();
     // eslint-disable-next-line
   }, [account]);
 
   useEffect(() => {
     // If account was already set abort
-    if (account !== "" || user == null) return;
+    if (account !== '' || user == null) return;
 
     // Get images from appropriate account
-    const urlParam = query.get("user");
+    const urlParam = query.get('user');
     // From url parameter
     if (urlParam) setAccount(urlParam);
     // From prop
     else if (targetAccount) setAccount(targetAccount);
     // From current signed in account
     else if (user) setAccount(user?.uid);
-    else setAccount("2lstY6QHUvfOsxdfglJdEOfJf1f2"); // From my account
+    else setAccount('2lstY6QHUvfOsxdfglJdEOfJf1f2'); // From my account
     // eslint-disable-next-line
   }, [user]);
 
@@ -122,7 +122,7 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
               className={classes.img}
               onClick={handleClick(img?.url)}
             >
-              <DisplayImage size="large" image={img} />
+              <DisplayImage size='large' image={img} />
             </div>
           ))}
         </div>
@@ -130,7 +130,7 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
 
       {images && images.length === 0 && (
         <div className={classes.message}>
-          <Typography variant="body1" color="inherit">
+          <Typography variant='body1' color='inherit'>
             This user hasn't uploaded any images.
           </Typography>
         </div>
