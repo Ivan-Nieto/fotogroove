@@ -11,6 +11,7 @@ import ViewImage from '../viewImage/ViewImage';
 import Gallery from '../gallery/Gallery';
 import WelcomePage from '../welcomePage/WelcomePage';
 import Registration from '../registration/Registration';
+import BrokenLink from '../../components/BrokenLink/BrokenLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
   flexChild: {
@@ -62,6 +63,7 @@ const Router = () => {
               <Route exact path='/upload' component={withNav(Upload)} />
               <Route exact path='/view-image' component={ViewImage} />
               <Route exact path='/register' component={withNav(Registration)} />
+              <Route exact path='*' component={BrokenLink} />
             </Switch>
           </div>
         )}
