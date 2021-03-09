@@ -7,7 +7,7 @@ interface Props {
   Secondary: any;
   timeout: number;
   move: boolean;
-  direction: 'up' | 'right';
+  direction: 'up' | 'right' | 'down';
 }
 
 const Slide = ({ Primary, Secondary, timeout, move, direction }: Props) => {
@@ -38,7 +38,26 @@ const Slide = ({ Primary, Secondary, timeout, move, direction }: Props) => {
     leave: { opacity: 0, transform: 'translate3d(0,-50%,0)' },
   });
 
-  const transition = direction === 'up' ? transitionUp : transitionRight;
+  const transitionDown = useTransition(index, (p) => p, {
+    from: { opacity: 0, transform: 'translate3d(0,-50%,0)' },
+    enter: { opacity: 1, transform: 'translate3d(0,0%,0)' },
+    leave: { opacity: 0, transform: 'translate3d(0,100%,0)' },
+  });
+
+  let transition;
+  switch (direction) {
+    case 'up':
+      transition = transitionUp;
+      break;
+    case 'down':
+      transition = transitionDown;
+      break;
+    case 'right':
+      transition = transitionRight;
+      break;
+    default:
+      transition = transitionRight;
+  }
 
   useEffect(() => {
     if (timeout > 0 && move) {

@@ -79,7 +79,7 @@ const Login = () => {
   };
 
   const handleSignUp = () => {
-    history.push('/registration');
+    history.push('/register');
   };
 
   return (
