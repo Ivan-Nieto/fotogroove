@@ -60,7 +60,7 @@ const RenderForm = (props: Props) => {
       {({ errors, touched }: any) => (
         <Form id={props.formName}>
           {props.fields.map((e) => (
-            <div className={item}>
+            <div className={item} key={e.key}>
               <Field
                 key={e.key}
                 id={e.key}

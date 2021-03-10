@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 
 import { functions, firestore } from '../../firebase/init';
 import RenderForm from '../../components/RenderForm/RenderForm';
+import { emailSignIn } from '../../firebase/auth/index';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -64,26 +65,39 @@ const RenderSignUp = () => {
     setDisabled(true);
 
     // Make sure username is unique
-    const exists = firestore
-      .collection('users')
-      .where('username', '==', event?.userName)
+    const exists = await firestore
+      .collection('usernames')
+      .where('userName', '==', event?.userName || '')
       .get()
       .then((snapshot) => {
         return snapshot.size > 0;
       })
-      .catch(() => true);
+      .catch(() => {
+        return true;
+      });
 
     if (exists) {
       setErrors({ userName: 'Username already exists' });
       setDisabled(false);
+      return;
     }
 
     // Make sure all fields where filled
 
-    const response = await createUser(event);
-    console.log(response);
-
-    setDisabled(false);
+    const response = await createUser(event).catch(() => ({
+      data: { error: true },
+    }));
+    if (response?.data?.error) {
+      switch (response.data.code) {
+        case 'ALREADY_EXISTS':
+          setErrors({ email: 'An account with this email already exists' });
+          break;
+      }
+      setDisabled(false);
+    } else {
+      setDisabled(false);
+      emailSignIn(event.email, event.password);
+    }
   };
 
   return (
