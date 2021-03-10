@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
-import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
-import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+
+import { functions, firestore } from '../../firebase/init';
+import RenderForm from '../../components/RenderForm/RenderForm';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -29,31 +31,78 @@ const useStyles = makeStyles((theme: Theme) => ({
 const RenderSignUp = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const [fields, setFields]: any = useState({});
+  const [disabled, setDisabled] = useState(false);
 
-  const inputs = ['Username', 'Email', 'Password', 'Confirm Password'];
+  const inputs = [
+    {
+      type: 'text',
+      validation: Yup.string().min(3, 'Invalid').required('Required'),
+      initialValue: '',
+      key: 'userName',
+      label: 'Username',
+    },
+    {
+      type: 'text',
+      validation: Yup.string().email('Invalid').required('Required'),
+      initialValue: '',
+      key: 'email',
+      component: '',
+      label: 'Email',
+    },
+    {
+      type: 'password',
+      validation: Yup.string().min(3, 'Invalid').required('Required'),
+      initialValue: '',
+      key: 'password',
+      label: 'Password',
+    },
+  ];
 
-  const handleChange = (key: string) => (event: any) => {
-    setFields({ ...fields, [key]: event.target.value });
+  const createUser = functions.httpsCallable('createUser');
+
+  const handleSubmit = async (event: any, { setErrors }: any) => {
+    setDisabled(true);
+
+    // Make sure username is unique
+    const exists = firestore
+      .collection('users')
+      .where('username', '==', event?.userName)
+      .get()
+      .then((snapshot) => {
+        return snapshot.size > 0;
+      })
+      .catch(() => true);
+
+    if (exists) {
+      setErrors({ userName: 'Username already exists' });
+      setDisabled(false);
+    }
+
+    // Make sure all fields where filled
+
+    const response = await createUser(event);
+    console.log(response);
+
+    setDisabled(false);
   };
-
-  const handleSubmit = () => {};
 
   return (
     <div className={classes.root}>
       <div className={classes.inputs}>
-        {inputs.map((e) => (
-          <div className={classes.item} key={e}>
-            <Input
-              onChange={handleChange(e)}
-              label={e}
-              value={fields[e] || ''}
-              type='text'
-            />
-          </div>
-        ))}
+        <RenderForm
+          fields={inputs}
+          onSubmit={handleSubmit}
+          formName='registration-form'
+        />
         <div className={classes.item}>
-          <Button variant='outlined'>Sign up</Button>
+          <Button
+            disabled={disabled}
+            variant='outlined'
+            type='submit'
+            form='registration-form'
+          >
+            Create Account
+          </Button>
         </div>
       </div>
     </div>
