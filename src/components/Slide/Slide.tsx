@@ -65,6 +65,7 @@ const Slide = ({ Primary, Secondary, timeout, move, direction }: Props) => {
         set(1);
       }, timeout);
     }
+    return () => {};
   }, [timeout, move]);
 
   return (

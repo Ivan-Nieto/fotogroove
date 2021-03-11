@@ -52,7 +52,9 @@ const RenderSignUp = () => {
     },
     {
       type: 'password',
-      validation: Yup.string().min(3, 'Invalid').required('Required'),
+      validation: Yup.string()
+        .min(6, 'Password must be at least 6 characters long')
+        .required('Required'),
       initialValue: '',
       key: 'password',
       label: 'Password',
