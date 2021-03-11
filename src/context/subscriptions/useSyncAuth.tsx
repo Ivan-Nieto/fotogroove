@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { Subject } from 'rxjs';
 import firebase from 'firebase/app';
 import { auth } from '../../firebase/init';
-
+import { User } from '../initialValues';
 import { useFormContext } from '../Context';
 
 const useSyncAuth = () => {
-  const [user, setUser]: any = useState(undefined);
+  const [user, setUser]: any = useState(User);
   const { dispatch } = useFormContext();
 
   useEffect(() => {

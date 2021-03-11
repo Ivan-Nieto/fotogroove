@@ -56,13 +56,14 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
 
   useEffect(() => {
     const getImages = async () => {
+      setPaginating(true);
       const images = await getUsersImages(account);
       setImages(images?.images || []);
       if (images?.images)
         setLastEntry(images?.images[images?.images?.length - 1]);
+      setPaginating(false);
     };
-
-    if (account !== '') getImages();
+    if (account !== '' && !paginating) getImages();
     // eslint-disable-next-line
   }, [account]);
 

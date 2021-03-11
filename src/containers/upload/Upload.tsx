@@ -1,51 +1,51 @@
-import React, { useState } from "react";
-import { Theme, makeStyles, useTheme } from "@material-ui/core/styles";
-import { useHistory } from "react-router-dom";
-import Typography from "@material-ui/core/Typography";
+import React, { useState } from 'react';
+import { Theme, makeStyles, useTheme } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom';
+import Typography from '@material-ui/core/Typography';
 
-import store from "../../store/index";
+import useUser from '../../hooks/useUser';
 
-import LoadingBar from "../../components/Loading/LoadingBar";
-import DropZone from "../../components/DropZone/DropZone";
-import uploadImage from "../../firebase/storage/uploadImage";
+import LoadingBar from '../../components/Loading/LoadingBar';
+import DropZone from '../../components/DropZone/DropZone';
+import uploadImage from '../../firebase/storage/uploadImage';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    height: "100%",
-    maxWidth: "800px",
-    margin: "auto",
-    width: "100%",
+    height: '100%',
+    maxWidth: '800px',
+    margin: 'auto',
+    width: '100%',
   },
   dropZone: {
-    textAlign: "center",
-    margin: "auto",
-    padding: "20px",
+    textAlign: 'center',
+    margin: 'auto',
+    padding: '20px',
   },
   title: {
-    width: "100%",
-    textAlign: "center",
-    paddingBottom: "20px",
+    width: '100%',
+    textAlign: 'center',
+    paddingBottom: '20px',
   },
   inputs: {
-    padding: "20px",
-    margin: "auto",
+    padding: '20px',
+    margin: 'auto',
 
     backgroundColor: theme.palette.grey[100],
-    borderRadius: "10px",
+    borderRadius: '10px',
   },
   input: {
-    textAlign: "center",
-    margin: "auto",
-    padding: "20px",
+    textAlign: 'center',
+    margin: 'auto',
+    padding: '20px',
   },
   halfInput: {
-    display: "inline-block",
-    padding: "20px",
-    width: "calc(50% - 40px)",
+    display: 'inline-block',
+    padding: '20px',
+    width: 'calc(50% - 40px)',
   },
   button: {
-    padding: "20px",
-    textAlign: "end",
+    padding: '20px',
+    textAlign: 'end',
   },
 }));
 
@@ -53,6 +53,7 @@ const Upload = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const history = useHistory();
+  const user = useUser();
   const [uploading, setUploading] = useState(false);
   const [fileProgress, setFileProgress] = useState({});
   const [progress, setProgress] = useState(0);
@@ -90,13 +91,13 @@ const Upload = () => {
 
   const handleComplete = () => {
     setUploading(false);
-    history.push("/");
+    history.push('/');
   };
 
   const handleFile = (event: any) => {
     setUploading(true);
 
-    const userID = store?.getState().user?.uid;
+    const userID = user?.uid;
     const tempObj: any = {};
     event?.forEach((e: any, index: number) => {
       tempObj[`img_${index}`] = { total: 0, transferred: 0 };
@@ -114,7 +115,7 @@ const Upload = () => {
   return (
     <div className={classes.root}>
       <div className={classes.title}>
-        <Typography variant="h5">Uploader</Typography>
+        <Typography variant='h5'>Uploader</Typography>
       </div>
       <div className={classes.dropZone}>
         <DropZone

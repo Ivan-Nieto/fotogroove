@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Router = () => {
-  const isSignedIn = useUser();
+  const user = useUser();
   useSyncAuth();
   const theme = useTheme();
   const { flexChild, link, color, navBar, content } = useStyles(theme);
@@ -57,7 +57,7 @@ const Router = () => {
   return (
     <div className={color}>
       <BrowserRouter>
-        {isSignedIn !== undefined && (
+        {user !== undefined && (
           <div>
             <Switch>
               <Route exact path='/' component={withNav(WelcomePage)} />
