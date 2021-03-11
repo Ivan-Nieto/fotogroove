@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Login = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const isSignedIn = useUser();
+  const user = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showLogin, setShowLogin] = useState(false);
@@ -59,8 +59,9 @@ const Login = () => {
   };
 
   const toggleShowLogin = () => {
-    if (isSignedIn) {
+    if (user?.isSignedIn) {
       signOut();
+      history.push('/');
       return;
     }
     setShowLogin(!showLogin);
@@ -73,7 +74,7 @@ const Login = () => {
   };
 
   const getButtonText = () => {
-    if (isSignedIn) return 'Log out';
+    if (user?.isSignedIn) return 'Log out';
     if (showLogin) return 'Log In';
     return 'Sign In';
   };
@@ -86,7 +87,9 @@ const Login = () => {
     <div className={classes.root}>
       <div className={classes.itemContainer}>
         <div
-          className={showLogin && !isSignedIn ? classes.input : classes.hidden}
+          className={
+            showLogin && !user?.isSignedIn ? classes.input : classes.hidden
+          }
         >
           <Input
             label='Email'
@@ -97,7 +100,9 @@ const Login = () => {
           />
         </div>
         <div
-          className={showLogin && !isSignedIn ? classes.input : classes.hidden}
+          className={
+            showLogin && !user?.isSignedIn ? classes.input : classes.hidden
+          }
         >
           <Input
             label='Password'
@@ -116,7 +121,7 @@ const Login = () => {
             {getButtonText()}
           </Button>
         </div>
-        {!isSignedIn && (
+        {!user?.isSignedIn && (
           <div className={classes.input}>
             <Button
               variant='outlined'

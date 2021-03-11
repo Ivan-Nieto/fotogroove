@@ -1,4 +1,4 @@
-import { auth } from "../init";
+import { auth } from '../init';
 
 export const emailSignIn = async (email: string, password: string) => {
   const response: any = await auth

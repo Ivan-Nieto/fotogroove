@@ -1,22 +1,14 @@
-import { useState } from "react";
-import { auth } from "../firebase/init";
-import useStore from "./useStoreAction";
+import { useState, useEffect } from 'react';
+
+import { useFormContext } from '../context/Context';
 
 const useUser = () => {
-  const [user, setUser]: any = useState(undefined);
-  const store = useStore();
+  const [user, setUser]: any = useState({});
+  const { state } = useFormContext();
 
-  auth.onAuthStateChanged((usr) => {
-    if (usr) {
-      // User is signed in.
-      setUser(usr);
-      store("SIGN_IN", usr);
-    } else {
-      // No user is signed in.
-      setUser(false);
-      store("SIGN_OUT", {});
-    }
-  });
+  useEffect(() => {
+    setUser(state?.user);
+  }, [state, setUser]);
 
   return user;
 };

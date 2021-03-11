@@ -67,7 +67,7 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
 
   useEffect(() => {
     // If account was already set abort
-    if (account !== '' || user == null) return;
+    if (account !== '') return;
 
     // Get images from appropriate account
     const urlParam = query.get('user');
@@ -76,7 +76,7 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
     // From prop
     else if (targetAccount) setAccount(targetAccount);
     // From current signed in account
-    else if (user) setAccount(user?.uid);
+    else if (user?.isSignedIn) setAccount(user?.uid);
     else setAccount('2lstY6QHUvfOsxdfglJdEOfJf1f2'); // From my account
     // eslint-disable-next-line
   }, [user]);

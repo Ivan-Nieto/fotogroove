@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 
 import useUser from '../../hooks/useUser';
+import useSyncAuth from '../../context/subscriptions/useSyncAuth';
 
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Upload from '../upload/Upload';
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Router = () => {
   const isSignedIn = useUser();
+  useSyncAuth();
   const theme = useTheme();
   const { flexChild, link, color, navBar, content } = useStyles(theme);
 

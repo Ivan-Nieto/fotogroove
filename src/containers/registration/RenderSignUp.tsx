@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import Button from '../../components/Button/Button';
 import * as Yup from 'yup';
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const RenderSignUp = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
+  const history = useHistory();
   const [disabled, setDisabled] = useState(false);
 
   const inputs = [
@@ -98,7 +100,8 @@ const RenderSignUp = () => {
       setDisabled(false);
     } else {
       setDisabled(false);
-      emailSignIn(event.email, event.password);
+      const err = await emailSignIn(event.email, event.password);
+      if (!err.error) history.push('/');
     }
   };
 
