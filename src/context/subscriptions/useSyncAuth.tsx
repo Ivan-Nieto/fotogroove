@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { Subject } from 'rxjs';
+import firebase from 'firebase/app';
 import { auth } from '../../firebase/init';
 
 import { useFormContext } from '../Context';
@@ -8,7 +10,9 @@ const useSyncAuth = () => {
   const { dispatch } = useFormContext();
 
   useEffect(() => {
-    auth.onAuthStateChanged((usr) => {
+    const authChange$ = new Subject<firebase.User | null>();
+    const fbUnsubscribe = auth.onAuthStateChanged(authChange$);
+    authChange$.subscribe((usr) => {
       if (usr) {
         // User is signed in.
         setUser(usr);
@@ -19,6 +23,11 @@ const useSyncAuth = () => {
         dispatch({ type: 'SIGN_OUT', value: {} });
       }
     });
+
+    return () => {
+      authChange$.unsubscribe();
+      fbUnsubscribe();
+    };
   }, [setUser, dispatch]);
 
   return user;
