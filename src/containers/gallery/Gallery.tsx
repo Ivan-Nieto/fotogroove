@@ -52,6 +52,7 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
   const [lastEntry, setLastEntry]: any = useState(false);
   const [paginating, setPaginating] = useState(false);
   const [endReached, setEndReached] = useState(false);
+  const [targetIsUser, setTargetIsUser] = useState(false);
 
   useEffect(() => {
     const getImages = async () => {
@@ -76,8 +77,10 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
     // From prop
     else if (targetAccount) setAccount(targetAccount);
     // From current signed in account
-    else if (user?.isSignedIn) setAccount(user?.uid);
-    else setAccount('2lstY6QHUvfOsxdfglJdEOfJf1f2'); // From my account
+    else if (user?.isSignedIn) {
+      setTargetIsUser(true);
+      setAccount(user?.uid || '');
+    }
     // eslint-disable-next-line
   }, [user]);
 
@@ -131,7 +134,9 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
       {images && images.length === 0 && (
         <div className={classes.message}>
           <Typography variant='body1' color='inherit'>
-            This user hasn't uploaded any images.
+            {targetIsUser
+              ? `You haven't uploaded any images yet. You can upload your images by selecting "Upload" from the profile dropdown. Any images you upload will show up here.`
+              : `This user hasn't uploaded any images.`}
           </Typography>
         </div>
       )}

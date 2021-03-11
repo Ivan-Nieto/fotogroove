@@ -64,15 +64,23 @@ const Slide = ({ Primary, Secondary, timeout, move, direction }: Props) => {
       setTimeout(() => {
         set(1);
       }, timeout);
+
+      return () => {
+        if (timeout > 0 && move) {
+          setTimeout(() => {
+            set(1);
+          }, timeout);
+        }
+      };
     }
     return () => {};
   }, [timeout, move]);
 
   return (
     <div className='simple-trans-main'>
-      {transition.map(({ item, props }, index: number) => {
+      {transition.map(({ item, props }, idx: number) => {
         const Page = pages[item];
-        return <Page key={`page-slide-${index}`} style={props} />;
+        return <Page key={`page-slide-${idx}`} style={props} />;
       })}
     </div>
   );

@@ -12,6 +12,7 @@ import Popper from '@material-ui/core/Popper';
 import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { useHistory } from 'react-router-dom';
+import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 
 import useUser from '../../hooks/useUser';
 
@@ -81,11 +82,18 @@ const ProfileDropdown = () => {
       icon: <CloudUploadIcon color='secondary' />,
       onClick: pushHistory('/upload'),
     },
+
+    {
+      label: 'My Gallery',
+      icon: <PhotoLibraryIcon color='secondary' />,
+      onClick: pushHistory('/gallery'),
+    },
     {
       label: 'Sign Out',
       icon: <ExitToAppRoundedIcon color='secondary' />,
-      onClick: () => {
-        signOut();
+      onClick: async () => {
+        await signOut();
+        history.push('/');
       },
     },
   ];

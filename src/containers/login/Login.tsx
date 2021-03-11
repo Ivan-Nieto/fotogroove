@@ -58,9 +58,10 @@ const Login = () => {
     setShowLogin(false);
   };
 
-  const toggleShowLogin = () => {
+  const toggleShowLogin = async () => {
     if (user?.isSignedIn) {
-      signOut();
+      await signOut();
+      setShowLogin(!showLogin);
       history.push('/');
       return;
     }
