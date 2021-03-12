@@ -11,6 +11,12 @@ import useUser from '../../hooks/useUser';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    appBar: {
+      position: 'relative',
+      top: '0',
+      right: '0',
+      left: '0',
+    },
     menuButton: {
       marginRight: theme.spacing(2),
     },
@@ -32,7 +38,7 @@ export default function NavigationBar() {
 
   return (
     <div>
-      <AppBar position='fixed'>
+      <AppBar position='relative' className={classes.appBar}>
         <Toolbar>
           <Typography
             onClick={() => history.push('/')}
