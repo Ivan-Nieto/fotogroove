@@ -52,10 +52,14 @@ const ProfileDropdown = () => {
   const user = useUser();
 
   useEffect(() => {
-    if (anchorRef.current && prevOpen.current && !open) {
+    let mounted = true;
+    if (anchorRef.current && prevOpen.current && !open && mounted) {
       anchorRef.current.focus();
     }
     prevOpen.current = open;
+    return () => {
+      mounted = false;
+    };
   }, [open]);
 
   const closeDropdown = (event: any) => {

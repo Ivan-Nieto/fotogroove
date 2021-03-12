@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import _ from 'lodash';
 
 import { useFormContext } from '../context/Context';
 
@@ -7,7 +8,11 @@ const useUser = () => {
   const { state } = useFormContext();
 
   useEffect(() => {
-    setUser(state?.user);
+    if (!_.isEqual(user, state?.user)) {
+      setUser(state?.user);
+    }
+
+    // eslint-disable-next-line
   }, [state, setUser]);
 
   return user;

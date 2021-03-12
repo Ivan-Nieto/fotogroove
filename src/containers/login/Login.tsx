@@ -49,19 +49,14 @@ const Login = () => {
 
     const response = await emailSignIn(email, password);
     if (response?.error) {
-      setError(true);
       setDisabled(false);
-      return;
+      setError(true);
     }
-
-    setDisabled(false);
-    setShowLogin(false);
   };
 
   const toggleShowLogin = async () => {
     if (user?.isSignedIn) {
       await signOut();
-      setShowLogin(!showLogin);
       history.push('/');
       return;
     }

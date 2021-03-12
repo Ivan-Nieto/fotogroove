@@ -55,15 +55,22 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
   const [targetIsUser, setTargetIsUser] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+
     const getImages = async () => {
       setPaginating(true);
       const images = await getUsersImages(account);
-      setImages(images?.images || []);
-      if (images?.images)
-        setLastEntry(images?.images[images?.images?.length - 1]);
-      setPaginating(false);
+      if (mounted) {
+        setImages(images?.images || []);
+        if (images?.images)
+          setLastEntry(images?.images[images?.images?.length - 1]);
+        setPaginating(false);
+      }
     };
     if (account !== '' && !paginating) getImages();
+    return () => {
+      mounted = false;
+    };
     // eslint-disable-next-line
   }, [account]);
 

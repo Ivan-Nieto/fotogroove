@@ -10,14 +10,15 @@ const useSyncAuth = () => {
   const { dispatch } = useFormContext();
 
   useEffect(() => {
+    let mounted = true;
     const authChange$ = new Subject<firebase.User | null>();
     const fbUnsubscribe = auth.onAuthStateChanged(authChange$);
     authChange$.subscribe((usr) => {
-      if (usr) {
+      if (usr && mounted) {
         // User is signed in.
         setUser(usr);
         dispatch({ type: 'SIGN_IN', value: usr });
-      } else if (user?.isSignedIn) {
+      } else if (mounted) {
         // No user is signed in.
         setUser(false);
         dispatch({ type: 'SIGN_OUT', value: User });
@@ -27,6 +28,7 @@ const useSyncAuth = () => {
     return () => {
       authChange$.unsubscribe();
       fbUnsubscribe();
+      mounted = false;
     };
     // eslint-disable-next-line
   }, [setUser, dispatch]);
