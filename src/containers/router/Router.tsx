@@ -13,6 +13,7 @@ import Gallery from '../gallery/Gallery';
 import WelcomePage from '../welcomePage/WelcomePage';
 import Registration from '../registration/Registration';
 import BrokenLink from '../../components/BrokenLink/BrokenLink';
+import Loader from '../../components/loader/Loader';
 
 const useStyles = makeStyles((theme: Theme) => ({
   flexChild: {
@@ -57,18 +58,25 @@ const Router = () => {
   return (
     <div className={color}>
       <BrowserRouter>
-        {user !== undefined && (
-          <div>
-            <Switch>
-              <Route exact path='/' component={withNav(WelcomePage)} />
-              <Route exact path='/gallery' component={withNav(Gallery)} />
-              <Route exact path='/upload' component={withNav(Upload)} />
-              <Route exact path='/view-image' component={ViewImage} />
-              <Route exact path='/register' component={withNav(Registration)} />
-              <Route exact path='*' component={BrokenLink} />
-            </Switch>
-          </div>
-        )}
+        <div>
+          <Switch>
+            {user == null && <Route exact path='/' component={Loader} />}
+            {user != null && (
+              <>
+                <Route exact path='/' component={withNav(WelcomePage)} />
+                <Route exact path='/gallery' component={withNav(Gallery)} />
+                <Route exact path='/upload' component={withNav(Upload)} />
+                <Route exact path='/view-image' component={ViewImage} />
+                <Route
+                  exact
+                  path='/register'
+                  component={withNav(Registration)}
+                />
+              </>
+            )}
+            <Route exact path='*' component={BrokenLink} />
+          </Switch>
+        </div>
       </BrowserRouter>
       <div>
         Icons made by

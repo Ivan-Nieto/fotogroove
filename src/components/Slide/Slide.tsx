@@ -60,20 +60,15 @@ const Slide = ({ Primary, Secondary, timeout, move, direction }: Props) => {
   }
 
   useEffect(() => {
+    let timer: any;
     if (timeout > 0 && move) {
-      setTimeout(() => {
+      timer = setTimeout(() => {
         set(1);
       }, timeout);
-
-      return () => {
-        if (timeout > 0 && move) {
-          setTimeout(() => {
-            set(1);
-          }, timeout);
-        }
-      };
     }
-    return () => {};
+    return () => {
+      clearTimeout(timer);
+    };
   }, [timeout, move]);
 
   return (

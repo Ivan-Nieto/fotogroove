@@ -17,10 +17,10 @@ const useSyncAuth = () => {
         // User is signed in.
         setUser(usr);
         dispatch({ type: 'SIGN_IN', value: usr });
-      } else {
+      } else if (user?.isSignedIn) {
         // No user is signed in.
         setUser(false);
-        dispatch({ type: 'SIGN_OUT', value: {} });
+        dispatch({ type: 'SIGN_OUT', value: User });
       }
     });
 
@@ -28,6 +28,7 @@ const useSyncAuth = () => {
       authChange$.unsubscribe();
       fbUnsubscribe();
     };
+    // eslint-disable-next-line
   }, [setUser, dispatch]);
 
   return user;

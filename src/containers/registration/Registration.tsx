@@ -26,9 +26,12 @@ const Registration = () => {
   const [flip, setFlip] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
+    let timer = setTimeout(() => {
       setFlip(true);
     }, 300);
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   return (
