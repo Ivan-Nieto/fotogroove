@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import MuDrawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -8,6 +8,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import clsx from 'clsx';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
+
+import useUser from '../../hooks/useUser';
 
 import Tags from '../Tags/Tags';
 
@@ -66,8 +68,10 @@ const Drawer = ({
   tags?: string[];
 }) => {
   const [open, setOpen] = useState(openByDefault);
+  const [ownsImage, setOwnsImage] = useState(false);
   const theme = useTheme();
   const classes = useStyles(theme);
+  const user = useUser();
 
   const toggleDrawer = (event: React.KeyboardEvent | React.MouseEvent) => {
     if (
@@ -81,13 +85,16 @@ const Drawer = ({
     setOpen(!open);
   };
 
+  useEffect(() => {
+    if (user?.isSignedIn && image?.author === user.uid) setOwnsImage(true);
+    else setOwnsImage(false);
+  }, [user, setOwnsImage, image]);
+
   return (
     <MuDrawer
       open={open}
       anchor={anchor}
       onClose={() => setOpen(false)}
-      onClick={toggleDrawer}
-      onKeyDown={toggleDrawer}
       variant='permanent'
       className={clsx(classes.drawer, {
         [classes.drawerOpen]: open,
@@ -108,7 +115,12 @@ const Drawer = ({
           <ListItemText>Tags</ListItemText>
         </ListItem>
         <ListItem>
-          <Tags tags={tags} docId={image?.id} open={open} />
+          <Tags
+            tags={tags}
+            docId={image?.docId}
+            open={open}
+            disableUpdate={!ownsImage}
+          />
         </ListItem>
       </List>
       <ListItem

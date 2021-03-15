@@ -46,7 +46,7 @@ const ViewImage = ({ imageLocation }: any) => {
         .catch();
 
       if (!imgDoc.empty) {
-        setImage(imgDoc.docs[0].data());
+        setImage({ ...imgDoc.docs[0].data(), docId: imgDoc.docs[0].id });
       }
     };
     getURL();
