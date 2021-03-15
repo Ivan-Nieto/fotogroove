@@ -5,9 +5,11 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import clsx from 'clsx';
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
+
+import Tags from '../Tags/Tags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -53,11 +55,15 @@ const Drawer = ({
   anchor = 'left',
   children,
   items,
+  tags,
+  image,
 }: {
   items?: any;
   openByDefault?: boolean;
+  image?: Record<string, any>;
   children?: any;
   anchor?: 'top' | 'right' | 'bottom' | 'left';
+  tags?: string[];
 }) => {
   const [open, setOpen] = useState(openByDefault);
   const theme = useTheme();
@@ -95,18 +101,15 @@ const Drawer = ({
       }}
     >
       <List className={classes.root}>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? (
-                <InboxIcon color='primary' />
-              ) : (
-                <MailIcon color='primary' />
-              )}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
+        <ListItem>
+          <ListItemIcon>
+            <LocalOfferIcon color='secondary' />
+          </ListItemIcon>
+          <ListItemText>Tags</ListItemText>
+        </ListItem>
+        <ListItem>
+          <Tags tags={tags} docId={image?.id} open={open} />
+        </ListItem>
       </List>
       <ListItem
         onClick={toggleDrawer}
@@ -115,7 +118,7 @@ const Drawer = ({
         className={classes.icon}
       >
         <ListItemIcon>
-          <InboxIcon color='primary' />
+          <KeyboardArrowRightIcon color='primary' />
         </ListItemIcon>
       </ListItem>
     </MuDrawer>

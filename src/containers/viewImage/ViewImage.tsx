@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { firestore } from '../../firebase/init';
 import { useTheme, Theme, makeStyles } from '@material-ui/core/styles';
 
 import useQuery from '../../hooks/useQuery';
@@ -31,12 +32,22 @@ const ViewImage = ({ imageLocation }: any) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const [url, setURL] = useState('');
+  const [image, setImage]: any = useState({});
   const query = useQuery();
 
   useEffect(() => {
     const getURL = async () => {
       const paramUrl = query.get('url');
       setURL(await getDownloadURL(paramUrl || imageLocation || ''));
+      const imgDoc = await firestore
+        .collection('images')
+        .where('url', '==', paramUrl || imageLocation || '')
+        .get()
+        .catch();
+
+      if (!imgDoc.empty) {
+        setImage(imgDoc.docs[0].data());
+      }
     };
     getURL();
     // eslint-disable-next-line
@@ -44,7 +55,7 @@ const ViewImage = ({ imageLocation }: any) => {
 
   return (
     <div className={classes.root}>
-      <Drawer openByDefault={true} />
+      <Drawer openByDefault={false} tags={image?.tags} image={image} />
       <div className={classes.container}>
         <img src={url} alt={''} className={classes.img} />
       </div>
