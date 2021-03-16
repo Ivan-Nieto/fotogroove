@@ -3,7 +3,9 @@ import { firestore } from '../../firebase/init';
 import { useTheme, Theme, makeStyles } from '@material-ui/core/styles';
 
 import useQuery from '../../hooks/useQuery';
+import useUser from '../../hooks/useUser';
 
+import { functions } from '../../firebase/init';
 import { getDownloadURL } from '../../firebase/firestore/firestore';
 import Drawer from '../../components/Drawer/Drawer';
 
@@ -33,6 +35,8 @@ const ViewImage = ({ imageLocation }: any) => {
   const classes = useStyles(theme);
   const [url, setURL] = useState('');
   const [image, setImage]: any = useState({});
+  const [viewed, setViewed] = useState(false);
+  const user = useUser();
   const query = useQuery();
 
   useEffect(() => {
@@ -45,13 +49,26 @@ const ViewImage = ({ imageLocation }: any) => {
         .get()
         .catch();
 
-      if (!imgDoc.empty) {
-        setImage({ ...imgDoc.docs[0].data(), docId: imgDoc.docs[0].id });
-      }
+      if (!imgDoc.empty)
+        setImage({
+          ...imgDoc.docs[0].data(),
+          docId: imgDoc.docs[0].id,
+        });
     };
+
     getURL();
+
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (viewed || user.isSignedIn == null || image?.author == null) return;
+    setViewed(true);
+    const updateViewCounter = functions.httpsCallable('updateViewCounter');
+
+    if (image?.docId && image?.author !== user?.uid)
+      updateViewCounter(image?.docId).catch(console.error);
+  }, [image, user, viewed, setViewed]);
 
   return (
     <div className={classes.root}>

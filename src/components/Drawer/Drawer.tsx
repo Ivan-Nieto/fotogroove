@@ -8,6 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import clsx from 'clsx';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
+import Divider from '@material-ui/core/Divider';
 
 import useUser from '../../hooks/useUser';
 
@@ -50,6 +51,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     bottom: '0%',
   },
+  divider: {
+    backgroundColor: theme.palette.grey[400],
+  },
 }));
 
 const Drawer = ({
@@ -72,6 +76,7 @@ const Drawer = ({
   const theme = useTheme();
   const classes = useStyles(theme);
   const user = useUser();
+  const hasRez = Boolean(image?.resolution?.height && image?.resolution?.width);
 
   const toggleDrawer = (event: React.KeyboardEvent | React.MouseEvent) => {
     if (
@@ -108,6 +113,19 @@ const Drawer = ({
       }}
     >
       <List className={classes.root}>
+        {hasRez && (
+          <ListItem>
+            <ListItemIcon></ListItemIcon>
+            <ListItemText>
+              {image?.resolution?.width} x {image?.resolution?.height}
+            </ListItemText>
+          </ListItem>
+        )}
+        <ListItem>
+          <ListItemIcon></ListItemIcon>
+          <ListItemText>Views: {image?.views || 1}</ListItemText>
+        </ListItem>
+        <Divider className={classes.divider} />
         <ListItem>
           <ListItemIcon>
             <LocalOfferIcon color='secondary' />
