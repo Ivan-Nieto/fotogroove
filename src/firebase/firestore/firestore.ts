@@ -3,7 +3,6 @@ import { storage } from '../init';
 
 export const runImageQuery = async (query: any) => {
   const snapshot: any = await query.get().catch((err: any) => {
-    console.log(err);
     return { error: err };
   });
 

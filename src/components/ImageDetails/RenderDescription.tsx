@@ -48,6 +48,7 @@ const RenderDescription = ({
 
   const handleChangeDescription = (event: any) => {
     setDescription(event.target.value || '');
+    setUpdateDescription(true);
   };
 
   const handleUpdateDescription = async () => {
