@@ -64,7 +64,7 @@ const Input = (props: InputProps) => {
         error={props.error}
         defaultValue={props.defaultValue}
         disabled={props.disabled}
-        variant='outlined'
+        variant={props.variant || 'outlined'}
       />
     </div>
   );

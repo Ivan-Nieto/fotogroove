@@ -92,7 +92,8 @@ const Tags = ({
   };
 
   const handleChange = (event: any) => {
-    setNewTags(event.target.value || '');
+    const newStr: string = event.target.value || '';
+    setNewTags(newStr.toLowerCase().replaceAll(' ', '-'));
   };
 
   const handleDelete = (id: string) => async () => {

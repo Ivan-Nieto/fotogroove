@@ -7,7 +7,7 @@ import useUser from '../../hooks/useUser';
 
 import { functions } from '../../firebase/init';
 import { getDownloadURL } from '../../firebase/firestore/firestore';
-import Drawer from '../../components/Drawer/Drawer';
+import ImageDetails from '../../components/ImageDetails/ImageDetails';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -72,7 +72,7 @@ const ViewImage = ({ imageLocation }: any) => {
 
   return (
     <div className={classes.root}>
-      <Drawer openByDefault={false} tags={image?.tags} image={image} />
+      <ImageDetails openByDefault={false} tags={image?.tags} image={image} />
       <div className={classes.container}>
         <img src={url} alt={''} className={classes.img} />
       </div>

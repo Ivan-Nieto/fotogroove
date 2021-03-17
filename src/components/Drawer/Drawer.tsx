@@ -1,28 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import MuDrawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import clsx from 'clsx';
-import LocalOfferIcon from '@material-ui/icons/LocalOffer';
-import Divider from '@material-ui/core/Divider';
-
-import useUser from '../../hooks/useUser';
-
-import Tags from '../Tags/Tags';
+import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.palette.grey[100],
-    height: '100vh',
-  },
   drawer: {
-    width: '240px',
+    width: 'auto',
     flexShrink: 0,
     whiteSpace: 'nowrap',
+  },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
+    backgroundColor: theme.palette.grey[100],
   },
   drawerOpen: {
     width: '240px',
@@ -31,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
+    overflowX: 'hidden',
   },
   drawerClose: {
     transition: theme.transitions.create('width', {
@@ -44,39 +42,23 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: theme.spacing(7) + 1,
     },
   },
-  icon: {
-    backgroundColor: theme.palette.grey[100],
-  },
-  close: {
-    position: 'relative',
-    bottom: '0%',
-  },
-  divider: {
-    backgroundColor: theme.palette.grey[400],
-  },
 }));
 
 const Drawer = ({
-  openByDefault = false,
   anchor = 'left',
   children,
-  items,
-  tags,
-  image,
+  open,
+  setOpen,
 }: {
-  items?: any;
+  open: boolean;
+  setOpen: any;
   openByDefault?: boolean;
   image?: Record<string, any>;
   children?: any;
   anchor?: 'top' | 'right' | 'bottom' | 'left';
-  tags?: string[];
 }) => {
-  const [open, setOpen] = useState(openByDefault);
-  const [ownsImage, setOwnsImage] = useState(false);
   const theme = useTheme();
   const classes = useStyles(theme);
-  const user = useUser();
-  const hasRez = Boolean(image?.resolution?.height && image?.resolution?.width);
 
   const toggleDrawer = (event: React.KeyboardEvent | React.MouseEvent) => {
     if (
@@ -89,11 +71,6 @@ const Drawer = ({
 
     setOpen(!open);
   };
-
-  useEffect(() => {
-    if (user?.isSignedIn && image?.author === user.uid) setOwnsImage(true);
-    else setOwnsImage(false);
-  }, [user, setOwnsImage, image]);
 
   return (
     <MuDrawer
@@ -112,45 +89,16 @@ const Drawer = ({
         }),
       }}
     >
-      <List className={classes.root}>
-        {hasRez && (
-          <ListItem>
-            <ListItemIcon></ListItemIcon>
-            <ListItemText>
-              {image?.resolution?.width} x {image?.resolution?.height}
-            </ListItemText>
-          </ListItem>
-        )}
-        <ListItem>
-          <ListItemIcon></ListItemIcon>
-          <ListItemText>Views: {image?.views || 1}</ListItemText>
-        </ListItem>
-        <Divider className={classes.divider} />
-        <ListItem>
-          <ListItemIcon>
-            <LocalOfferIcon color='secondary' />
-          </ListItemIcon>
-          <ListItemText>Tags</ListItemText>
-        </ListItem>
-        <ListItem>
-          <Tags
-            tags={tags}
-            docId={image?.docId}
-            open={open}
-            disableUpdate={!ownsImage}
-          />
-        </ListItem>
-      </List>
-      <ListItem
-        onClick={toggleDrawer}
-        button
-        key='close-open'
-        className={classes.icon}
-      >
-        <ListItemIcon>
-          <KeyboardArrowRightIcon color='primary' />
-        </ListItemIcon>
-      </ListItem>
+      {children}
+      <div className={classes.drawerHeader}>
+        <IconButton onClick={toggleDrawer}>
+          {open ? (
+            <ChevronLeftIcon color='secondary' />
+          ) : (
+            <ChevronRightIcon color='secondary' />
+          )}
+        </IconButton>
+      </div>
     </MuDrawer>
   );
 };

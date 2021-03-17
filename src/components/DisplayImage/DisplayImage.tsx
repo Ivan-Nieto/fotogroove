@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useTheme, Theme, makeStyles } from "@material-ui/core/styles";
-import Skeleton from "@material-ui/lab/Skeleton";
+import React, { useState, useEffect } from 'react';
+import { useTheme, Theme, makeStyles } from '@material-ui/core/styles';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -30,14 +30,14 @@ interface Image {
 }
 
 interface DisplayImageProps {
-  size?: "small" | "large";
+  size?: 'small' | 'large';
   image: Image;
 }
 
 const DisplayImage = ({ size, image }: DisplayImageProps) => {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState('');
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -50,10 +50,10 @@ const DisplayImage = ({ size, image }: DisplayImageProps) => {
       portraitSmall || portraitLarge || landscapeLarge || landscapeSmall;
 
     switch (size) {
-      case "large":
+      case 'large':
         setUrl(portraitLarge || defaultImage);
         break;
-      case "small":
+      case 'small':
         setUrl(portraitSmall || defaultImage);
         break;
       default:
@@ -65,18 +65,19 @@ const DisplayImage = ({ size, image }: DisplayImageProps) => {
     <div>
       <img
         src={url}
-        alt={image?.description || ""}
+        alt={image?.description || ''}
         onLoad={() => setLoaded(true)}
         className={classes.root}
-        width={size === "small" ? 300 : 680}
-        height={size === "small" ? 200 : 400}
+        width={size === 'small' ? 300 : 680}
+        height={size === 'small' ? 200 : 400}
       />
 
       {!loaded && (
         <Skeleton
-          variant="rect"
-          width={size === "small" ? 300 : 680}
-          height={size === "small" ? 200 : 400}
+          animation='wave'
+          variant='rect'
+          width={size === 'small' ? 300 : 680}
+          height={size === 'small' ? 200 : 400}
         />
       )}
     </div>
