@@ -4,6 +4,7 @@ import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 
 import useUser from '../../hooks/useUser';
 import useSyncAuth from '../../context/subscriptions/useSyncAuth';
+import useSyncUserDoc from '../../context/subscriptions/useSyncUserDoc';
 
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Upload from '../upload/Upload';
@@ -39,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Router = () => {
   const user = useUser();
   useSyncAuth();
+  useSyncUserDoc();
   const theme = useTheme();
   const { flexChild, link, color, navBar, content } = useStyles(theme);
 

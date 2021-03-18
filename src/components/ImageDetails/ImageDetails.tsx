@@ -13,6 +13,7 @@ import Tags from '../Tags/Tags';
 import Drawer from '../Drawer/Drawer';
 import RenderDescription from './RenderDescription';
 import RenderImageDetails from './RenderImageDetails';
+import RenderFavorite from './RenderFavorite';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -91,13 +92,21 @@ const ImageDetails = ({
             </ListItemText>
           </ListItem>
         )}
+        {user?.isSignedIn && open && (
+          <ListItem className={classes.item}>
+            <RenderFavorite user={user} image={image} />
+          </ListItem>
+        )}
+
         <Divider className={classes.divider} />
+
         <ListItem>
           <ListItemIcon>
             <LocalOfferIcon color='secondary' />
           </ListItemIcon>
           <ListItemText>Tags</ListItemText>
         </ListItem>
+
         <ListItem className={classes.item}>
           <Tags
             tags={tags}
@@ -106,9 +115,11 @@ const ImageDetails = ({
             disableUpdate={!ownsImage}
           />
         </ListItem>
+
         <ListItem className={classes.item}>
           <RenderImageDetails image={image} author={author} open={open} />
         </ListItem>
+
         {image?.description !== null && (
           <RenderDescription open={open} image={image} ownsImage={ownsImage} />
         )}

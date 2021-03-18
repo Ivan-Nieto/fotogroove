@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    width: '100%',
     backgroundColor: theme.palette.grey[200],
+
+    padding: '10px',
     borderRadius: '10px',
   },
   title: {
@@ -64,7 +66,7 @@ const RenderImageDetails = ({
   }, [image, author, setItems]);
 
   return (
-    <ListItem className={open ? classes.root : ''}>
+    <div className={open ? classes.root : ''}>
       {open && items.length > 0 && (
         <div>
           <Typography className={classes.title} variant='body1'>
@@ -77,7 +79,7 @@ const RenderImageDetails = ({
           ))}
         </div>
       )}
-    </ListItem>
+    </div>
   );
 };
 
