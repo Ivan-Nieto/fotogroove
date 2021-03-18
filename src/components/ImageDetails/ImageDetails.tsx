@@ -12,6 +12,7 @@ import useUser from '../../hooks/useUser';
 import Tags from '../Tags/Tags';
 import Drawer from '../Drawer/Drawer';
 import RenderDescription from './RenderDescription';
+import RenderImageDetails from './RenderImageDetails';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -50,6 +51,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     bottom: '0%',
   },
+  item: {
+    padding: '20px 10px',
+  },
   divider: {
     backgroundColor: theme.palette.grey[400],
   },
@@ -58,12 +62,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 const ImageDetails = ({
   tags,
   image,
+  author,
 }: {
-  items?: any;
-  openByDefault?: boolean;
+  author: Record<string, any>;
   image?: Record<string, any>;
-  children?: any;
-  anchor?: 'top' | 'right' | 'bottom' | 'left';
   tags?: string[];
 }) => {
   const [ownsImage, setOwnsImage] = useState(true);
@@ -89,10 +91,6 @@ const ImageDetails = ({
             </ListItemText>
           </ListItem>
         )}
-        <ListItem>
-          <ListItemIcon></ListItemIcon>
-          <ListItemText>Views: {image?.views || 1}</ListItemText>
-        </ListItem>
         <Divider className={classes.divider} />
         <ListItem>
           <ListItemIcon>
@@ -100,13 +98,16 @@ const ImageDetails = ({
           </ListItemIcon>
           <ListItemText>Tags</ListItemText>
         </ListItem>
-        <ListItem>
+        <ListItem className={classes.item}>
           <Tags
             tags={tags}
             docId={image?.docId}
             open={open}
             disableUpdate={!ownsImage}
           />
+        </ListItem>
+        <ListItem className={classes.item}>
+          <RenderImageDetails image={image} author={author} open={open} />
         </ListItem>
         {image?.description !== null && (
           <RenderDescription open={open} image={image} ownsImage={ownsImage} />

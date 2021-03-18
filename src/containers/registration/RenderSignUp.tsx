@@ -70,7 +70,7 @@ const RenderSignUp = () => {
 
     // Make sure username is unique
     const exists = await firestore
-      .collection('usernames')
+      .collection('users')
       .where('userName', '==', event?.userName || '')
       .get()
       .then((snapshot) => {

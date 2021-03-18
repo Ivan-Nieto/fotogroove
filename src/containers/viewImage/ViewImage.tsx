@@ -36,10 +36,12 @@ const ViewImage = ({ imageLocation }: any) => {
   const [url, setURL] = useState('');
   const [image, setImage]: any = useState({});
   const [viewed, setViewed] = useState(false);
+  const [author, setAuthor] = useState({});
   const user = useUser();
   const query = useQuery();
 
   useEffect(() => {
+    let mounted = true;
     const getURL = async () => {
       const paramUrl = query.get('url');
       setURL(await getDownloadURL(paramUrl || imageLocation || ''));
@@ -49,11 +51,29 @@ const ViewImage = ({ imageLocation }: any) => {
         .get()
         .catch();
 
-      if (!imgDoc.empty)
+      if (!imgDoc.empty && mounted) {
+        const docData = imgDoc.docs[0].data();
         setImage({
-          ...imgDoc.docs[0].data(),
+          ...docData,
           docId: imgDoc.docs[0].id,
         });
+
+        if (docData?.author)
+          await firestore
+            .collection('users')
+            .doc(docData?.author)
+            .get()
+            .then((response) => {
+              if (!mounted) return;
+              const data = response?.data() || {};
+              setAuthor({ ...data });
+            })
+            .catch();
+      }
+
+      return () => {
+        mounted = false;
+      };
     };
 
     getURL();
@@ -72,7 +92,7 @@ const ViewImage = ({ imageLocation }: any) => {
 
   return (
     <div className={classes.root}>
-      <ImageDetails openByDefault={false} tags={image?.tags} image={image} />
+      <ImageDetails tags={image?.tags} image={image} author={author} />
       <div className={classes.container}>
         <img src={url} alt={''} className={classes.img} />
       </div>
