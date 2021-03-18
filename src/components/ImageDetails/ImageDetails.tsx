@@ -54,6 +54,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   item: {
     padding: '20px 10px',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
   },
   divider: {
     backgroundColor: theme.palette.grey[400],

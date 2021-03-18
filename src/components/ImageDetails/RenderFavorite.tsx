@@ -3,7 +3,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
 import Button from '../Button/Button';
-import { firestore } from '../../firebase/init';
+import { firestore, functions } from '../../firebase/init';
 
 const RenderFavorite = ({ user, image }: any) => {
   const [disabled, setDisabled] = React.useState(false);
@@ -25,6 +25,10 @@ const RenderFavorite = ({ user, image }: any) => {
     setFavorites(user?.userDoc?.favorites || []);
   }, [user, image]);
 
+  const updateFavoriteCounter = functions.httpsCallable(
+    'updateFavoriteCounter'
+  );
+
   const handleClick = async () => {
     const docId = image?.docId || '';
 
@@ -45,6 +49,10 @@ const RenderFavorite = ({ user, image }: any) => {
       await firestore.collection('users').doc(user?.uid).update({
         favorites: newFavorites,
       });
+
+      // Update favorites counter
+      updateFavoriteCounter({ increment: !alreadyFaved, docId }).catch();
+
       setAlreadyFaved(!alreadyFaved);
     } catch (error) {}
 

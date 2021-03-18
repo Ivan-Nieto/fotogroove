@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     padding: '10px',
     borderRadius: '10px',
+    textAlign: 'left',
   },
   title: {
     width: '100%',
