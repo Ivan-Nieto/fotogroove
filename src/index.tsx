@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from '@material-ui/core/styles';
+import { BrowserRouter } from 'react-router-dom';
 
 import ContextProvider from './context/Context';
 import customTheme from './theme/theme';
@@ -12,7 +13,9 @@ ReactDOM.render(
   <React.StrictMode>
     <ContextProvider>
       <ThemeProvider theme={customTheme}>
-        <Router />
+        <BrowserRouter>
+          <Router />
+        </BrowserRouter>
       </ThemeProvider>
     </ContextProvider>
   </React.StrictMode>,

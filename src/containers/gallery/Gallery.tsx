@@ -3,6 +3,7 @@ import { useTheme, Theme, makeStyles } from '@material-ui/core/styles';
 
 import useQuery from '../../hooks/useQuery';
 import useUser from '../../hooks/useUser';
+import useScroll from '../../hooks/useScroll';
 
 import DisplayImage from '../../components/DisplayImage/DisplayImage';
 import { getUsersImages } from '../../firebase/firestore/firestore';
@@ -10,14 +11,11 @@ import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    overflowY: 'hidden',
     minHeight: '600px',
     overflowX: 'hidden',
     padding: '30px 30px 0px 30px',
-    backgroundColor: theme.palette.grey[100],
   },
   container: {
-    height: 'calc(100vh - 140px)',
     overflowY: 'scroll',
     marginRight: '-50px',
     paddingRight: '50px',
@@ -46,6 +44,7 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
   const classes = useStyles(theme);
   const query = useQuery();
   const user = useUser();
+  const bottomHit = useScroll();
 
   const [images, setImages]: any = useState(false);
   const [account, setAccount] = useState('');
@@ -53,6 +52,40 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
   const [paginating, setPaginating] = useState(false);
   const [endReached, setEndReached] = useState(false);
   const [targetIsUser, setTargetIsUser] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    const update = async () => {
+      if (bottomHit !== 0 && !paginating && !endReached && mounted) {
+        setPaginating(true);
+        // Get new set of images
+        const newImgs = await getUsersImages(account, lastEntry);
+
+        if (!mounted) return;
+
+        // Add new images to current set
+        const newImages = images.concat(newImgs.images || []);
+        setImages(newImages);
+
+        // Decide weather or not this is the end of the list
+        const newLastEntry = newImgs.images
+          ? newImgs.images[newImgs?.images?.length - 1]
+          : false;
+        if (lastEntry && (!newLastEntry || newLastEntry.id === lastEntry.id)) {
+          setEndReached(true);
+        } else setLastEntry(newLastEntry);
+
+        setPaginating(false);
+      }
+    };
+
+    update();
+
+    return () => {
+      mounted = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bottomHit]);
 
   useEffect(() => {
     let mounted = true;
@@ -97,36 +130,10 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
     win?.focus();
   };
 
-  // Paginates when bottom of page is reached.
-  const handleScroll = async (e: any) => {
-    // True if bottom was reached
-    const bottom =
-      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    if (bottom && !paginating && !endReached) {
-      setPaginating(true);
-      // Get new set of images
-      const newImgs = await getUsersImages(account, lastEntry);
-
-      // Add new images to current set
-      const newImages = images.concat(newImgs.images || []);
-      setImages(newImages);
-
-      // Decide weather or not this is the end of the list
-      const newLastEntry = newImgs.images
-        ? newImgs.images[newImgs?.images?.length - 1]
-        : false;
-      if (lastEntry && (!newLastEntry || newLastEntry.id === lastEntry.id)) {
-        setEndReached(true);
-      } else setLastEntry(newLastEntry);
-
-      setPaginating(false);
-    }
-  };
-
   return (
     <div className={classes.root}>
       {images.length > 0 && (
-        <div className={classes.container} onScroll={handleScroll}>
+        <div className={classes.container}>
           {images.map((img: any, index: number) => (
             <div
               key={`img${index}`}

@@ -24,9 +24,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   img: {
     margin: 'auto',
     padding: 'auto',
-    maxWidth: 'calc(100vw - 100px)',
-    maxHeight: 'calc(100vh - 100px)',
-    height: 'auto',
+    maxWidth: 'calc(100vw - 60px)',
+    maxHeight: 'calc(100vh - 60px)',
+    height: '100%',
   },
 }));
 
