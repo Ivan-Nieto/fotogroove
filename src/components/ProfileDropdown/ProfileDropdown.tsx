@@ -34,11 +34,8 @@ const useStyles = makeStyles((theme?: Theme) => ({
     justifyContent: 'center',
   },
   button: {
-    '&:hover': {
-      backgroundColor: 'inherit',
-      color: theme?.palette.common?.white,
-      borderColor: 'inherit',
-    },
+    textTransform: 'none',
+    border: 'none',
   },
 }));
 

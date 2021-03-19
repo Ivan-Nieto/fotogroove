@@ -19,7 +19,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   link: {
     textDecoration: 'none',
-    color: 'black',
+    color: theme.palette.grey[400],
+  },
+  text: {
+    color: theme.palette.grey[400],
   },
 }));
 
@@ -29,8 +32,8 @@ const Footer = () => {
 
   return (
     <div className={classes.root}>
-      <Typography variant='subtitle1'>
-        Icons made by
+      <Typography variant='subtitle1' className={classes.text}>
+        Icons made by{' '}
         <a
           href='https://www.freepik.com'
           className={classes.link}
