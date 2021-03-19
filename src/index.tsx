@@ -10,15 +10,13 @@ import customTheme from './theme/theme';
 import Router from './containers/router/Router';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <ContextProvider>
-      <ThemeProvider theme={customTheme}>
-        <BrowserRouter>
-          <Router />
-        </BrowserRouter>
-      </ThemeProvider>
-    </ContextProvider>
-  </React.StrictMode>,
+  <ContextProvider>
+    <ThemeProvider theme={customTheme}>
+      <BrowserRouter>
+        <Router />
+      </BrowserRouter>
+    </ThemeProvider>
+  </ContextProvider>,
   document.getElementById('root')
 );
 
