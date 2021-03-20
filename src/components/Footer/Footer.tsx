@@ -37,9 +37,9 @@ const Footer = () => {
         <a
           href='https://www.freepik.com'
           className={classes.link}
-          title='Freepik'
+          title='Good Ware'
         >
-          Freepik
+          Good Ware
         </a>{' '}
         from{' '}
         <a

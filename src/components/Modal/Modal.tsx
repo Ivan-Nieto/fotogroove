@@ -13,12 +13,14 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     modal: {
       display: 'flex',
+      outline: 'none',
       alignItems: 'center',
       justifyContent: 'center',
     },
     paper: {
       backgroundColor: theme.palette.grey[100],
       borderRadius: '10px',
+      outline: 'none',
     },
   })
 );
@@ -28,6 +30,7 @@ const Modal = ({ children, open, setOpen }: any) => {
   const classes = useStyles(theme);
 
   const style = useSpring({
+    outline: 'none',
     from: { opacity: 0 },
     to: { opacity: open ? 1 : 0 },
   });

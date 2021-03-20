@@ -8,7 +8,6 @@ import useSyncUserDoc from '../../context/subscriptions/useSyncUserDoc';
 
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Upload from '../upload/Upload';
-// import MainPage from "../mainPage/MainPage";
 import ViewImage from '../viewImage/ViewImage';
 import Gallery from '../gallery/Gallery';
 import WelcomePage from '../welcomePage/WelcomePage';
