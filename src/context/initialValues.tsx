@@ -7,6 +7,7 @@ export const User = {
 export const initialValues = {
   user: User,
   userDoc: {},
+  collections: [],
 };
 
 export default initialValues;

@@ -1,7 +1,7 @@
 import { User } from './initialValues';
 
-interface Action {
-  type: 'SIGN_IN' | 'SIGN_OUT' | 'UPDATE_USER';
+export interface Action {
+  type: 'SIGN_IN' | 'SIGN_OUT' | 'UPDATE_USER' | 'UPDATE_USER_COLLECTIONS';
   value?: Record<string, any>;
 }
 
@@ -13,6 +13,14 @@ const reducer = (state: Record<string, any>, action: Action) => {
       return {
         ...state,
         user: { ...User, ...action.value, isSignedIn: false },
+      };
+    case 'UPDATE_USER_COLLECTIONS':
+      return {
+        ...state,
+        user: {
+          ...state?.user,
+          collections: action.value,
+        },
       };
     case 'UPDATE_USER':
       return {

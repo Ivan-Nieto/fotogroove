@@ -13,16 +13,22 @@ const RenderFavorite = ({ user, image }: any) => {
   useEffect(() => {
     if (
       !image?.docId ||
-      user?.userDoc?.favorites == null ||
-      user?.userDoc?.favorites?.length === 0
+      user?.collections == null ||
+      user?.collections?.length === 0
     )
       return;
 
+    // Check if user had favorites collection
+    const favoritesCollection = user?.collections.filter(
+      (e: { name: string }) => e.name === 'Favorites'
+    )[0];
+    if (favoritesCollection.length === 0) return;
+
     // Check if current image is already favored by user
-    if (user?.userDoc?.favorites?.includes(image?.docId)) {
+    if (favoritesCollection.images?.includes(image?.docId)) {
       setAlreadyFaved(true);
     }
-    setFavorites(user?.userDoc?.favorites || []);
+    setFavorites(favoritesCollection.images || []);
   }, [user, image]);
 
   const updateFavoriteCounter = functions.httpsCallable(
@@ -46,15 +52,26 @@ const RenderFavorite = ({ user, image }: any) => {
         newFavorites = newFavorites.filter((e) => e !== docId);
       }
 
-      await firestore.collection('users').doc(user?.uid).update({
-        favorites: newFavorites,
-      });
+      const favoritesCollection = user?.collections?.filter(
+        (e: { name: string }) => e.name === 'Favorites'
+      )[0];
+
+      await firestore
+        .collection('users')
+        .doc(user?.uid)
+        .collection('collections')
+        .doc(favoritesCollection.docId || '')
+        .update({
+          images: newFavorites,
+        });
 
       // Update favorites counter
       updateFavoriteCounter({ increment: !alreadyFaved, docId }).catch();
 
       setAlreadyFaved(!alreadyFaved);
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
 
     setDisabled(false);
   };
