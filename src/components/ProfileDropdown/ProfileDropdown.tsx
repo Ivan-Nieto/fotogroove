@@ -13,6 +13,7 @@ import ExitToAppRoundedIcon from '@material-ui/icons/ExitToAppRounded';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { useHistory } from 'react-router-dom';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
+import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
 
 import useUser from '../../hooks/useUser';
 
@@ -88,6 +89,11 @@ const ProfileDropdown = () => {
       label: 'My Gallery',
       icon: <PhotoLibraryIcon color='secondary' />,
       onClick: pushHistory('/gallery'),
+    },
+    {
+      label: 'My Collections',
+      icon: <CollectionsBookmarkIcon color='secondary' />,
+      onClick: pushHistory('/collections'),
     },
     {
       label: 'Sign Out',

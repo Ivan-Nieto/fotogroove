@@ -39,7 +39,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
+const Gallery = ({
+  targetAccount,
+  imageSource,
+}: {
+  targetAccount?: string;
+  imageSource?: any;
+}) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const query = useQuery();
@@ -59,12 +65,13 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
       if (bottomHit !== 0 && !paginating && !endReached && mounted) {
         setPaginating(true);
         // Get new set of images
-        const newImgs = await getUsersImages(account, lastEntry);
+        const queryFunction = imageSource ? imageSource : getUsersImages;
+        const newImgs = await queryFunction(account, lastEntry);
 
         if (!mounted) return;
 
         // Add new images to current set
-        const newImages = images.concat(newImgs.images || []);
+        const newImages = (images || []).concat(newImgs.images || []);
         setImages(newImages);
 
         // Decide weather or not this is the end of the list
@@ -92,7 +99,8 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
 
     const getImages = async () => {
       setPaginating(true);
-      const images = await getUsersImages(account);
+      const queryFunction = imageSource ? imageSource : getUsersImages;
+      const images = await queryFunction(account);
       if (mounted) {
         setImages(images?.images || []);
         if (images?.images)

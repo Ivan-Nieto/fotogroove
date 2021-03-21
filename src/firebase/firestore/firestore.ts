@@ -1,5 +1,6 @@
 import { firestore } from '../init';
 import { storage } from '../init';
+import firebase from 'firebase/app';
 
 export const runImageQuery = async (query: any) => {
   const snapshot: any = await query.get().catch((err: any) => {
@@ -85,4 +86,18 @@ export const getDownloadURL = async (fileLocation: string) => {
     .catch((error) => {
       return '';
     });
+};
+
+export const getImagesFromList = async (images: string[]) => (
+  lastEntry?: any
+) => {
+  let query = firestore
+    .collection('images')
+    .where(firebase.firestore.FieldPath.documentId(), 'in', images || [''])
+    .limit(15);
+
+  if (lastEntry)
+    query = query.startAfter(lastEntry.rating, lastEntry.createDate);
+
+  return runImageQuery(query);
 };

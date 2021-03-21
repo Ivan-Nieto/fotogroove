@@ -16,6 +16,7 @@ import Registration from '../registration/Registration';
 import BrokenLink from '../../components/BrokenLink/BrokenLink';
 import Loader from '../../components/loader/Loader';
 import Footer from '../../components/Footer/Footer';
+import ViewCollections from '../viewCollections/ViewCollections';
 
 const useStyles = makeStyles((theme: Theme) => ({
   color: {
@@ -73,6 +74,11 @@ const Router = () => {
               <Route exact path='/upload' component={withNav(Upload)} />
               <Route exact path='/view-image' component={ViewImage} />
               <Route exact path='/register' component={withNav(Registration)} />
+              <Route
+                exact
+                path='/collections'
+                component={withNav(ViewCollections)}
+              />
             </>
           )}
           <Route exact path='*' component={BrokenLink} />
