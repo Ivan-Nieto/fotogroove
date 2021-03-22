@@ -40,13 +40,13 @@ const CustomTextField = withStyles((theme: Theme) => ({
 }))(TextField);
 
 interface InputProps {
-  value: any;
-  type: 'text' | 'password' | 'number';
+  value?: any;
+  type?: 'text' | 'password' | 'number';
   disabled?: boolean;
   error?: boolean;
   label?: string;
   defaultValue?: string | number;
-  onChange: (event: any) => void | undefined;
+  onChange?: (event: any) => void | undefined;
   [key: string]: any;
 }
 

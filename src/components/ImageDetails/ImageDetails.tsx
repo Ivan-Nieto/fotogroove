@@ -14,6 +14,7 @@ import Drawer from '../Drawer/Drawer';
 import RenderDescription from './RenderDescription';
 import RenderImageDetails from './RenderImageDetails';
 import RenderFavorite from './RenderFavorite';
+import RenderCollectionSelect from './RenderCollectionSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -73,6 +74,9 @@ const ImageDetails = ({
         )}
 
         <Divider className={classes.divider} />
+        <ListItem>
+          <RenderCollectionSelect image={image} />
+        </ListItem>
 
         <ListItem>
           <ListItemIcon>
