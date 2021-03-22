@@ -14,12 +14,20 @@ import Input from '@material-ui/core/Input';
 
 import useUser from '../../hooks/useUser';
 
+import { addRemoveImageFromCollections } from '../../firebase/firestore/collections';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+      borderRadius: '5px',
+      backgroundColor: theme.palette.grey[200],
+      padding: '5px',
+      justifyItems: 'center',
+      alignItems: 'center',
+    },
     formControl: {
       margin: theme.spacing(1),
       minWidth: 120,
-      maxWidth: 300,
     },
     chips: {
       display: 'flex',
@@ -30,6 +38,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     noLabel: {
       marginTop: theme.spacing(3),
+    },
+    active: {
+      fontWeight: theme.typography.fontWeightBold,
+    },
+    input: {
+      width: '150px',
     },
   })
 );
@@ -58,7 +72,7 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
 
   const [disabled, setDisabled] = useState(false);
   const [collections, setCollections]: [Image[], any] = useState([]);
-  const [activeCollections, setActiveCollections]: [string[], any] = useState(
+  const [activeCollections, setActiveCollections]: [Image[], any] = useState(
     []
   );
 
@@ -89,43 +103,65 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
     }
   }, [user, image]);
 
-  const getNameOfCol = (id: string) => {
-    return collections.filter((e: Image) => e.docId === id)[0] || {};
-  };
-
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleChange = async (event: React.ChangeEvent<{ value: unknown }>) => {
     setDisabled(true);
 
     const newCollections: string[] = (event.target.value as string[]) || [];
-    const removedCollections = activeCollections.filter(
-      (e) => !newCollections.includes(e)
-    );
+    const value = newCollections[newCollections.length - 1];
 
-    const addedCollections = newCollections.filter(
-      (e) => !activeCollections.includes(e)
-    );
+    const alreadyInArr =
+      activeCollections.filter((e) => e.docId === value).length > 0;
 
-    setActiveCollections(
-      newCollections.filter((e) => Boolean(e)).map((e) => getNameOfCol(e)) || []
-    );
+    const removeFromCollections = alreadyInArr ? [value] : [];
+    const addToCollections = !alreadyInArr ? [value] : [];
 
-    // TODO: Update firestore
+    // Create new collection
+    let updatedCollections = [];
+    if (alreadyInArr) {
+      updatedCollections = activeCollections.filter((e) => e.docId !== value);
+    } else {
+      updatedCollections = activeCollections.concat([
+        collections.filter((e) => e.docId === value)[0],
+      ]);
+    }
+
+    setActiveCollections(updatedCollections);
+
+    // Update firestore
+    if (
+      user?.uid &&
+      image?.docId &&
+      (removeFromCollections.length > 0 || addToCollections.length > 0)
+    ) {
+      await addRemoveImageFromCollections(user.uid, image?.docId || '', {
+        addToCollections,
+        removeFromCollections,
+      });
+    }
 
     setDisabled(false);
   };
 
+  const getClass = (img: Image) => {
+    if (activeCollections.filter((e) => e.docId === img.docId).length > 0)
+      return classes.active;
+    return '';
+  };
+
   return (
-    <div>
+    <div className={classes.root}>
       <FormControl className={classes.formControl}>
-        <InputLabel id='demo-multiple-chip-label'>Add To Collection</InputLabel>
+        <InputLabel id='collection-select-label'>Add To Collection</InputLabel>
         <Select
-          labelId='demo-multiple-chip-label'
-          id='demo-multiple-chip'
+          labelId='collection-select-label'
+          id='collection-select'
           multiple
           disabled={disabled}
           value={activeCollections}
           onChange={handleChange}
-          input={<Input id='collection-render-input' />}
+          input={
+            <Input id='collection-render-input' className={classes.input} />
+          }
           renderValue={(selected: any) => (
             <div className={classes.chips}>
               {selected.map((value: any, index: number) => (
@@ -139,8 +175,12 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
           )}
           MenuProps={MenuProps}
         >
-          {collections.map((img: any, index: number) => (
-            <MenuItem key={`${img.name} ${index}`} value={img.docId}>
+          {collections.map((img: any) => (
+            <MenuItem
+              key={img.docId}
+              value={img.docId}
+              className={getClass(img)}
+            >
               {img.name}
             </MenuItem>
           ))}
