@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import useUser from '../../hooks/useUser';
 
@@ -7,7 +7,7 @@ import { getImagesFromList } from '../../firebase/firestore/firestore';
 import RenderCollectionButtons from './RenderCollectionButtons';
 import RenderImageGallery from '../../components/RenderImageGallery/RenderImageGallery';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     width: 'calc(100% - 40px)',
     padding: '20px',
@@ -24,8 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const ViewCollections = () => {
-  const theme = useTheme();
-  const classes = useStyles(theme);
+  const classes = useStyles();
   const [collections, setCollections]: any = useState([]);
   const [activeCollection, setActiveCollection] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -38,13 +37,13 @@ const ViewCollections = () => {
 
   const user = useUser();
 
-  const updateActiveCollection = (index: number) => () => {
-    if (index === activeCollection) return;
+  const updateActiveCollection = (index: number) => {
+    if (paginating || loading) return;
     setActiveCollection(index);
     setImages([]);
     setLastEntry(false);
     setEndReached(false);
-    setReRunPagination(index);
+    setReRunPagination(Math.random());
   };
 
   // Get user collections
@@ -55,7 +54,7 @@ const ViewCollections = () => {
       const newCollections =
         user?.collections?.map((e: Record<string, any>, index: number) => ({
           ...e,
-          onClick: updateActiveCollection(index),
+          onClick: () => updateActiveCollection(index),
         })) || [];
 
       setCollections(newCollections || []);
@@ -135,7 +134,7 @@ const ViewCollections = () => {
           name: newCol,
           images: [],
           docId: '',
-          onCLick: updateActiveCollection(collections.length),
+          onCLick: () => updateActiveCollection(collections.length),
         },
       ])
     );
@@ -145,6 +144,7 @@ const ViewCollections = () => {
     <div className={classes.root}>
       {collections.length > 0 && (
         <RenderCollectionButtons
+          activeCollection={activeCollection}
           addCollection={addCollection}
           uid={user.uid}
           collections={collections}

@@ -30,13 +30,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.grey[400],
   },
   title: { textAlign: 'center' },
+  active: {
+    fontWeight: theme.typography.fontWeightBold,
+  },
+  inactive: {
+    fontWeight: theme.typography.fontWeightRegular,
+  },
+  classItem: {
+    textAlign: 'center',
+  },
 }));
 
 const RenderCollectionButtons = ({
   collections,
   uid,
   addCollection,
+  activeCollection,
 }: {
+  activeCollection: number;
   addCollection: any;
   uid: string;
   collections: { name: string; onClick: () => void | undefined }[];
@@ -59,11 +70,27 @@ const RenderCollectionButtons = ({
             e: { name: string; onClick: () => void | undefined },
             index: number
           ) => (
-            <ListItem button key={`${e.name}-${index}`} onClick={e.onClick}>
+            <ListItem
+              className={classes.classItem}
+              button
+              key={`${e.name}-${index}`}
+              onClick={e.onClick}
+            >
               <ListItemIcon>
                 <CollectionsBookmarkIcon color='secondary' />
               </ListItemIcon>
-              <ListItemText>{e.name}</ListItemText>
+              <ListItemText disableTypography>
+                <Typography
+                  className={
+                    activeCollection === index
+                      ? classes.active
+                      : classes.inactive
+                  }
+                  variant='body1'
+                >
+                  {e.name}
+                </Typography>
+              </ListItemText>
             </ListItem>
           )
         )}
