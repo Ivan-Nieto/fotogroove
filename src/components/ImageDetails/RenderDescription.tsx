@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   input: {
     backgroundColor: theme.palette.grey[100],
-    padding: '0px 10px',
   },
   content: {
     display: 'flex',

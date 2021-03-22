@@ -1,53 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useTheme, Theme, makeStyles } from '@material-ui/core/styles';
 
 import useQuery from '../../hooks/useQuery';
 import useUser from '../../hooks/useUser';
 import useScroll from '../../hooks/useScroll';
 
-import DisplayImage from '../../components/DisplayImage/DisplayImage';
 import { getUsersImages } from '../../firebase/firestore/firestore';
-import { Typography } from '@material-ui/core';
+import RenderImageGallery from '../../components/RenderImageGallery/RenderImageGallery';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    minHeight: '600px',
-    overflowX: 'hidden',
-    padding: '30px 30px 0px 30px',
-  },
-  container: {
-    overflowY: 'scroll',
-    marginRight: '-50px',
-    paddingRight: '50px',
-
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  img: {
-    padding: '10px',
-    margin: 'auto',
-    cursor: 'pointer',
-  },
-  message: {
-    width: '100%',
-    paddingTop: '200px',
-    color: theme.palette.grey[400],
-    textAlign: 'center',
-  },
-  scroll: {
-    overflowY: 'scroll',
-  },
-}));
-
-const Gallery = ({
-  targetAccount,
-  imageSource,
-}: {
-  targetAccount?: string;
-  imageSource?: any;
-}) => {
-  const theme = useTheme();
-  const classes = useStyles(theme);
+const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
   const query = useQuery();
   const user = useUser();
   const bottomHit = useScroll();
@@ -59,14 +19,14 @@ const Gallery = ({
   const [endReached, setEndReached] = useState(false);
   const [targetIsUser, setTargetIsUser] = useState(false);
 
+  // Paginate
   useEffect(() => {
     let mounted = true;
     const update = async () => {
       if (bottomHit !== 0 && !paginating && !endReached && mounted) {
         setPaginating(true);
         // Get new set of images
-        const queryFunction = imageSource ? imageSource : getUsersImages;
-        const newImgs = await queryFunction(account, lastEntry);
+        const newImgs = await getUsersImages(account, lastEntry);
 
         if (!mounted) return;
 
@@ -94,13 +54,13 @@ const Gallery = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bottomHit]);
 
+  // Initial Query
   useEffect(() => {
     let mounted = true;
 
     const getImages = async () => {
       setPaginating(true);
-      const queryFunction = imageSource ? imageSource : getUsersImages;
-      const images = await queryFunction(account);
+      const images = await getUsersImages(account);
       if (mounted) {
         setImages(images?.images || []);
         if (images?.images)
@@ -115,6 +75,7 @@ const Gallery = ({
     // eslint-disable-next-line
   }, [account]);
 
+  // Find out target account
   useEffect(() => {
     // If account was already set abort
     if (account !== '') return;
@@ -133,37 +94,15 @@ const Gallery = ({
     // eslint-disable-next-line
   }, [user]);
 
-  const handleClick = (img: string) => () => {
-    const win = window.open(`/view-image?url=${img}`);
-    win?.focus();
-  };
-
   return (
-    <div className={classes.root}>
-      {images.length > 0 && (
-        <div className={classes.container}>
-          {images.map((img: any, index: number) => (
-            <div
-              key={`img${index}`}
-              className={classes.img}
-              onClick={handleClick(img?.url)}
-            >
-              <DisplayImage size='large' image={img} />
-            </div>
-          ))}
-        </div>
-      )}
-
-      {images && images.length === 0 && (
-        <div className={classes.message}>
-          <Typography variant='body1' color='inherit'>
-            {targetIsUser
-              ? `You haven't uploaded any images yet. You can upload your images by selecting "Upload" from the profile dropdown. Any images you upload will show up here.`
-              : `This user hasn't uploaded any images.`}
-          </Typography>
-        </div>
-      )}
-    </div>
+    <RenderImageGallery
+      images={images}
+      onEmptyMessage={
+        targetIsUser
+          ? `You haven't uploaded any images yet. You can upload your images by selecting "Upload" from the profile dropdown. Any images you upload will show up here.`
+          : `This user hasn't uploaded any images.`
+      }
+    />
   );
 };
 

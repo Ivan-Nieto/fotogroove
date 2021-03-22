@@ -1,20 +1,8 @@
 import { firestore } from '../init';
 import { storage } from '../init';
-import firebase from 'firebase/app';
 
-export const runImageQuery = async (query: any) => {
-  const snapshot: any = await query.get().catch((err: any) => {
-    return { error: err };
-  });
-
-  if (snapshot.empty) return { error: true };
-
-  if (snapshot.error) {
-    console.error(snapshot.error);
-    return snapshot;
-  }
-
-  const images = snapshot.docs?.map((doc: any) => {
+const getDownloadUrls = async (docs: any) => {
+  const images = docs?.map((doc: any) => {
     const data = doc.data();
     return { ...data, id: doc.id };
   });
@@ -39,6 +27,23 @@ export const runImageQuery = async (query: any) => {
     });
   });
   await Promise.allSettled(promises);
+  return images || [];
+};
+
+export const runImageQuery = async (query: any) => {
+  const snapshot: any = await query.get().catch((err: any) => {
+    return { error: err };
+  });
+
+  if (snapshot.empty) return { error: true };
+
+  if (snapshot.error) {
+    console.error(snapshot.error);
+    return snapshot;
+  }
+
+  const images = await getDownloadUrls(snapshot.docs);
+
   return {
     error: false,
     images: images.filter((e: any) => Boolean(e.thumbUrl?.landscape)),
@@ -83,21 +88,25 @@ export const getDownloadURL = async (fileLocation: string) => {
     .then((url: any) => {
       return url;
     })
-    .catch((error) => {
+    .catch(() => {
       return '';
     });
 };
 
-export const getImagesFromList = async (images: string[]) => (
-  lastEntry?: any
-) => {
-  let query = firestore
-    .collection('images')
-    .where(firebase.firestore.FieldPath.documentId(), 'in', images || [''])
-    .limit(15);
+export const getImagesFromList = async (images: string[], lastEntry?: any) => {
+  const promisi = images.map(async (e) => {
+    if (e === '') return { exists: false };
+    try {
+      const result = await firestore.collection('images').doc(e).get();
+      return result;
+    } catch (error) {
+      return { exists: false };
+    }
+  });
 
-  if (lastEntry)
-    query = query.startAfter(lastEntry.rating, lastEntry.createDate);
+  const results = await Promise.all(promisi);
 
-  return runImageQuery(query);
+  const imgs = await getDownloadUrls(results.filter((e) => e.exists));
+
+  return { error: false, images: imgs };
 };

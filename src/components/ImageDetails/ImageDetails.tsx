@@ -20,37 +20,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.grey[100],
     height: '100vh',
   },
-  drawer: {
-    width: '240px',
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-  },
-  drawerOpen: {
-    width: '240px',
-    borderRight: `2px solid ${theme.palette.grey[800]}`,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerClose: {
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    borderRight: `2px solid ${theme.palette.grey[800]}`,
-    overflowX: 'hidden',
-    width: theme.spacing(6) + 1,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(7) + 1,
-    },
-  },
   icon: {
     backgroundColor: theme.palette.grey[100],
-  },
-  close: {
-    position: 'relative',
-    bottom: '0%',
   },
   item: {
     padding: '20px 10px',
