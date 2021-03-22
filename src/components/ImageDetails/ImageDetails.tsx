@@ -74,9 +74,11 @@ const ImageDetails = ({
         )}
 
         <Divider className={classes.divider} />
-        <ListItem>
-          <RenderCollectionSelect image={image} />
-        </ListItem>
+        {user?.isSignedIn && open && (
+          <ListItem className={classes.item}>
+            <RenderCollectionSelect image={image} />
+          </ListItem>
+        )}
 
         <ListItem>
           <ListItemIcon>

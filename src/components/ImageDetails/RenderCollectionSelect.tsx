@@ -45,12 +45,19 @@ const MenuProps = {
   },
 };
 
+interface Image {
+  images: string[];
+  docId: string;
+  name: string;
+}
+
 const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const user = useUser();
 
-  const [collections, setCollections]: [string[], any] = useState([]);
+  const [disabled, setDisabled] = useState(false);
+  const [collections, setCollections]: [Image[], any] = useState([]);
   const [activeCollections, setActiveCollections]: [string[], any] = useState(
     []
   );
@@ -66,10 +73,7 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
       return;
 
     // Find out what collections this image belongs too
-    interface Image {
-      images: string[];
-      name: string;
-    }
+
     const currCollections: Image[] =
       user?.collections?.filter((e: Image) => e.name !== 'Favorites') || [];
     const imageId = image?.docId || '';
@@ -77,12 +81,37 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
     const belongsTo: Image[] =
       currCollections.filter((e: Image) => e.images?.includes(imageId)) || [];
 
-    setCollections(currCollections.map((e: Image) => e.name));
-    setActiveCollections(belongsTo.map((e: Image) => e.name));
+    setCollections(currCollections);
+    setActiveCollections(belongsTo);
+
+    if (currCollections.length === 0) {
+      setDisabled(true);
+    }
   }, [user, image]);
 
+  const getNameOfCol = (id: string) => {
+    return collections.filter((e: Image) => e.docId === id)[0] || {};
+  };
+
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    console.log(event.target.value as string[]);
+    setDisabled(true);
+
+    const newCollections: string[] = (event.target.value as string[]) || [];
+    const removedCollections = activeCollections.filter(
+      (e) => !newCollections.includes(e)
+    );
+
+    const addedCollections = newCollections.filter(
+      (e) => !activeCollections.includes(e)
+    );
+
+    setActiveCollections(
+      newCollections.filter((e) => Boolean(e)).map((e) => getNameOfCol(e)) || []
+    );
+
+    // TODO: Update firestore
+
+    setDisabled(false);
   };
 
   return (
@@ -93,15 +122,16 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
           labelId='demo-multiple-chip-label'
           id='demo-multiple-chip'
           multiple
+          disabled={disabled}
           value={activeCollections}
           onChange={handleChange}
           input={<Input id='collection-render-input' />}
-          renderValue={(selected) => (
+          renderValue={(selected: any) => (
             <div className={classes.chips}>
-              {(selected as string[]).map((value, index) => (
+              {selected.map((value: any, index: number) => (
                 <Chip
-                  key={`${value} ${index}`}
-                  label={value}
+                  key={`chip-${value.docId}-${index}`}
+                  label={value.name}
                   className={classes.chip}
                 />
               ))}
@@ -109,9 +139,9 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
           )}
           MenuProps={MenuProps}
         >
-          {collections.map((name, index) => (
-            <MenuItem key={`${name} ${index}`} value={name}>
-              {name}
+          {collections.map((img: any, index: number) => (
+            <MenuItem key={`${img.name} ${index}`} value={img.docId}>
+              {img.name}
             </MenuItem>
           ))}
         </Select>
