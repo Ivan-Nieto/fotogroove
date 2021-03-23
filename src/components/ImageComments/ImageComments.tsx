@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: '10px',
     color: theme.palette.grey[800],
     padding: '10px 30px',
+    textAlign: 'center',
   },
   divider: {
     width: '100%',
@@ -64,7 +65,13 @@ const ImageComments = ({
   };
 
   const bottomHit = useScroll();
-  const [comments] = usePagination(bottomHit, dbRef, ['date'], 15, extractData);
+  const [comments, topHit] = usePagination(
+    bottomHit,
+    dbRef,
+    ['date'],
+    5,
+    extractData
+  );
 
   return (
     <div className={classes.root}>
@@ -76,6 +83,11 @@ const ImageComments = ({
         {comments?.length === 0 && (
           <Typography className={classes.comment} variant='body1'>
             No Comments
+          </Typography>
+        )}
+        {topHit && (
+          <Typography className={classes.comment} variant='body1'>
+            Reload to view new comments
           </Typography>
         )}
         {comments.map((e: Comment, index: number) => (
