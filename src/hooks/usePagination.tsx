@@ -72,7 +72,7 @@ const usePagination = (
         setData(data.concat(mutateResults(newData.docs || [])));
       } else setData(data.concat(newData?.docs || []));
 
-      if (!snapshotSet) setSnapshotSet(true);
+      if (!snapshotSet && !newData.empty) setSnapshotSet(true);
 
       // Find out if bottom has been reached
       if (newData.empty || newData.size < limit) {
