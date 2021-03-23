@@ -8,6 +8,7 @@ import useUser from '../../hooks/useUser';
 import { functions } from '../../firebase/init';
 import { getDownloadURL } from '../../firebase/firestore/firestore';
 import ImageDetails from '../../components/ImageDetails/ImageDetails';
+import ImageComments from '../../components/ImageComments/ImageComments';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -95,6 +96,9 @@ const ViewImage = ({ imageLocation }: any) => {
       <ImageDetails tags={image?.tags} image={image} author={author} />
       <div className={classes.container}>
         <img src={url} alt={''} className={classes.img} />
+      </div>
+      <div>
+        {image?.docId && <ImageComments user={user} imageId={image?.docId} />}
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ const useScroll = () => {
         window.innerHeight + window.pageYOffset >=
         document.body.offsetHeight
       ) {
-        setBottomHit(bottomHit + 1);
+        setBottomHit(Math.random());
       }
     };
     window?.addEventListener('scroll', handleScroll);
