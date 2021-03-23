@@ -9,6 +9,8 @@ import { firestore } from '../../firebase/init';
 const useStyles = makeStyles(() => ({
   root: {
     width: '100%',
+    maxWidth: '800px',
+    margin: 'auto',
   },
   input: {
     display: 'flex',
@@ -16,9 +18,16 @@ const useStyles = makeStyles(() => ({
     padding: '10px 20px',
 
     justifyContent: 'center',
-    justifyItems: 'center',
 
     margin: 'auto',
+  },
+  button: {
+    display: 'flex',
+    width: '100%',
+    margin: 'auto',
+    maxWidth: '300px',
+
+    justifyContent: 'center',
   },
 }));
 
@@ -26,9 +35,11 @@ const RenderAddComment = ({ user, imageId }: any) => {
   const classes = useStyles();
   const [comment, setComment] = useState('');
   const [disabled, setDisabled] = useState(false);
+  const [clicked, setClicked] = useState(false);
 
   const handleChange = (event: any) => {
     setComment(event?.target?.value || '');
+    setClicked(true);
   };
 
   const handleSubmit = async () => {
@@ -62,13 +73,24 @@ const RenderAddComment = ({ user, imageId }: any) => {
           value={comment}
           label='Add Comment'
           fullWidth
+          multiline
+          rows='3'
+          rowsMax='10'
+          onClick={() => setClicked(true)}
         />
       </div>
-      <div className={classes.input}>
-        <Button disabled={disabled} onClick={handleSubmit}>
-          Reply
-        </Button>
-      </div>
+      {clicked && (
+        <div className={classes.button}>
+          <Button
+            size='large'
+            fullWidth
+            disabled={disabled}
+            onClick={handleSubmit}
+          >
+            Reply
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

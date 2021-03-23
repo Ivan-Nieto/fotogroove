@@ -100,6 +100,7 @@ const InputModal = ({ showLogin, setShowLogin }: any) => {
     setFields({ ...fields, [field]: event.target.value });
   };
 
+  // TODO: add link to sign up page
   return (
     <Modal open={showLogin} setOpen={setShowLogin}>
       <div className={classes.modalContainer}>
