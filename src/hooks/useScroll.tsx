@@ -9,7 +9,8 @@ const useScroll = () => {
         window.innerHeight + window.pageYOffset >=
         document.body.offsetHeight
       ) {
-        setBottomHit(Math.random());
+        // Set bottomHit to a random integer between 1 and 999,999
+        setBottomHit(Math.floor(Math.random() * 999999) + 1);
       }
     };
     window?.addEventListener('scroll', handleScroll);

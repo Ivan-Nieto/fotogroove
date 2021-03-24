@@ -1,13 +1,8 @@
 import React from 'react';
-import firebase from 'firebase/app';
 import { useTheme, Theme, makeStyles } from '@material-ui/core/styles';
 
-import usePagination from '../../hooks/usePagination';
-import useScroll from '../../hooks/useScroll';
-
 import RenderAddComment from './RenderAddComment';
-import RenderComment, { Comment } from './RenderComment';
-import { Typography } from '@material-ui/core';
+import RenderComments from './RenderComments';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -21,20 +16,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   addComment: {
     display: 'block',
     margin: 'auto',
-  },
-  content: {
-    width: '100%',
-    justifyContent: 'center',
-    alignContent: 'center',
-  },
-  comment: {
-    display: 'block',
-    margin: 'auto',
-    marginTop: '10px',
-    marginBottom: '10px',
-    color: theme.palette.grey[800],
-    padding: '10px 30px',
-    textAlign: 'center',
   },
   divider: {
     width: '100%',
@@ -53,51 +34,20 @@ const ImageComments = ({
 }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const dbRef = firebase
-    .firestore()
-    .collection('comments')
-    .where('contentType', '==', 'image')
-    .where('contentId', '==', imageId)
-    .orderBy('date', 'desc');
-
-  const extractData = (docs: any) => {
-    return docs.map((e: any) => ({ ...e.data(), docId: e.id }));
-  };
-
-  const bottomHit = useScroll();
-  const [comments, topHit] = usePagination(
-    bottomHit,
-    dbRef,
-    ['date'],
-    5,
-    extractData
-  );
 
   return (
     <div className={classes.root}>
       <div className={classes.addComment}>
-        {user?.isSignedIn && <RenderAddComment user={user} imageId={imageId} />}
+        {user?.isSignedIn && (
+          <RenderAddComment
+            user={user}
+            contentId={imageId}
+            threadId={imageId}
+          />
+        )}
       </div>
       <div className={classes.divider} />
-      <div className={classes.content}>
-        {comments?.length === 0 && (
-          <Typography className={classes.comment} variant='body1'>
-            No Comments
-          </Typography>
-        )}
-        {topHit && (
-          <Typography className={classes.comment} variant='body1'>
-            Reload to view new comments
-          </Typography>
-        )}
-        {comments.map((e: Comment, index: number) => (
-          <RenderComment
-            className={classes.comment}
-            key={`${e.docId}-${index}`}
-            comment={e}
-          />
-        ))}
-      </div>
+      <RenderComments contentId={imageId} user={user} />
     </div>
   );
 };

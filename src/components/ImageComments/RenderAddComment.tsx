@@ -31,7 +31,15 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const RenderAddComment = ({ user, imageId }: any) => {
+const RenderAddComment = ({
+  user,
+  contentId,
+  threadId,
+}: {
+  user: Record<string, any>;
+  contentId: string;
+  threadId: string;
+}) => {
   const classes = useStyles();
   const [comment, setComment] = useState('');
   const [disabled, setDisabled] = useState(false);
@@ -43,7 +51,7 @@ const RenderAddComment = ({ user, imageId }: any) => {
   };
 
   const handleSubmit = async () => {
-    if (!user?.uid || !imageId) return;
+    if (!user?.uid || !contentId || !threadId) return;
     setDisabled(true);
 
     const data = {
@@ -51,11 +59,11 @@ const RenderAddComment = ({ user, imageId }: any) => {
       authorUserName: user.userDoc?.userName || 'ANONYMOUS',
       comment,
       commentHistory: [comment],
-      contentId: imageId,
+      contentId: contentId,
       contentType: 'image',
       date: firebase.firestore.Timestamp.now(),
       likes: 0,
-      threadId: imageId,
+      threadId: threadId,
     };
 
     await firestore.collection('comments').add(data).catch();
