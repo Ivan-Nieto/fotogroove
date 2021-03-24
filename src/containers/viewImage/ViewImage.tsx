@@ -12,21 +12,19 @@ import ImageComments from '../../components/ImageComments/ImageComments';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    maxWidth: '100%',
-    padding: '30px',
-    display: 'block',
+    marginLeft: '50px',
+    padding: '15px',
   },
   container: {
     backgroundColor: theme.palette.grey[100],
     borderRadius: '10px',
     display: 'flex',
-    padding: '20px 0px',
   },
   img: {
     margin: 'auto',
     padding: 'auto',
-    maxWidth: 'calc(100vw - 60px)',
-    maxHeight: 'calc(100vh - 60px)',
+    maxWidth: 'calc(100vw - 80px)',
+    maxHeight: 'calc(100vh - 80px)',
     height: '100%',
   },
 }));
@@ -92,15 +90,19 @@ const ViewImage = ({ imageLocation }: any) => {
   }, [image, user, viewed, setViewed]);
 
   return (
-    <div className={classes.root}>
-      <ImageDetails tags={image?.tags} image={image} author={author} />
-      <div className={classes.container}>
-        <img src={url} alt={''} className={classes.img} />
+    <>
+      <div className={classes.root}>
+        <ImageDetails tags={image?.tags} image={image} author={author} />
+        <div className={classes.container}>
+          <img src={url} alt={''} className={classes.img} />
+        </div>
       </div>
-      <div>
-        {image?.docId && <ImageComments user={user} imageId={image?.docId} />}
+      <div className={classes.img}>
+        {image?.docId && (
+          <ImageComments user={user || {}} imageId={image?.docId} />
+        )}
       </div>
-    </div>
+    </>
   );
 };
 

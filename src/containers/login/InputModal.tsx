@@ -113,7 +113,6 @@ const InputModal = ({ showLogin, setShowLogin }: any) => {
               label='Email'
               onChange={handleChange('email')}
               type='text'
-              autofocus
               value={fields.email}
               error={error}
             />

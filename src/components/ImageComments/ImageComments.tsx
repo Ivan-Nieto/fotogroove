@@ -30,7 +30,7 @@ const ImageComments = ({
   user,
 }: {
   imageId: string;
-  user?: Record<string, any>;
+  user: Record<string, any>;
 }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -38,13 +38,7 @@ const ImageComments = ({
   return (
     <div className={classes.root}>
       <div className={classes.addComment}>
-        {user?.isSignedIn && (
-          <RenderAddComment
-            user={user}
-            contentId={imageId}
-            threadId={imageId}
-          />
-        )}
+        <RenderAddComment user={user} contentId={imageId} threadId={imageId} />
       </div>
       <div className={classes.divider} />
       <RenderComments contentId={imageId} user={user} />

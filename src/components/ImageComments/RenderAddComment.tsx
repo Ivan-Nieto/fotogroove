@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import firebase from 'firebase/app';
 
 import Input from '../Input/Input';
 import Button from '../Button/Button';
 import { firestore } from '../../firebase/init';
+import InputModal from '../../containers/login/InputModal';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -44,11 +45,16 @@ const RenderAddComment = ({
   const [comment, setComment] = useState('');
   const [disabled, setDisabled] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   const handleChange = (event: any) => {
     setComment(event?.target?.value || '');
     setClicked(true);
   };
+
+  useEffect(() => {
+    if (user.isSignedIn) setShowLogin(false);
+  }, [user]);
 
   const handleSubmit = async () => {
     if (!user?.uid || !contentId || !threadId) return;
@@ -74,6 +80,7 @@ const RenderAddComment = ({
 
   return (
     <div className={classes.root}>
+      <InputModal showLogin={showLogin} setShowLogin={setShowLogin} />
       <div className={classes.input}>
         <Input
           type='text'
@@ -84,7 +91,9 @@ const RenderAddComment = ({
           multiline
           rows='3'
           rowsMax='10'
-          onClick={() => setClicked(true)}
+          onClick={() =>
+            user?.isSignedIn ? setClicked(true) : setShowLogin(true)
+          }
         />
       </div>
       {clicked && (
