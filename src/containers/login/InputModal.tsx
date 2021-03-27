@@ -11,14 +11,11 @@ import useEnterKey from '../../hooks/useEnterKey';
 const useStyles = makeStyles((theme: Theme) => ({
   input: {
     padding: '10px',
-    outline: 'none',
     margin: 'auto',
   },
   modalContainer: {
     padding: '30px',
     borderRadius: '10px',
-
-    outline: 'none',
 
     display: 'flex',
     flexWrap: 'wrap',

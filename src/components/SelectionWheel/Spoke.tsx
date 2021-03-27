@@ -54,7 +54,7 @@ const Spoke = ({
     from: {
       opacity: 1,
       fontSize: '18',
-      transform: 'translate3d(-20%,-100%,0)',
+      transform: 'translate3d(-20px,-100%,0)',
     },
     to: {
       opacity: 1,
@@ -68,7 +68,7 @@ const Spoke = ({
     from: {
       opacity: 1,
       fontSize: '18',
-      transform: 'translate3d(-20%,100%,0)',
+      transform: 'translate3d(-20px,100%,0)',
     },
     to: {
       opacity: 1,

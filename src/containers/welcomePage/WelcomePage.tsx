@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 
-import Gallery from '../gallery/Gallery';
 import SelectionWheel from '../../components/SelectionWheel/SelectionWheel';
+import RenderLatest from './RenderLatest';
+import RenderFavorites from './RenderFavorites';
+import RenderPopular from './RenderPopular';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -50,7 +52,9 @@ const WelcomePage = () => {
           is the right place for you.
         </Typography>
       </div>
-      <Gallery targetAccount='all' />
+      {activeFilter === 0 && <RenderLatest />}
+      {activeFilter === 1 && <RenderPopular />}
+      {activeFilter === 2 && <RenderFavorites />}
     </div>
   );
 };

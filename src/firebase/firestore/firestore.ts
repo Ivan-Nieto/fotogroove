@@ -1,7 +1,7 @@
 import { firestore } from '../init';
 import { storage } from '../init';
 
-const getDownloadUrls = async (docs: any) => {
+export const getDownloadUrls = async (docs: any) => {
   const images = docs?.map((doc: any) => {
     const data = doc.data();
     return { ...data, id: doc.id };

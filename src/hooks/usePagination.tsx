@@ -8,7 +8,8 @@ const usePagination = (
   batchSize?: number,
   mutateResults?: (
     docs: firebase.firestore.QueryDocumentSnapshot[]
-  ) => Array<any>
+  ) => Array<any> | Promise<Array<any>>,
+  dontAddNew?: boolean
 ) => {
   const [data, setData]: any = useState([]);
   const [endReached, setEndReached] = useState(false);
@@ -20,7 +21,7 @@ const usePagination = (
   const [snapshotSet, setSnapshotSet] = useState(false);
 
   useEffect(() => {
-    if (!snapshotSet) return;
+    if (!snapshotSet || dontAddNew) return;
 
     const firstRecord = data[0];
     let obj: Record<string, any> = {};
@@ -31,9 +32,9 @@ const usePagination = (
     const unsubscribe = query
       .limit(limit)
       .endBefore(...orderByFields.map((e) => obj[e]))
-      .onSnapshot((querySnapshot) => {
+      .onSnapshot(async (querySnapshot) => {
         const newDocs = mutateResults
-          ? mutateResults(querySnapshot.docs)
+          ? await mutateResults(querySnapshot.docs)
           : querySnapshot.docs;
         // Snapshot hit
         setData(newDocs.concat(data));
@@ -69,7 +70,9 @@ const usePagination = (
       if (!mounted) return;
 
       if (mutateResults) {
-        setData(data.concat(mutateResults(newData.docs || [])));
+        const muData = await mutateResults(newData.docs || []);
+        if (!mounted) return;
+        setData(data.concat(muData || []));
       } else setData(data.concat(newData?.docs || []));
 
       if (!snapshotSet && !newData.empty) setSnapshotSet(true);

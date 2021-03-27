@@ -32,7 +32,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '18px',
     color: theme.palette.grey[400],
   },
-  animationDown: {},
 }));
 
 const SelectionWheel = ({

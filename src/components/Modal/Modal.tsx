@@ -13,14 +13,13 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     modal: {
       display: 'flex',
-      outline: 'none',
       alignItems: 'center',
       justifyContent: 'center',
+      outlineColor: '#141e30',
     },
     paper: {
       backgroundColor: theme.palette.grey[100],
       borderRadius: '10px',
-      outline: 'none',
     },
   })
 );
