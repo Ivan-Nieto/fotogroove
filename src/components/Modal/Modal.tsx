@@ -1,15 +1,10 @@
 import React from 'react';
 import MaterialModal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
-import {
-  makeStyles,
-  Theme,
-  createStyles,
-  useTheme,
-} from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { useSpring, animated } from 'react-spring'; // web.cjs is required for IE 11 support
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     modal: {
       display: 'flex',
@@ -18,18 +13,22 @@ const useStyles = makeStyles((theme: Theme) =>
       outlineColor: '#141e30',
     },
     paper: {
-      backgroundColor: theme.palette.grey[100],
+      backgroundColor: 'rgba(37, 40, 43, 0.6)',
       borderRadius: '10px',
+      backdropFilter: 'blur(5px)',
+    },
+    noOutline: {
+      outline: 0,
     },
   })
 );
 
 const Modal = ({ children, open, setOpen }: any) => {
-  const theme = useTheme();
-  const classes = useStyles(theme);
+  const classes = useStyles();
 
   const style = useSpring({
-    outline: 'none',
+    outline: 0,
+
     from: { opacity: 0 },
     to: { opacity: open ? 1 : 0 },
   });
@@ -45,7 +44,7 @@ const Modal = ({ children, open, setOpen }: any) => {
         timeout: 500,
       }}
     >
-      <animated.div style={style}>
+      <animated.div style={style} className={classes.noOutline}>
         <div className={classes.paper}>{children}</div>
       </animated.div>
     </MaterialModal>

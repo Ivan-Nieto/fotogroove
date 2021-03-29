@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   modalContainer: {
     padding: '30px',
     borderRadius: '10px',
+    outline: 0,
 
     display: 'flex',
     flexWrap: 'wrap',
