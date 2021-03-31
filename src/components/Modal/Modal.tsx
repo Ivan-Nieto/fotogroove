@@ -13,7 +13,7 @@ const useStyles = makeStyles(() =>
       outlineColor: '#141e30',
     },
     paper: {
-      backgroundColor: 'rgba(37, 40, 43, 0.6)',
+      backgroundColor: 'rgba(37, 40, 43, 0.8)',
       borderRadius: '10px',
       backdropFilter: 'blur(5px)',
     },

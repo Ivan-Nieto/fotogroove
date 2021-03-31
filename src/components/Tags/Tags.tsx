@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 import AddIcon from '@material-ui/icons/Add';
-import Button from '../Button/Button';
 
 import useFocus from '../../hooks/useFocus';
 
 import Input from '../Input/Input';
-
-import { firestore } from '../../firebase/init';
+import Button from '../Button/Button';
+import { firestore, functions } from '../../firebase/init';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -65,12 +64,16 @@ const Tags = ({
   const [localTags, setLocalTags] = useState(tags || []);
   const [showInput, setShowInput] = useState(false);
 
+  const updateTagCount = functions.httpsCallable('updateTagCount');
+
   useEffect(() => {
     if (tags) setLocalTags(tags);
   }, [tags]);
 
   const addTag = async () => {
     if (newTag && newTag !== '') {
+      if (localTags.filter((e) => e === newTag)[0]) return;
+
       setDisable(true);
       await firestore
         .collection('images')
@@ -82,6 +85,7 @@ const Tags = ({
           setLocalTags(localTags?.concat([newTag]));
           setNewTags('');
           setError(false);
+          updateTagCount({ addTags: [newTag] }).catch(() => {});
         })
         .catch(() => {
           setError(true);
@@ -106,6 +110,9 @@ const Tags = ({
       .doc(docId)
       .update({
         tags: newTags,
+      })
+      .then(() => {
+        updateTagCount({ removeTags: [id] }).catch(() => {});
       })
       .catch(() => {});
   };
