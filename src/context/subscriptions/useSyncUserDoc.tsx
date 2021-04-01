@@ -7,6 +7,7 @@ import useUser from '../../hooks/useUser';
 
 import { firestore } from '../../firebase/init';
 import { useFormContext } from '../Context';
+import useSync from './useSync';
 
 const accessUserDb = (
   obs$: Observer<firebase.firestore.DocumentData>,
@@ -19,24 +20,32 @@ const getUserData = (userDoc: firebase.firestore.DocumentData) =>
 const useSyncUserDoc = () => {
   const user = useUser();
   const { dispatch } = useFormContext();
+  const done = useSync('userDoc');
 
   useEffect(() => {
-    if (!user.isSignedIn || Object.keys(user?.userDoc || {}).length !== 0)
+    if (!user.isSignedIn || Object.keys(user?.userDoc || {}).length !== 0) {
+      done();
       return;
+    }
     const userData$ = new Subject<firebase.firestore.DocumentData>();
     const unsubscribe = accessUserDb(userData$, user?.uid);
 
     userData$.pipe(map(getUserData)).subscribe(
       (data) => {
         dispatch({ type: 'UPDATE_USER', value: data });
+        done();
       },
-      () => {}
+      () => {
+        done();
+      }
     );
 
     return () => {
       unsubscribe();
       userData$.unsubscribe();
     };
+
+    // eslint-disable-next-line
   }, [user, dispatch]);
 };
 

@@ -5,15 +5,19 @@ import { auth } from '../../firebase/init';
 import { User } from '../initialValues';
 import { useFormContext } from '../Context';
 
+import useSync from './useSync';
+
 const useSyncAuth = () => {
   const [user, setUser]: any = useState(User);
   const { dispatch } = useFormContext();
+  const done = useSync('auth');
 
   useEffect(() => {
     let mounted = true;
     const authChange$ = new Subject<firebase.User | null>();
     const fbUnsubscribe = auth.onAuthStateChanged(authChange$);
     authChange$.subscribe((usr) => {
+      done();
       if (usr && mounted) {
         // User is signed in.
         setUser(usr);

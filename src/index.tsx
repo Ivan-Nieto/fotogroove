@@ -9,11 +9,25 @@ import ContextProvider from './context/Context';
 import customTheme from './theme/theme';
 import Router from './containers/router/Router';
 
+import useSyncAuth from './context/subscriptions/useSyncAuth';
+import useSyncUserDoc from './context/subscriptions/useSyncUserDoc';
+import useSyncUserCollections from './context/subscriptions/useSyncUserCollections';
+import useSyncTags from './context/subscriptions/useSyncTags';
+
+const App = () => {
+  useSyncAuth();
+  useSyncUserDoc();
+  useSyncUserCollections();
+  useSyncTags();
+
+  return <Router />;
+};
+
 ReactDOM.render(
   <ContextProvider>
     <ThemeProvider theme={customTheme}>
       <BrowserRouter>
-        <Router />
+        <App />
       </BrowserRouter>
     </ThemeProvider>
   </ContextProvider>,

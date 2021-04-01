@@ -9,6 +9,10 @@ export const initialValues = {
   userDoc: {},
   collections: [],
   tags: [],
+  sync: {
+    done: false,
+    syncing: {},
+  },
 };
 
 export default initialValues;

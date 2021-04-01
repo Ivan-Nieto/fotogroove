@@ -2,11 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 
-import useUser from '../../hooks/useUser';
-import useSyncAuth from '../../context/subscriptions/useSyncAuth';
-import useSyncUserDoc from '../../context/subscriptions/useSyncUserDoc';
-import useSyncUserCollections from '../../context/subscriptions/useSyncUserCollections';
-import useSyncTags from '../../context/subscriptions/useSyncTags';
+import { useFormContext } from '../../context/Context';
 
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Upload from '../upload/Upload';
@@ -44,13 +40,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Router = () => {
-  const user = useUser();
-  useSyncAuth();
-  useSyncUserDoc();
-  useSyncUserCollections();
-  useSyncTags();
   const theme = useTheme();
   const { color, navBar, content, routes } = useStyles(theme);
+  const { state } = useFormContext();
 
   const withNav = (Page: any) => () => {
     return (
@@ -68,12 +60,12 @@ const Router = () => {
   return (
     <div className={color}>
       <div className={routes}>
-        {user?.isSignedIn == null && (
+        {!state?.sync?.done && (
           <Switch>
             <Route exact path='/' component={Loader} />
           </Switch>
         )}
-        {user?.isSignedIn != null && (
+        {state?.sync?.done && (
           <Switch>
             <Route exact path='/' component={withNav(WelcomePage)} />
             <Route exact path='/gallery' component={withNav(Gallery)} />

@@ -2,9 +2,11 @@ import { useEffect } from 'react';
 
 import { firestore } from '../../firebase/init';
 import { useFormContext } from '../Context';
+import useSync from './useSync';
 
 const useSyncTags = () => {
   const { dispatch } = useFormContext();
+  const done = useSync('tags');
 
   useEffect(() => {
     let mounted = true;
@@ -22,7 +24,10 @@ const useSyncTags = () => {
           tags.push({ label: e, count: data[e] });
         });
 
-        if (mounted) dispatch({ type: 'UPDATE_TAGS', value: tags });
+        if (mounted) {
+          dispatch({ type: 'UPDATE_TAGS', value: tags });
+          done();
+        }
       } catch (error) {}
     };
 
@@ -30,6 +35,7 @@ const useSyncTags = () => {
     return () => {
       mounted = false;
     };
+    // eslint-disable-next-line
   }, [dispatch]);
 };
 
