@@ -6,6 +6,7 @@ import useUser from '../../hooks/useUser';
 import useSyncAuth from '../../context/subscriptions/useSyncAuth';
 import useSyncUserDoc from '../../context/subscriptions/useSyncUserDoc';
 import useSyncUserCollections from '../../context/subscriptions/useSyncUserCollections';
+import useSyncTags from '../../context/subscriptions/useSyncTags';
 
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Upload from '../upload/Upload';
@@ -17,6 +18,7 @@ import BrokenLink from '../../components/BrokenLink/BrokenLink';
 import Loader from '../../components/loader/Loader';
 import Footer from '../../components/Footer/Footer';
 import ViewCollections from '../viewCollections/ViewCollections';
+import ViewByTag from '../viewByTag/ViewByTag';
 
 const useStyles = makeStyles((theme: Theme) => ({
   color: {
@@ -46,6 +48,7 @@ const Router = () => {
   useSyncAuth();
   useSyncUserDoc();
   useSyncUserCollections();
+  useSyncTags();
   const theme = useTheme();
   const { color, navBar, content, routes } = useStyles(theme);
 
@@ -65,24 +68,27 @@ const Router = () => {
   return (
     <div className={color}>
       <div className={routes}>
-        <Switch>
-          {user == null && <Route exact path='/' component={Loader} />}
-          {user != null && (
-            <>
-              <Route exact path='/' component={withNav(WelcomePage)} />
-              <Route exact path='/gallery' component={withNav(Gallery)} />
-              <Route exact path='/upload' component={withNav(Upload)} />
-              <Route exact path='/view-image' component={ViewImage} />
-              <Route exact path='/register' component={withNav(Registration)} />
-              <Route
-                exact
-                path='/collections'
-                component={withNav(ViewCollections)}
-              />
-            </>
-          )}
-          <Route exact path='*' component={BrokenLink} />
-        </Switch>
+        {user?.isSignedIn == null && (
+          <Switch>
+            <Route exact path='/' component={Loader} />
+          </Switch>
+        )}
+        {user?.isSignedIn != null && (
+          <Switch>
+            <Route exact path='/' component={withNav(WelcomePage)} />
+            <Route exact path='/gallery' component={withNav(Gallery)} />
+            <Route exact path='/upload' component={withNav(Upload)} />
+            <Route exact path='/view-image' component={ViewImage} />
+            <Route exact path='/register' component={withNav(Registration)} />
+            <Route
+              exact
+              path='/collections'
+              component={withNav(ViewCollections)}
+            />
+            <Route exact path='/search' component={withNav(ViewByTag)} />
+            <Route component={BrokenLink} />
+          </Switch>
+        )}
       </div>
       <Footer />
     </div>

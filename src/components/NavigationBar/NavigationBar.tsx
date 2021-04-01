@@ -5,9 +5,11 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
+import useUser from '../../hooks/useUser';
+
+import TagSearchField from '../TagSearchField/TagSearchField';
 import ProfileDropdown from '../ProfileDropdown/ProfileDropdown';
 import Login from '../../containers/login/Login';
-import useUser from '../../hooks/useUser';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,6 +50,7 @@ export default function NavigationBar() {
           >
             Fotogroove
           </Typography>
+          <TagSearchField />
           {!user?.isSignedIn && <Login />}
           {user?.isSignedIn && <ProfileDropdown />}
         </Toolbar>

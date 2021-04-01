@@ -1,7 +1,12 @@
 import { User } from './initialValues';
 
 export interface Action {
-  type: 'SIGN_IN' | 'SIGN_OUT' | 'UPDATE_USER' | 'UPDATE_USER_COLLECTIONS';
+  type:
+    | 'SIGN_IN'
+    | 'SIGN_OUT'
+    | 'UPDATE_USER'
+    | 'UPDATE_USER_COLLECTIONS'
+    | 'UPDATE_TAGS';
   value?: Record<string, any>;
 }
 
@@ -30,6 +35,12 @@ const reducer = (state: Record<string, any>, action: Action) => {
           userDoc: { ...action.value },
         },
       };
+    case 'UPDATE_TAGS':
+      return {
+        ...state,
+        tags: action.value || [],
+      };
+
     default:
       return state;
   }
