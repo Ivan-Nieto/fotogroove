@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     width: '100%',
     textAlign: 'center',
+    paddingTop: '20px',
     paddingBottom: '20px',
   },
   inputs: {
