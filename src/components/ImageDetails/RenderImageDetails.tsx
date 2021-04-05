@@ -7,6 +7,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     backgroundColor: theme.palette.grey[200],
 
+    display: 'block',
+
     padding: '10px',
     borderRadius: '10px',
     textAlign: 'left',
@@ -19,9 +21,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   item: {
     padding: '0px',
-    width: '100%',
+    maxWidth: '100%',
     color: theme.palette.grey[400],
 
+    overflowWrap: 'break-word',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -45,14 +48,25 @@ const RenderImageDetails = ({
       Object.keys(data || {}).length > 0;
 
     const newItems: string[] = [];
+
+    // Add authors user name
     if (notEmpty(author)) {
       newItems.push(`Author: ${author?.userName}`);
     }
+
     if (notEmpty(image)) {
+      // Add creation date
+      try {
+        if (image?.createDate)
+          newItems.push(
+            `Uploaded: ${image.createDate?.toDate().toLocaleString()}`
+          );
+      } catch (error) {}
+
+      // Add view counter
       newItems.push(
         `Views: ${image?.views && image.views > 0 ? image.views : 1}`
       );
-
       newItems.push(`Favorites: ${image?.favorites || 0}`);
 
       // Add all metadata from image

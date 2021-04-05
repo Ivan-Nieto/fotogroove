@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme?: Theme) => ({
     justifyContent: 'center',
   },
   paper: {
+    paddingTop: '15px',
     display: 'flex',
     borderRadius: '.5em',
     backgroundColor: theme?.palette.grey[200],
