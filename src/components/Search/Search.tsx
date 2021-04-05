@@ -12,13 +12,13 @@ import Input from '../Input/Input';
 
 const useStyles = makeStyles(() => ({
   root: {
-    width: '280px',
+    maxWidth: '280px',
   },
 }));
 
 const Paper = withStyles((theme: Theme) => ({
   root: {
-    backgroundColor: 'rgba(37, 40, 43, 0.8)',
+    backgroundColor: 'rgba(37, 40, 43, 0.9)',
     borderRadius: '10px',
     backdropFilter: 'blur(20px)',
     color: theme.palette.common.white,
