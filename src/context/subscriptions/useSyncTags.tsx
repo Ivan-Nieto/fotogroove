@@ -20,7 +20,16 @@ const useSyncTags = () => {
         const tags: { label: string; count: number }[] = [];
 
         const data = snapshot.data() || {};
-        Object.keys(data).forEach((e) => {
+
+        // Sort keys alphabetically
+        const ordered = Object.keys(data)
+          .sort()
+          .reduce((obj: Record<string, any>, key: string) => {
+            obj[key] = data[key];
+            return obj;
+          }, {});
+
+        Object.keys(ordered).forEach((e) => {
           tags.push({ label: e, count: data[e] });
         });
 
