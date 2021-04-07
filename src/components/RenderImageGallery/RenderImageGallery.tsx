@@ -1,46 +1,40 @@
-import React from "react";
-import { useTheme, Theme, makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import React from 'react';
+import { useTheme, Theme, makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
-import DisplayImage from "../../components/DisplayImage/DisplayImage";
+import DisplayImage from '../DisplayImage/DisplayImage';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    minHeight: "600px",
-    overflowX: "hidden",
-    padding: "30px 30px 0px 30px",
+    minHeight: '600px',
+    overflowX: 'hidden',
+    padding: '30px 30px 0px 30px',
   },
   container: {
-    overflowY: "scroll",
-    marginRight: "-50px",
-    paddingRight: "50px",
+    overflowY: 'scroll',
+    marginRight: '-50px',
+    paddingRight: '50px',
 
-    display: "flex",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexWrap: 'wrap',
   },
   img: {
-    padding: "10px",
-    margin: "auto",
-    cursor: "pointer",
+    padding: '10px',
+    margin: 'auto',
+    cursor: 'pointer',
   },
   message: {
-    width: "100%",
-    paddingTop: "200px",
+    width: '100%',
+    paddingTop: '200px',
     color: theme.palette.grey[400],
-    textAlign: "center",
+    textAlign: 'center',
   },
   scroll: {
-    overflowY: "scroll",
+    overflowY: 'scroll',
   },
 }));
 
-const RenderImageGallery = ({
-  images,
-  onEmptyMessage = "No Images Found",
-}: {
-  images: Array<any>;
-  onEmptyMessage: string;
-}) => {
+const RenderImageGallery = ({ images, onEmptyMessage = 'No Images Found' }: { images: Array<any>; onEmptyMessage: string }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
@@ -54,12 +48,8 @@ const RenderImageGallery = ({
       {images.length > 0 && (
         <div className={classes.container}>
           {images.map((img: any, index: number) => (
-            <div
-              key={`img${index}`}
-              className={classes.img}
-              onClick={handleClick(img?.url)}
-            >
-              <DisplayImage size="large" image={img} />
+            <div key={`img${index}`} className={classes.img} onClick={handleClick(img?.url)}>
+              <DisplayImage size='large' image={img} />
             </div>
           ))}
         </div>
@@ -67,7 +57,7 @@ const RenderImageGallery = ({
 
       {images && images.length === 0 && (
         <div className={classes.message}>
-          <Typography variant="body1" color="inherit">
+          <Typography variant='body1' color='inherit'>
             {onEmptyMessage}
           </Typography>
         </div>
