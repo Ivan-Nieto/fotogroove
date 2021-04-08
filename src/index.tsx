@@ -13,12 +13,14 @@ import useSyncAuth from './context/subscriptions/useSyncAuth';
 import useSyncUserDoc from './context/subscriptions/useSyncUserDoc';
 import useSyncUserCollections from './context/subscriptions/useSyncUserCollections';
 import useSyncTags from './context/subscriptions/useSyncTags';
+import useUniqueUser from './hooks/useUniqueUser';
 
 const App = () => {
   useSyncAuth();
   useSyncUserDoc();
   useSyncUserCollections();
   useSyncTags();
+  useUniqueUser();
 
   return <Router />;
 };
