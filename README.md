@@ -1,2 +1,2 @@
-# photogruve
+# fotogroove
 Image sharing website
