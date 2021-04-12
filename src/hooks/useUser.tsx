@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import _ from 'lodash';
 
 import { useFormContext } from '../context/Context';
+import { User, user as userInitialState } from '../context/initialValues';
 
-const useUser = () => {
-  const [user, setUser]: any = useState({});
+const useUser = (): User => {
+  const [user, setUser]: any = useState(userInitialState);
   const { state } = useFormContext();
 
   useEffect(() => {

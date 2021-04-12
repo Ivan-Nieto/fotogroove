@@ -35,9 +35,7 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
         setImages(newImages);
 
         // Decide weather or not this is the end of the list
-        const newLastEntry = newImgs.images
-          ? newImgs.images[newImgs?.images?.length - 1]
-          : false;
+        const newLastEntry = newImgs.images ? newImgs.images[newImgs?.images?.length - 1] : false;
         if (lastEntry && (!newLastEntry || newLastEntry.id === lastEntry.id)) {
           setEndReached(true);
         } else setLastEntry(newLastEntry);
@@ -63,8 +61,7 @@ const Gallery = ({ targetAccount }: { targetAccount?: string }) => {
       const images = await getUsersImages(account);
       if (mounted) {
         setImages(images?.images || []);
-        if (images?.images)
-          setLastEntry(images?.images[images?.images?.length - 1]);
+        if (images?.images) setLastEntry(images?.images[images?.images?.length - 1]);
         setPaginating(false);
       }
     };

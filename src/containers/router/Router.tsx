@@ -7,7 +7,6 @@ import { useFormContext } from '../../context/Context';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Upload from '../upload/Upload';
 import ViewImage from '../viewImage/ViewImage';
-import Gallery from '../gallery/Gallery';
 import WelcomePage from '../welcomePage/WelcomePage';
 import Registration from '../registration/Registration';
 import BrokenLink from '../../components/BrokenLink/BrokenLink';
@@ -15,6 +14,7 @@ import Loader from '../../components/loader/Loader';
 import Footer from '../../components/Footer/Footer';
 import ViewCollections from '../viewCollections/ViewCollections';
 import ViewByTag from '../viewByTag/ViewByTag';
+import MyGallery from '../myGallery/MyGallery';
 
 const useStyles = makeStyles((theme: Theme) => ({
   color: {
@@ -68,15 +68,11 @@ const Router = () => {
         {state?.sync?.done && (
           <Switch>
             <Route exact path='/' component={withNav(WelcomePage)} />
-            <Route exact path='/gallery' component={withNav(Gallery)} />
+            <Route exact path='/gallery' component={withNav(MyGallery)} />
             <Route exact path='/upload' component={withNav(Upload)} />
             <Route exact path='/view-image' component={ViewImage} />
             <Route exact path='/register' component={withNav(Registration)} />
-            <Route
-              exact
-              path='/collections'
-              component={withNav(ViewCollections)}
-            />
+            <Route exact path='/collections' component={withNav(ViewCollections)} />
             <Route exact path='/search' component={withNav(ViewByTag)} />
             <Route component={BrokenLink} />
           </Switch>

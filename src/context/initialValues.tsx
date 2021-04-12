@@ -1,11 +1,16 @@
 export interface InitialValues {}
 
-export const User = {
+export interface User {
+  isSignedIn: boolean;
+  [key: string]: any;
+}
+
+export const user = {
   isSignedIn: null,
 };
 
 export const initialValues = {
-  user: User,
+  user,
   userDoc: {},
   collections: [],
   tags: [],
