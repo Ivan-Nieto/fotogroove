@@ -3,10 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 
 import useUser from '../../hooks/useUser';
+import useQuery from '../../hooks/useQuery';
 
 import Gallery from '../gallery/Gallery';
 import Carousel from '../../components/Carousel/Carousel';
-import { getImagesFromList, getDownloadURL } from '../../firebase/firestore/firestore';
+import { getImagesFromList, getDownloadURL, getUserFavorites } from '../../firebase/firestore/firestore';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -22,17 +23,31 @@ const MyGallery = () => {
   const user = useUser();
   const { root } = useStyles();
   const history = useHistory();
+  const query = useQuery();
   const [featured, setFeatured] = useState<{ id?: string; src: string }[]>([]);
   const [querying, setQuerying] = useState(false);
+  const [account, setAccount] = useState<undefined | string>();
 
   useEffect(() => {
     let mount = true;
+    const acc = query.get('account') as string;
+    if (Boolean(acc)) setAccount(acc);
 
     if (!Boolean(user?.isSignedIn) || user?.userDoc?.featured?.length === 0) return;
 
+    if (!Boolean(acc)) setAccount(user?.uid);
+
     const getImgs = async () => {
       setQuerying(true);
-      const { images } = await getImagesFromList(user?.userDoc?.featured || [], true);
+
+      // If account belongs to another user query for favorites
+      let targetFeatured = [];
+      if (Boolean(acc)) targetFeatured = await getUserFavorites(acc);
+      else targetFeatured = user?.userDoc?.featured || [];
+
+      if (!mount || targetFeatured.length === 0) return;
+
+      const { images } = await getImagesFromList(targetFeatured, true);
 
       if (!mount || images?.length === 0) return;
 
@@ -56,7 +71,7 @@ const MyGallery = () => {
       if (mount && imgs) {
         setFeatured(imgs.filter((e: ImgReturn) => Boolean(e?.src)) || []);
         const params = new URLSearchParams();
-        if (user?.uid) {
+        if (user?.uid && !Boolean(acc)) {
           params?.append('account', user?.uid);
           history.push({ search: params.toString() });
         }
@@ -72,8 +87,12 @@ const MyGallery = () => {
 
   return (
     <div className={root}>
-      {featured.length > 0 && <Carousel images={featured} />}
-      <Gallery targetAccount={user?.uid} />;
+      {Boolean(account) && (
+        <>
+          {featured.length > 0 && <Carousel images={featured} />}
+          <Gallery targetAccount={account} />
+        </>
+      )}
     </div>
   );
 };

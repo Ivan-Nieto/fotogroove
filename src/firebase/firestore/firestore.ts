@@ -109,3 +109,14 @@ export const getImagesFromList = async (images: string[], dontGetUrls?: boolean)
 
   return { error: false, images: imgs || [] };
 };
+
+export const getUserFavorites = async (uid: string): Promise<string[]> => {
+  try {
+    const user = await firestore.collection('users').doc(uid).get();
+    if (!user.exists) return [];
+
+    return (user.data() || {}).featured || [];
+  } catch (err) {
+    return [];
+  }
+};
