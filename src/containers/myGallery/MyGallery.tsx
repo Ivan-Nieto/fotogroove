@@ -27,15 +27,31 @@ const MyGallery = () => {
   const [featured, setFeatured] = useState<{ id?: string; src: string }[]>([]);
   const [querying, setQuerying] = useState(false);
   const [account, setAccount] = useState<undefined | string>();
+  const ref = React.useRef<any>(null);
+
+  // Set querying to false after 3 seconds
+  useEffect(() => {
+    if (querying)
+      ref.current = setTimeout(() => {
+        setQuerying(false);
+      }, 3000);
+    else if (ref?.current) clearTimeout(ref.current);
+
+    return () => {
+      if (ref?.current) clearTimeout(ref.current);
+    };
+  }, [querying]);
 
   useEffect(() => {
     let mount = true;
-    const acc = query.get('account') as string;
-    if (Boolean(acc)) setAccount(acc);
+    const acc = (query.get('account') as string) || '';
+    if (!Boolean(account)) {
+      if (Boolean(acc)) setAccount(acc);
 
-    if (!Boolean(user?.isSignedIn) || user?.userDoc?.featured?.length === 0) return;
+      if (!Boolean(user?.isSignedIn) || user?.userDoc?.featured?.length === 0) return;
 
-    if (!Boolean(acc)) setAccount(user?.uid);
+      if (!Boolean(acc)) setAccount(user?.uid);
+    }
 
     const getImgs = async () => {
       setQuerying(true);
@@ -45,11 +61,17 @@ const MyGallery = () => {
       if (Boolean(acc)) targetFeatured = await getUserFavorites(acc);
       else targetFeatured = user?.userDoc?.featured || [];
 
-      if (!mount || targetFeatured.length === 0) return;
+      if (!mount || targetFeatured.length === 0) {
+        if (mount) setQuerying(false);
+        return;
+      }
 
       const { images } = await getImagesFromList(targetFeatured, true);
 
-      if (!mount || images?.length === 0) return;
+      if (!mount || images?.length === 0) {
+        if (mount) setQuerying(false);
+        return;
+      }
 
       interface ImgReturn {
         src: string;
@@ -76,9 +98,11 @@ const MyGallery = () => {
           history.push({ search: params.toString() });
         }
       }
+
+      if (mount) setQuerying(false);
     };
 
-    if (!querying) getImgs();
+    if (!querying || featured.length > 0) getImgs();
     return () => {
       mount = false;
     };
@@ -87,10 +111,10 @@ const MyGallery = () => {
 
   return (
     <div className={root}>
-      {Boolean(account) && (
+      {Boolean(account) && !querying && (
         <>
           {featured.length > 0 && <Carousel images={featured} />}
-          <Gallery targetAccount={account} />
+          {account && Boolean(account) && <Gallery targetAccount={account} />}
         </>
       )}
     </div>

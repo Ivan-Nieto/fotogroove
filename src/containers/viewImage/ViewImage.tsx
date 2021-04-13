@@ -70,7 +70,7 @@ const ViewImage = ({ imageLocation }: any) => {
             .then((response) => {
               if (!mounted) return;
               const data = response?.data() || {};
-              setAuthor({ ...data });
+              setAuthor({ ...data, id: response?.id });
             })
             .catch();
       }

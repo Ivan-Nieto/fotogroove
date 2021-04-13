@@ -60,13 +60,14 @@ interface Props {
 // and https://codesandbox.io/s/improved-carousel-envjk?from-embed=&file=/src/Slider.js
 const Slide = ({ children, width, height }: Props) => {
   const theme = useTheme();
+  const windowWidth = width || (window?.innerWidth || document?.documentElement?.clientWidth || document?.body?.clientWidth) - 40;
+
   const classes = useStyles(height, width)(theme);
   const numItems = children?.length || 0;
   const [active, setActive] = useState(0);
   const [disableBack, setDisableBack] = useState(numItems === 2);
   const [disableForward, setDisableForward] = useState(false);
 
-  const windowWidth = width || window?.innerWidth || document?.documentElement?.clientWidth || document?.body?.clientWidth;
   const getInitialConfig = (i: number) => {
     if (numItems > 1 && i === numItems - 1 && numItems !== 2)
       return {
@@ -149,10 +150,14 @@ const Carousel = ({ images = [] }: { images: { src: string; id?: string }[] }) =
   const theme = useTheme();
   const classes = useStyles()(theme);
 
+  const windowWidth = Math.floor((window?.innerWidth || document?.documentElement?.clientWidth || document?.body?.clientWidth) - 40);
+  const height = Math.floor((window?.innerHeight || document?.documentElement?.clientHeight || document?.body?.clientHeight) - 40);
+  const maxHeight = Math.min(Math.floor(windowWidth / 1.8), height);
+
   return (
-    <Slide height={600}>
+    <Slide height={maxHeight}>
       {images.map((e, index) => (
-        <CarouselImage className={classes.img} key={`carousel-image-${index}`} height={600} id={e?.id} src={e?.src} alt={`img-${index}`} />
+        <CarouselImage className={classes.img} key={`carousel-image-${index}`} height={maxHeight} id={e?.id} src={e?.src} alt={`img-${index}`} />
       ))}
     </Slide>
   );
