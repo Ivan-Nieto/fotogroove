@@ -94,7 +94,7 @@ const DisplayImage = ({ size, image }: DisplayImageProps) => {
   };
 
   const handleClick = () => {
-    const win = window.open(`/view-image?url=${image.id}`);
+    const win = window.open(`/view-image?id=${image.id}`);
     win?.focus();
   };
 
@@ -112,7 +112,7 @@ const DisplayImage = ({ size, image }: DisplayImageProps) => {
         style={{ transform: props?.xys?.interpolate(trans) }}
       />
 
-      {loaded && Boolean(ownsImage) && (
+      {loaded && user?.isSignedIn && (
         <a.div className={classes.overlay} style={overlayProps}>
           <ImageOverlay image={image} ownsImage={Boolean(ownsImage)} user={user} />
         </a.div>

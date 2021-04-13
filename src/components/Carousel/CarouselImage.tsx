@@ -9,6 +9,9 @@ const useStyles = makeStyles(() => ({
     padding: 0,
     borderRadius: '7px',
   },
+  clickable: {
+    cursor: 'pointer',
+  },
 }));
 
 const CarouselImage = ({
@@ -17,7 +20,9 @@ const CarouselImage = ({
   className,
   height,
   style,
+  id,
 }: {
+  id?: string;
   style?: any;
   height?: number;
   src: string;
@@ -25,16 +30,24 @@ const CarouselImage = ({
   className?: string;
 }) => {
   const [loaded, setLoaded] = useState(false);
-  const { root } = useStyles();
+  const { root, clickable } = useStyles();
+
+  const handleClick = () => {
+    const win = window.open(`/view-image?id=${id}`);
+    win?.focus();
+  };
 
   return (
     <>
       <img
         style={style}
-        className={`${root} ${className || ''}`}
-        onLoad={() => setLoaded(true)}
+        className={`${root} ${className || ''} ${id ? clickable : ''}`}
+        onLoad={() => {
+          setLoaded(true);
+        }}
         src={src}
         alt={alt || 'carousel image'}
+        {...(id ? { onClick: handleClick } : {})}
         height={height || 500}
       />
       {!loaded && <Skeleton animation='wave' variant='rect' height={height || 500} />}
@@ -42,4 +55,4 @@ const CarouselImage = ({
   );
 };
 
-export default React.memo(CarouselImage);
+export default CarouselImage;

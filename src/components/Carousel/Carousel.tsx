@@ -68,7 +68,7 @@ const Slide = ({ children, width, height }: Props) => {
 
   const windowWidth = width || window?.innerWidth || document?.documentElement?.clientWidth || document?.body?.clientWidth;
   const getInitialConfig = (i: number) => {
-    if (i === numItems - 1 && numItems !== 2)
+    if (numItems > 1 && i === numItems - 1 && numItems !== 2)
       return {
         left: -1 * windowWidth,
         opacity: 1,
@@ -145,14 +145,14 @@ const Slide = ({ children, width, height }: Props) => {
   );
 };
 
-const Carousel = ({ images = [] }: { images: string[] }) => {
+const Carousel = ({ images = [] }: { images: { src: string; id?: string }[] }) => {
   const theme = useTheme();
   const classes = useStyles()(theme);
 
   return (
     <Slide height={600}>
       {images.map((e, index) => (
-        <CarouselImage className={classes.img} key={`carousel-image-${index}`} height={600} src={e} alt={`img-${index}`} />
+        <CarouselImage className={classes.img} key={`carousel-image-${index}`} height={600} id={e?.id} src={e?.src} alt={`img-${index}`} />
       ))}
     </Slide>
   );

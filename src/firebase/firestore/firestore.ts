@@ -3,7 +3,7 @@ import { storage } from '../init';
 
 export const getDownloadUrls = async (docs: any) => {
   const images = docs?.map((doc: any) => {
-    const data = doc.data();
+    const data = doc?.data() || {};
     return { ...data, id: doc.id };
   });
 
@@ -61,8 +61,7 @@ export const getUsersImages = async (uid: string, lastEntry?: any) => {
     .orderBy('createDate', 'desc')
     .limit(15);
 
-  if (lastEntry)
-    query = query.startAfter(lastEntry.rating, lastEntry.createDate);
+  if (lastEntry) query = query.startAfter(lastEntry.rating, lastEntry.createDate);
 
   return runImageQuery(query);
 };
@@ -75,8 +74,7 @@ export const getLatestImages = (lastEntry?: any) => {
     .orderBy('createDate', 'desc')
     .limit(15);
 
-  if (lastEntry)
-    query = query.startAfter(lastEntry.rating, lastEntry.createDate);
+  if (lastEntry) query = query.startAfter(lastEntry.rating, lastEntry.createDate);
 
   return runImageQuery(query);
 };
@@ -93,7 +91,7 @@ export const getDownloadURL = async (fileLocation: string) => {
     });
 };
 
-export const getImagesFromList = async (images: string[], lastEntry?: any) => {
+export const getImagesFromList = async (images: string[], dontGetUrls?: boolean) => {
   const promisi = images.map(async (e) => {
     if (e === '') return { exists: false };
     try {
@@ -106,7 +104,8 @@ export const getImagesFromList = async (images: string[], lastEntry?: any) => {
 
   const results = await Promise.all(promisi);
 
-  const imgs = await getDownloadUrls(results.filter((e) => e.exists));
+  const filteredResults = results.filter((e) => e.exists);
+  const imgs = dontGetUrls ? filteredResults.map((e: any) => ({ ...e?.data(), id: e?.id })) : await getDownloadUrls(filteredResults);
 
-  return { error: false, images: imgs };
+  return { error: false, images: imgs || [] };
 };

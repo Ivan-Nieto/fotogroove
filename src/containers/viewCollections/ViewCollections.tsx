@@ -65,8 +65,7 @@ const ViewCollections = () => {
       const images = await getImagesFromList(newCollections[0].images || []);
       if (mounted) {
         setImages(images?.images || []);
-        if (images?.images)
-          setLastEntry(images?.images[images?.images?.length - 1]);
+        if (images?.images) setLastEntry(images?.images[images?.images?.length - 1]);
         setPaginating(false);
       }
 
@@ -88,10 +87,7 @@ const ViewCollections = () => {
       if (!loading && !paginating && !endReached && mounted) {
         setPaginating(true);
         // Get new set of images
-        const newImgs = await getImagesFromList(
-          collections[activeCollection].images,
-          lastEntry
-        );
+        const newImgs = await getImagesFromList(collections[activeCollection].images);
 
         if (!mounted) return;
 
@@ -100,9 +96,7 @@ const ViewCollections = () => {
         setImages(newImages);
 
         // Decide weather or not this is the end of the list
-        const newLastEntry = newImgs.images
-          ? newImgs.images[newImgs?.images?.length - 1]
-          : false;
+        const newLastEntry = newImgs.images ? newImgs.images[newImgs?.images?.length - 1] : false;
         if (lastEntry && (!newLastEntry || newLastEntry.id === lastEntry.id)) {
           setEndReached(true);
         } else setLastEntry(newLastEntry);
@@ -111,11 +105,7 @@ const ViewCollections = () => {
       }
     };
 
-    if (
-      collections[activeCollection] &&
-      collections[activeCollection].images?.length > 0
-    )
-      update();
+    if (collections[activeCollection] && collections[activeCollection].images?.length > 0) update();
     else {
       setImages([]);
       setEndReached(true);
@@ -143,21 +133,9 @@ const ViewCollections = () => {
   return (
     <div className={classes.root}>
       {collections.length > 0 && (
-        <RenderCollectionButtons
-          activeCollection={activeCollection}
-          addCollection={addCollection}
-          uid={user.uid}
-          collections={collections}
-        />
+        <RenderCollectionButtons activeCollection={activeCollection} addCollection={addCollection} uid={user.uid} collections={collections} />
       )}
-      {!loading && (
-        <RenderImageGallery
-          images={images}
-          onEmptyMessage={
-            paginating ? 'Loading...' : 'This collection is empty'
-          }
-        />
-      )}
+      {!loading && <RenderImageGallery images={images} onEmptyMessage={paginating ? 'Loading...' : 'This collection is empty'} />}
     </div>
   );
 };
