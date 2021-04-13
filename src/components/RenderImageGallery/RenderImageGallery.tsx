@@ -34,22 +34,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const RenderImageGallery = ({ images, onEmptyMessage = 'No Images Found' }: { images: Array<any>; onEmptyMessage: string }) => {
+const RenderImageGallery = ({
+  images,
+  targetIsUser,
+  onEmptyMessage = 'No Images Found',
+}: {
+  targetIsUser?: boolean;
+  images: Array<any>;
+  onEmptyMessage: string;
+}) => {
   const theme = useTheme();
   const classes = useStyles(theme);
-
-  const handleClick = (img: string) => () => {
-    const win = window.open(`/view-image?url=${img}`);
-    win?.focus();
-  };
 
   return (
     <div className={classes.root}>
       {images.length > 0 && (
         <div className={classes.container}>
           {images.map((img: any, index: number) => (
-            <div key={`img${index}`} className={classes.img} onClick={handleClick(img?.url)}>
-              <DisplayImage size='large' image={img} />
+            <div key={`img${index}`} className={classes.img}>
+              <DisplayImage ownsImage={Boolean(targetIsUser)} size='large' image={img} />
             </div>
           ))}
         </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -19,9 +20,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'left',
     paddingBottom: '10px',
   },
+  link: {
+    textDecoration: 'none',
+    color: theme.palette.grey[400],
+  },
   item: {
     padding: '0px',
-    maxWidth: '100%',
+    maxWidth: 'calc(100% - 20px)',
+    textDecoration: 'none',
     color: theme.palette.grey[400],
 
     overflowWrap: 'break-word',
@@ -30,43 +36,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const RenderImageDetails = ({
-  image,
-  author,
-  open,
-}: {
-  open: boolean;
-  image?: Record<string, any>;
-  author?: Record<string, any>;
-}) => {
+const RenderImageDetails = ({ image, author, open }: { open: boolean; image?: Record<string, any>; author?: Record<string, any> }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const [items, setItems]: any = useState([]);
 
   useEffect(() => {
-    const notEmpty = (data?: Record<string, any>) =>
-      Object.keys(data || {}).length > 0;
+    const notEmpty = (data?: Record<string, any>) => Object.keys(data || {}).length > 0;
 
     const newItems: string[] = [];
-
-    // Add authors user name
-    if (notEmpty(author)) {
-      newItems.push(`Author: ${author?.userName}`);
-    }
 
     if (notEmpty(image)) {
       // Add creation date
       try {
-        if (image?.createDate)
-          newItems.push(
-            `Uploaded: ${image.createDate?.toDate().toLocaleString()}`
-          );
+        if (image?.createDate) newItems.push(`Uploaded: ${image.createDate?.toDate().toLocaleDateString()}`);
       } catch (error) {}
 
       // Add view counter
-      newItems.push(
-        `Views: ${image?.views && image.views > 0 ? image.views : 1}`
-      );
+      newItems.push(`Views: ${image?.views && image.views > 0 ? image.views : 1}`);
       newItems.push(`Favorites: ${image?.favorites || 0}`);
 
       // Add all metadata from image
@@ -87,6 +74,14 @@ const RenderImageDetails = ({
           <Typography className={classes.title} variant='body1'>
             Details
           </Typography>
+          {author && (
+            <Typography variant='subtitle1' className={classes.item}>
+              Author:{' '}
+              <Link className={classes.link} to={`/gallery?account=${author?.id}`}>
+                {author?.userName}
+              </Link>
+            </Typography>
+          )}
           {items.map((e: string) => (
             <Typography key={e} variant='subtitle1' className={classes.item}>
               {e}

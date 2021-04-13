@@ -5,7 +5,7 @@ import cuid from 'cuid';
 const useUniqueUser = () => {
   useEffect(() => {
     try {
-      if (!window.localStorage) return;
+      if (!window.localStorage || window?.location?.hostname === 'localhost') return;
 
       // Check if user is returning
       const isReturning = Boolean(window.localStorage.getItem('fotogroove-unique-visit'));

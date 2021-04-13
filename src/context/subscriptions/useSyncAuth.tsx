@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { Subject } from 'rxjs';
 import firebase from 'firebase/app';
 import { auth } from '../../firebase/init';
-import { User } from '../initialValues';
+import { user as userInitialState } from '../initialValues';
 import { useFormContext } from '../Context';
 
 import useSync from './useSync';
 
 const useSyncAuth = () => {
-  const [user, setUser]: any = useState(User);
+  const [user, setUser]: any = useState(userInitialState);
   const { dispatch } = useFormContext();
   const done = useSync('auth');
 
@@ -25,7 +25,7 @@ const useSyncAuth = () => {
       } else if (mounted) {
         // No user is signed in.
         setUser(false);
-        dispatch({ type: 'SIGN_OUT', value: User });
+        dispatch({ type: 'SIGN_OUT', value: userInitialState });
       }
     });
 

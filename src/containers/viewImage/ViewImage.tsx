@@ -42,30 +42,35 @@ const ViewImage = ({ imageLocation }: any) => {
   useEffect(() => {
     let mounted = true;
     const getURL = async () => {
-      const paramUrl = query.get('url');
-      setURL(await getDownloadURL(paramUrl || imageLocation || ''));
-      const imgDoc = await firestore
+      const imageId = query.get('id') as string;
+      if (!Boolean(imageId)) return;
+      const imgDoc: any = await firestore
         .collection('images')
-        .where('url', '==', paramUrl || imageLocation || '')
+        .doc(imageId)
         .get()
-        .catch();
+        .catch(() => ({ empty: true }));
+
+      if (imgDoc.empty) return;
+
+      const imgData = imgDoc.data() || {};
+
+      if (mounted) setURL(await getDownloadURL(imgData?.url));
 
       if (!imgDoc.empty && mounted) {
-        const docData = imgDoc.docs[0].data();
         setImage({
-          ...docData,
-          docId: imgDoc.docs[0].id,
+          ...imgData,
+          docId: imgDoc?.id,
         });
 
-        if (docData?.author)
+        if (imgData?.author)
           await firestore
             .collection('users')
-            .doc(docData?.author)
+            .doc(imgData?.author)
             .get()
             .then((response) => {
               if (!mounted) return;
               const data = response?.data() || {};
-              setAuthor({ ...data });
+              setAuthor({ ...data, id: response?.id });
             })
             .catch();
       }
@@ -85,8 +90,7 @@ const ViewImage = ({ imageLocation }: any) => {
     setViewed(true);
     const updateViewCounter = functions.httpsCallable('updateViewCounter');
 
-    if (image?.docId && image?.author !== user?.uid)
-      updateViewCounter(image?.docId).catch(console.error);
+    if (image?.docId && image?.author !== user?.uid) updateViewCounter(image?.docId).catch(console.error);
   }, [image, user, viewed, setViewed]);
 
   return (
@@ -97,11 +101,7 @@ const ViewImage = ({ imageLocation }: any) => {
           <img src={url} alt={''} className={classes.img} />
         </div>
       </div>
-      <div className={classes.img}>
-        {image?.docId && (
-          <ImageComments user={user || {}} imageId={image?.docId} />
-        )}
-      </div>
+      <div className={classes.img}>{image?.docId && <ImageComments user={user || {}} imageId={image?.docId} />}</div>
     </>
   );
 };
