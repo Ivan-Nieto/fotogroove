@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   link: {
     textDecoration: 'none',
-    color: theme.palette.grey[400],
+    color: theme.palette.common.white,
   },
   item: {
     padding: '0px',

@@ -3,7 +3,8 @@ import { useTheme, Theme, makeStyles } from '@material-ui/core/styles';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { useSpring, animated as a } from 'react-spring';
 
-import ImageOverlay from './ImageOverlay';
+import ImageOverlayTop from './ImageOverlayTop';
+import ImageOverlayBottom from './ImageOverlayBottom';
 import { Image } from './DisplayImage.types';
 import useUser from '../../hooks/useUser';
 
@@ -37,10 +38,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     width: '100%',
   },
-  clickArea: {
-    width: '100%',
-    height: 'auto',
+  overlayBottom: {
     zIndex: 1,
+    bottom: 0,
+
+    position: 'absolute',
+    width: '100%',
   },
 }));
 
@@ -100,6 +103,12 @@ const DisplayImage = ({ size, image }: DisplayImageProps) => {
 
   return (
     <div className={classes.container} onMouseMove={mouseOver} onMouseLeave={mouseLeave}>
+      {loaded && (
+        <a.div className={classes.overlay} style={overlayProps}>
+          <ImageOverlayTop image={image} ownsImage={Boolean(ownsImage)} user={user} />
+        </a.div>
+      )}
+
       <a.img
         onClick={handleClick}
         alt={image?.description || ''}
@@ -112,9 +121,9 @@ const DisplayImage = ({ size, image }: DisplayImageProps) => {
         style={{ transform: props?.xys?.interpolate(trans) }}
       />
 
-      {loaded && user?.isSignedIn && (
-        <a.div className={classes.overlay} style={overlayProps}>
-          <ImageOverlay image={image} ownsImage={Boolean(ownsImage)} user={user} />
+      {loaded && (
+        <a.div className={classes.overlayBottom} style={overlayProps}>
+          <ImageOverlayBottom image={image} ownsImage={Boolean(ownsImage)} user={user} />
         </a.div>
       )}
 

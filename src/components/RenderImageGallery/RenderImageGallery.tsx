@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     minHeight: '600px',
     overflowX: 'hidden',
-    padding: '30px 30px 0px 30px',
+    padding: '30px 30px 50px 30px',
   },
   container: {
     overflowY: 'scroll',

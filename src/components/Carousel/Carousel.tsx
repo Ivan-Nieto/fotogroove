@@ -151,7 +151,7 @@ const Carousel = ({ images = [] }: { images: { src: string; id?: string }[] }) =
   const classes = useStyles()(theme);
 
   const windowWidth = Math.floor((window?.innerWidth || document?.documentElement?.clientWidth || document?.body?.clientWidth) - 40);
-  const height = Math.floor((window?.innerHeight || document?.documentElement?.clientHeight || document?.body?.clientHeight) - 40);
+  const height = Math.floor((window?.innerHeight || document?.documentElement?.clientHeight || document?.body?.clientHeight) * 0.8);
   const maxHeight = Math.min(Math.floor(windowWidth / 1.8), height);
 
   return (

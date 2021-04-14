@@ -15,15 +15,22 @@ const useStyles = makeStyles(() => ({
   root: {
     width: '100%',
   },
-  icon: {
+  star: {
+    color: '#F0E696 !important',
+  },
+  heart: {
+    color: '#F96969 !important',
+  },
+  iconsTop: {
     padding: '7px',
     width: 'calc(100% - 14px)',
-    display: 'flex',
 
-    color: '#F96969 !important',
     borderRadius: '7px 7px 0px 0px',
     backgroundColor: 'rgba(37, 40, 43, 0.8)',
     backdropFilter: 'blur(5px)',
+  },
+  icon: {
+    alignSelf: 'right',
   },
 }));
 
@@ -34,8 +41,9 @@ interface Props {
   user: any;
 }
 
-const ImageOverlay = ({ image, user }: Props) => {
+const ImageOverlayTop = ({ image, user }: Props) => {
   const classes = useStyles();
+
   const [staredImage, setStaredImage] = useState(false);
   const [isFeatured, setIsFeatured] = useState(false);
   const [disabled, setDisabled] = useState(false);
@@ -94,16 +102,16 @@ const ImageOverlay = ({ image, user }: Props) => {
   return (
     <div className={classes.root}>
       {user?.isSignedIn && (
-        <div className={classes.icon}>
+        <div className={classes.iconsTop}>
           {staredImage ? (
-            <Tooltip title='Remove from Favorites'>
-              <IconButton onClick={disabled ? () => {} : handleClick} color='inherit'>
+            <Tooltip className={classes.icon} title='Remove from Favorites'>
+              <IconButton className={classes.heart} onClick={disabled ? () => {} : handleClick} color='inherit'>
                 <FavoriteIcon color='inherit' />
               </IconButton>
             </Tooltip>
           ) : (
-            <Tooltip title='Add to Favorites'>
-              <IconButton onClick={disabled ? () => {} : handleClick} color='inherit'>
+            <Tooltip className={classes.icon} title='Add to Favorites'>
+              <IconButton className={classes.heart} onClick={disabled ? () => {} : handleClick} color='inherit'>
                 <FavoriteBorderIcon color='inherit' />
               </IconButton>
             </Tooltip>
@@ -112,13 +120,13 @@ const ImageOverlay = ({ image, user }: Props) => {
             <>
               {isFeatured ? (
                 <Tooltip title='Remove from Featured'>
-                  <IconButton onClick={disabledFeatured ? () => {} : handleClickFeatured} color='inherit'>
+                  <IconButton className={classes.star} onClick={disabledFeatured ? () => {} : handleClickFeatured} color='inherit'>
                     <StarIcon color='inherit' />
                   </IconButton>
                 </Tooltip>
               ) : (
                 <Tooltip title='Add to Featured'>
-                  <IconButton onClick={disabledFeatured ? () => {} : handleClickFeatured} color='inherit'>
+                  <IconButton className={classes.star} onClick={disabledFeatured ? () => {} : handleClickFeatured} color='inherit'>
                     <StarBorderIcon color='inherit' />
                   </IconButton>
                 </Tooltip>
@@ -131,4 +139,4 @@ const ImageOverlay = ({ image, user }: Props) => {
   );
 };
 
-export default ImageOverlay;
+export default ImageOverlayTop;
