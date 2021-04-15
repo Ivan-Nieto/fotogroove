@@ -56,6 +56,12 @@ const RenderCollectionButtons = ({
   const theme = useTheme();
   const classes = useStyles(theme);
 
+  const cutString = (str: string, maxLength: number) => {
+    const temp = str?.toString();
+    if (temp.length > maxLength && maxLength > 3) return `${temp.substr(0, maxLength - 3)}...`;
+    return temp;
+  };
+
   return (
     <Drawer open={open} setOpen={setOpen} openByDefault={false} anchor='left'>
       <List className={classes.root}>
@@ -65,40 +71,19 @@ const RenderCollectionButtons = ({
           </Typography>
         </ListItem>
         <Divider className={classes.divider} />
-        {collections.map(
-          (
-            e: { name: string; onClick: () => void | undefined },
-            index: number
-          ) => (
-            <ListItem
-              className={classes.classItem}
-              button
-              key={`${e.name}-${index}`}
-              onClick={e.onClick}
-            >
-              <ListItemIcon>
-                <CollectionsBookmarkIcon color='secondary' />
-              </ListItemIcon>
-              <ListItemText disableTypography>
-                <Typography
-                  className={
-                    activeCollection === index
-                      ? classes.active
-                      : classes.inactive
-                  }
-                  variant='body1'
-                >
-                  {e.name}
-                </Typography>
-              </ListItemText>
-            </ListItem>
-          )
-        )}
-        <RenderAddCollection
-          addCollection={addCollection}
-          uid={uid}
-          open={open}
-        />
+        {collections.map((e: { name: string; onClick: () => void | undefined }, index: number) => (
+          <ListItem className={classes.classItem} button key={`${e.name}-${index}`} onClick={e.onClick}>
+            <ListItemIcon>
+              <CollectionsBookmarkIcon color='secondary' />
+            </ListItemIcon>
+            <ListItemText disableTypography>
+              <Typography className={activeCollection === index ? classes.active : classes.inactive} variant='body1'>
+                {cutString(e.name, 18)}
+              </Typography>
+            </ListItemText>
+          </ListItem>
+        ))}
+        <RenderAddCollection addCollection={addCollection} uid={uid} open={open} />
       </List>
     </Drawer>
   );

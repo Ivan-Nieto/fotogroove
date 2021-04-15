@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  createStyles,
-  makeStyles,
-  useTheme,
-  Theme,
-} from '@material-ui/core/styles';
+import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -72,28 +67,17 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
 
   const [disabled, setDisabled] = useState(false);
   const [collections, setCollections]: [Image[], any] = useState([]);
-  const [activeCollections, setActiveCollections]: [Image[], any] = useState(
-    []
-  );
+  const [activeCollections, setActiveCollections]: [Image[], any] = useState([]);
 
   useEffect(() => {
-    if (
-      !user.isSignedIn ||
-      !user.collections ||
-      user.collections?.length === 0 ||
-      !image ||
-      !image.docId
-    )
-      return;
+    if (!user.isSignedIn || !user.collections || user.collections?.length === 0 || !image || !image.docId) return;
 
     // Find out what collections this image belongs too
 
-    const currCollections: Image[] =
-      user?.collections?.filter((e: Image) => e.name !== 'Favorites') || [];
+    const currCollections: Image[] = user?.collections?.filter((e: Image) => e.name !== 'Favorites') || [];
     const imageId = image?.docId || '';
 
-    const belongsTo: Image[] =
-      currCollections.filter((e: Image) => e.images?.includes(imageId)) || [];
+    const belongsTo: Image[] = currCollections.filter((e: Image) => e.images?.includes(imageId)) || [];
 
     setCollections(currCollections);
     setActiveCollections(belongsTo);
@@ -109,8 +93,7 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
     const newCollections: string[] = (event.target.value as string[]) || [];
     const value = newCollections[newCollections.length - 1];
 
-    const alreadyInArr =
-      activeCollections.filter((e) => e.docId === value).length > 0;
+    const alreadyInArr = activeCollections.filter((e) => e.docId === value).length > 0;
 
     const removeFromCollections = alreadyInArr ? [value] : [];
     const addToCollections = !alreadyInArr ? [value] : [];
@@ -120,19 +103,13 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
     if (alreadyInArr) {
       updatedCollections = activeCollections.filter((e) => e.docId !== value);
     } else {
-      updatedCollections = activeCollections.concat([
-        collections.filter((e) => e.docId === value)[0],
-      ]);
+      updatedCollections = activeCollections.concat([collections.filter((e) => e.docId === value)[0]]);
     }
 
     setActiveCollections(updatedCollections);
 
     // Update firestore
-    if (
-      user?.uid &&
-      image?.docId &&
-      (removeFromCollections.length > 0 || addToCollections.length > 0)
-    ) {
+    if (user?.uid && image?.docId && (removeFromCollections.length > 0 || addToCollections.length > 0)) {
       await addRemoveImageFromCollections(user.uid, image?.docId || '', {
         addToCollections,
         removeFromCollections,
@@ -143,9 +120,14 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
   };
 
   const getClass = (img: Image) => {
-    if (activeCollections.filter((e) => e.docId === img.docId).length > 0)
-      return classes.active;
+    if (activeCollections.filter((e) => e.docId === img.docId).length > 0) return classes.active;
     return '';
+  };
+
+  const cutString = (str: string, maxLength: number) => {
+    const temp = str?.toString();
+    if (temp.length > maxLength && maxLength > 3) return `${temp.substr(0, maxLength - 3)}...`;
+    return temp;
   };
 
   return (
@@ -159,29 +141,19 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
           disabled={disabled}
           value={activeCollections}
           onChange={handleChange}
-          input={
-            <Input id='collection-render-input' className={classes.input} />
-          }
+          input={<Input id='collection-render-input' className={classes.input} />}
           renderValue={(selected: any) => (
             <div className={classes.chips}>
               {selected.map((value: any, index: number) => (
-                <Chip
-                  key={`chip-${value.docId}-${index}`}
-                  label={value.name}
-                  className={classes.chip}
-                />
+                <Chip key={`chip-${value.docId}-${index}`} label={cutString(value.name, 18)} className={classes.chip} />
               ))}
             </div>
           )}
           MenuProps={MenuProps}
         >
           {collections.map((img: any) => (
-            <MenuItem
-              key={img.docId}
-              value={img.docId}
-              className={getClass(img)}
-            >
-              {img.name}
+            <MenuItem key={img.docId} value={img.docId} className={getClass(img)}>
+              {cutString(img.name, 25)}
             </MenuItem>
           ))}
         </Select>

@@ -11,7 +11,8 @@ const useStyles = (height?: number, width?: number) =>
   makeStyles((theme: Theme) => ({
     root: {
       minHeight: '550px',
-      maxWidth: '100vw',
+      maxWidth: 'calc(100vw - 40px)',
+
       ...(height ? { height } : {}),
       ...(width ? { width } : {}),
       margin: '20px 0px',
@@ -19,6 +20,8 @@ const useStyles = (height?: number, width?: number) =>
       overflow: 'hidden',
       display: 'flex',
       alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
       position: 'relative',
     },
     arrowLeft: {

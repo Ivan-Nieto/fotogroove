@@ -44,17 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Tags = ({
-  tags,
-  open,
-  docId,
-  disableUpdate,
-}: {
-  docId?: string;
-  tags?: string[];
-  open?: boolean;
-  disableUpdate?: boolean;
-}) => {
+const Tags = ({ tags, open, docId, disableUpdate }: { docId?: string; tags?: string[]; open?: boolean; disableUpdate?: boolean }) => {
   const theme = useTheme();
   const [inputRef, setInputFocus] = useFocus();
   const classes = useStyles(theme);
@@ -117,6 +107,12 @@ const Tags = ({
       .catch(() => {});
   };
 
+  const cutString = (str: string, maxLength: number) => {
+    const temp = str?.toString();
+    if (temp.length > maxLength && maxLength > 3) return `${temp.substr(0, maxLength - 3)}...`;
+    return temp;
+  };
+
   return (
     <div className={`${classes.root} ${open ? classes.card : ''}`}>
       {open && (
@@ -131,23 +127,14 @@ const Tags = ({
                   : {})}
                 size='small'
                 className={classes.chip}
-                label={e}
+                label={cutString(e, 20)}
                 key={e}
               />
             ))}
           </div>
           {!disableUpdate && (
             <>
-              {showInput && (
-                <Input
-                  onChange={handleChange}
-                  value={newTag}
-                  type='text'
-                  error={error}
-                  ref={inputRef}
-                  autoFocus
-                />
-              )}
+              {showInput && <Input onChange={handleChange} value={newTag} type='text' error={error} ref={inputRef} autoFocus />}
 
               <Button
                 variant='text'

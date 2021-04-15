@@ -13,9 +13,6 @@ const useStyles = makeStyles(() => ({
   root: {
     marginTop: '50px',
     height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
   },
 }));
 
