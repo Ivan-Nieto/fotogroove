@@ -43,11 +43,7 @@ export default function NavigationBar() {
     <div>
       <AppBar position='relative' className={classes.appBar}>
         <Toolbar>
-          <Typography
-            onClick={() => history.push('/')}
-            variant='h5'
-            className={classes.title}
-          >
+          <Typography onClick={() => history.push('/')} variant='h5' className={classes.title}>
             Fotogroove
           </Typography>
           <TagSearchField />

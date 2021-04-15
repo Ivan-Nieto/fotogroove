@@ -15,6 +15,7 @@ import Footer from '../../components/Footer/Footer';
 import ViewCollections from '../viewCollections/ViewCollections';
 import ViewByTag from '../viewByTag/ViewByTag';
 import MyGallery from '../myGallery/MyGallery';
+import Notifications from '../notifications/Notifications';
 
 const useStyles = makeStyles((theme: Theme) => ({
   color: {
@@ -59,6 +60,7 @@ const Router = () => {
 
   return (
     <div className={color}>
+      <Notifications />
       <div className={routes}>
         {!state?.sync?.done && (
           <Switch>

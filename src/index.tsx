@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { BrowserRouter } from 'react-router-dom';
 
+import NotifyContextProvider from './notificationsContext/Context';
 import ContextProvider from './context/Context';
 import customTheme from './theme/theme';
 import Router from './containers/router/Router';
@@ -27,11 +28,13 @@ const App = () => {
 
 ReactDOM.render(
   <ContextProvider>
-    <ThemeProvider theme={customTheme}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ThemeProvider>
+    <NotifyContextProvider>
+      <ThemeProvider theme={customTheme}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ThemeProvider>
+    </NotifyContextProvider>
   </ContextProvider>,
   document.getElementById('root')
 );
