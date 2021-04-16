@@ -1,8 +1,7 @@
-import { InitialValues } from './initialValues';
-
+import { InitialValues, Notification } from './initialValues';
 export interface Action {
   type: 'ADD_NOTIFICATION' | 'REMOVE_NOTIFICATION' | 'UPDATE_FIRST_VISIT';
-  value?: Record<string, any> | string | boolean;
+  value?: Notification | string | boolean;
 }
 
 const reducer = (state: InitialValues, action: Action) => {
