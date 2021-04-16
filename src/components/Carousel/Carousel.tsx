@@ -11,11 +11,12 @@ const useStyles = (height?: number, width?: number) =>
   makeStyles((theme: Theme) => ({
     root: {
       minHeight: '550px',
-      maxWidth: 'calc(100vw - 40px)',
+      maxWidth: 'calc(100vw)',
 
       ...(height ? { height } : {}),
       ...(width ? { width } : {}),
-      margin: '20px 0px',
+      margin: '0px',
+      padding: '0px 10px 10px 0px',
 
       overflow: 'hidden',
       display: 'flex',
@@ -153,7 +154,7 @@ const Carousel = ({ images = [] }: { images: { src: string; id?: string }[] }) =
   const theme = useTheme();
   const classes = useStyles()(theme);
 
-  const windowWidth = Math.floor((window?.innerWidth || document?.documentElement?.clientWidth || document?.body?.clientWidth) - 40);
+  const windowWidth = Math.floor(window?.innerWidth || document?.documentElement?.clientWidth || document?.body?.clientWidth);
   const height = Math.floor((window?.innerHeight || document?.documentElement?.clientHeight || document?.body?.clientHeight) * 0.8);
   const maxHeight = Math.min(Math.floor(windowWidth / 1.8), height);
 
