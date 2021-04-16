@@ -7,7 +7,8 @@ export const Context = React.createContext({});
 
 export const useNotifyContext = (): any => React.useContext(Context);
 
-interface Values {
+export type Dispatch = (params: Action) => void | undefined;
+export interface Values {
   state: InitialValues;
   dispatch: (params: Action) => void | undefined;
 }

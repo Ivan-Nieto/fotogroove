@@ -10,22 +10,21 @@ const useStyles = makeStyles(() => ({
   root: {
     position: 'fixed',
     zIndex: 1000,
-    width: '0 auto',
+    width: 'auto',
     top: 'unset',
     bottom: '30px',
-    margin: '0 auto',
+    margin: 'auto',
     left: '30px',
     right: '30px',
     display: 'flex',
     flexDirection: 'column',
-    pointerEvents: 'none',
     alignItems: 'flex-end',
   },
 }));
 
 const Notifications = () => {
   const { state } = useNotifyContext();
-  const [notifications, setNotifications]: [Array<Notification>, any] = useState([]);
+  const [notifications, setNotifications]: [Array<Notification>, (...args: any[]) => void] = useState([]);
   const classes = useStyles();
   useTutorial();
 

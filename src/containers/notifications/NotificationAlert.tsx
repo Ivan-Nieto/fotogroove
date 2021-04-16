@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { useSpring, animated as a } from 'react-spring';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
 
 import { Notification } from '../../notificationsContext/initialValues';
 
@@ -33,6 +35,9 @@ const useStyles = makeStyles(() => ({
 
 const NotificationAlert = (props: Notification) => {
   const classes = useStyles();
+  const [close, setClose] = useState(false);
+  const ref = useRef<any>();
+  const refInterval = useRef<any>();
   const [springProps, setSpringProps] = useSpring(() => ({
     from: { opacity: 0, transform: 'translate3d(80px,0,0)' },
     to: { opacity: 1, transform: 'translate3d(0px,0,0)' },
@@ -40,42 +45,63 @@ const NotificationAlert = (props: Notification) => {
 
   useEffect(() => {
     let mounted = true;
-    const timer = setTimeout(() => {
-      if (mounted) {
-        setSpringProps({
-          from: { opacity: 1, transform: 'translate3d(0px,0,0)' },
-          to: { opacity: 0, transform: 'translate3d(80px,0,0)' },
-        });
-      }
-    }, props.duration || 4000);
 
-    const elem: any = document.getElementById(`notification-loading-bar-${props.id}`);
-    let width = 1;
-    const id = setInterval(() => {
-      if (width >= 100) {
-        clearInterval(id);
-      } else {
-        width += 1;
-        if (elem?.style) elem.style.width = width + '%';
+    const exitAnimationProps = {
+      from: { opacity: 1, transform: 'translate3d(0px,0,0)' },
+      to: { opacity: 0, transform: 'translate3d(80px,0,0)' },
+    };
+
+    if (close) {
+      if (ref.current || !mounted) clearTimeout(ref.current);
+      if (mounted) {
+        setSpringProps(exitAnimationProps);
       }
-    }, (props.duration || 4000) / 100);
+    } else {
+      ref.current = setTimeout(() => {
+        if (mounted) {
+          setSpringProps(exitAnimationProps);
+        }
+      }, props.duration || 4000);
+
+      const elm = document.getElementById(`notification-loading-bar-${props.id}`);
+      let width = 2;
+      refInterval.current = setInterval(() => {
+        if (width >= 100) {
+          clearInterval(refInterval.current);
+        } else {
+          if (elm?.style) elm.style.width = `${width}%`;
+          width += 1;
+        }
+      }, (props.duration || 4000) / 100);
+    }
 
     return () => {
       mounted = false;
-      clearInterval(id);
-      clearTimeout(timer);
+      if (refInterval.current) clearInterval(refInterval.current);
+      if (ref.current) clearTimeout(ref.current);
     };
 
     // eslint-disable-next-line
-  }, []);
+  }, [close]);
+
+  const defaultAction = (
+    <IconButton size='small' onClick={() => setClose(true)} color='inherit'>
+      <CloseIcon color='inherit' />
+    </IconButton>
+  );
 
   return (
     <a.div style={springProps} className={classes.root}>
       <Alert
-        {...{ action: props.action, onClose: props.onClose, icon: props.icon, closeText: props.closeText }}
-        className={classes.card}
-        severity={props.severity}
-        key={props.id}
+        {...{
+          action: props.action || defaultAction,
+          onClose: props.onClose,
+          icon: props.icon,
+          closeText: props.closeText,
+          severity: props.severity,
+          key: props.id,
+          className: classes.card,
+        }}
       >
         {props.title && <AlertTitle>{props.title}</AlertTitle>}
 
