@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import useScroll from '../../hooks/useScroll';
 import usePaginate from '../../hooks/usePagination';
@@ -11,24 +11,25 @@ import RenderImageGallery from '../../components/RenderImageGallery/RenderImageG
 const ViewByTag = () => {
   const bottomHit = useScroll();
   const query = useQuery();
-  const dbRef = firestore
-    .collection('images')
-    .where('visibility', '==', 'PUBLIC')
-    .where('tags', 'array-contains', query.get('tag'))
-    .orderBy('createDate', 'desc');
+  const [fr, setFr] = React.useState(true);
+  const tag = query.get('tag') as string;
 
-  const [images] = usePaginate(
-    bottomHit,
-    dbRef,
-    ['createDate'],
-    15,
-    getDownloadUrls,
-    true
-  );
+  const makeQuery = (t: string) =>
+    firestore.collection('images').where('visibility', '==', 'PUBLIC').where('tags', 'array-contains', t).orderBy('createDate', 'desc');
 
-  return (
-    <RenderImageGallery images={images} onEmptyMessage={'Nothing found'} />
-  );
+  const [images, , loading, changeTag] = usePaginate(bottomHit, makeQuery(tag), ['createDate'], 15, getDownloadUrls, true);
+
+  useEffect(() => {
+    if (fr) {
+      setFr(false);
+      return;
+    }
+
+    changeTag(makeQuery(tag));
+    // eslint-disable-next-line
+  }, [tag]);
+
+  return <RenderImageGallery images={images} onEmptyMessage={loading ? 'Loading...' : 'Nothing found'} />;
 };
 
 export default ViewByTag;

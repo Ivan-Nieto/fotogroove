@@ -30,7 +30,7 @@ const useTutorial = () => {
       }, 2000);
     }
 
-    if (Boolean(upload) && user?.isSignedIn) {
+    if (!Boolean(upload) && user?.isSignedIn) {
       ref.current = setTimeout(() => {
         setItem('fotogroove-tips-upload');
         dispatch({

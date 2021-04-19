@@ -3,15 +3,16 @@ import firebase from 'firebase/app';
 
 const usePagination = (
   paginate: any,
-  query: firebase.firestore.Query<firebase.firestore.DocumentData>,
+  searchQuery: firebase.firestore.Query<firebase.firestore.DocumentData>,
   orderByFields: string[],
   batchSize?: number,
-  mutateResults?: (
-    docs: firebase.firestore.QueryDocumentSnapshot[]
-  ) => Array<any> | Promise<Array<any>>,
+  mutateResults?: (docs: firebase.firestore.QueryDocumentSnapshot[]) => Array<any> | Promise<Array<any>>,
   dontAddNew?: boolean
 ) => {
   const [data, setData]: any = useState([]);
+  const [reQuery, setReQuery] = useState(0);
+  const [query, setQuery] = useState(searchQuery);
+  const [changeQuery, setChangeQuery] = useState<firebase.firestore.Query<firebase.firestore.DocumentData>>();
   const [endReached, setEndReached] = useState(false);
   const [paginating, setPaginating] = useState(false);
   const [lastEntry, setLastEntry]: [Record<string, any>, any] = useState({});
@@ -19,6 +20,20 @@ const usePagination = (
 
   const [snapshotCount, setSnapshotCount] = useState(0);
   const [snapshotSet, setSnapshotSet] = useState(false);
+
+  // Control query restart
+  useEffect(() => {
+    if (!changeQuery) return;
+
+    // Reset all values to their defaults;
+    setEndReached(false);
+    setLastEntry({});
+    setData([]);
+    setSnapshotCount(0);
+    setSnapshotSet(false);
+    setQuery(changeQuery);
+    setReQuery(Math.random());
+  }, [changeQuery]);
 
   useEffect(() => {
     if (!snapshotSet || dontAddNew) return;
@@ -33,9 +48,7 @@ const usePagination = (
       .limit(limit)
       .endBefore(...orderByFields.map((e) => obj[e]))
       .onSnapshot(async (querySnapshot) => {
-        const newDocs = mutateResults
-          ? await mutateResults(querySnapshot.docs)
-          : querySnapshot.docs;
+        const newDocs = mutateResults ? await mutateResults(querySnapshot.docs) : querySnapshot.docs;
         // Snapshot hit
         setData(newDocs.concat(data));
         if (snapshotCount + querySnapshot.size > limit) {
@@ -60,9 +73,7 @@ const usePagination = (
       const lastEntryEmpty = Object.keys(lastEntry).length === 0;
 
       if (!lastEntryEmpty) {
-        newData = await dbRef
-          .startAfter(...orderByFields.map((e) => lastEntry[e]))
-          .get();
+        newData = await dbRef.startAfter(...orderByFields.map((e) => lastEntry[e])).get();
       } else {
         newData = await dbRef.get();
       }
@@ -110,9 +121,9 @@ const usePagination = (
     };
 
     // eslint-disable-next-line
-  }, [paginate]);
+  }, [paginate, reQuery]);
 
-  return [data, snapshotCount === limit];
+  return [data, snapshotCount === limit, paginating, setChangeQuery];
 };
 
 export default usePagination;
