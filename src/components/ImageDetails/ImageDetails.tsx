@@ -6,6 +6,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import Divider from '@material-ui/core/Divider';
+import Typography from '@material-ui/core/Typography';
 
 import useUser from '../../hooks/useUser';
 
@@ -25,7 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.grey[100],
   },
   item: {
-    padding: '20px 10px',
+    width: '100%',
+    padding: '10px',
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
@@ -35,15 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ImageDetails = ({
-  tags,
-  image,
-  author,
-}: {
-  author: Record<string, any>;
-  image?: Record<string, any>;
-  tags?: string[];
-}) => {
+const ImageDetails = ({ tags, image, author }: { author: Record<string, any>; image?: Record<string, any>; tags?: string[] }) => {
   const [ownsImage, setOwnsImage] = useState(true);
   const [open, setOpen] = useState(false);
   const theme = useTheme();
@@ -61,12 +55,16 @@ const ImageDetails = ({
       <List className={classes.root}>
         {hasRez && (
           <ListItem>
-            <ListItemIcon></ListItemIcon>
-            <ListItemText>
-              {image?.resolution?.width} x {image?.resolution?.height}
-            </ListItemText>
+            <div className={classes.item}>
+              {open && (
+                <Typography variant='h6'>
+                  {image?.resolution?.width} x {image?.resolution?.height}
+                </Typography>
+              )}
+            </div>
           </ListItem>
         )}
+
         {user?.isSignedIn && open && (
           <ListItem className={classes.item}>
             <RenderFavorite user={user} image={image} />
@@ -88,21 +86,14 @@ const ImageDetails = ({
         </ListItem>
 
         <ListItem className={classes.item}>
-          <Tags
-            tags={tags}
-            docId={image?.docId}
-            open={open}
-            disableUpdate={!ownsImage}
-          />
+          <Tags tags={tags} docId={image?.docId} open={open} disableUpdate={!ownsImage} />
         </ListItem>
 
         <ListItem className={classes.item}>
           <RenderImageDetails image={image} author={author} open={open} />
         </ListItem>
 
-        {image?.description !== null && (
-          <RenderDescription open={open} image={image} ownsImage={ownsImage} />
-        )}
+        {image?.description !== null && <RenderDescription open={open} image={image} ownsImage={ownsImage} />}
       </List>
     </Drawer>
   );

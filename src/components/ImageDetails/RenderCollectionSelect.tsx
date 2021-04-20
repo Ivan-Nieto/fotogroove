@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: theme.typography.fontWeightBold,
     },
     input: {
-      width: '150px',
+      width: '250px',
     },
   })
 );

@@ -58,9 +58,21 @@ const RenderImageDetails = ({ image, author, open }: { open: boolean; image?: Re
 
       // Add all metadata from image
       if (notEmpty(image?.metadata)) {
-        Object.keys(image?.metadata).forEach((e) => {
-          newItems.push(`${e}: ${image?.metadata[e]}`);
-        });
+        const exists = (key: string, field: string): Array<string> =>
+          Boolean(image?.metadata[field]) ? [`${key}: ${image?.metadata[field]}`] : [];
+
+        newItems.push(
+          ...[
+            ...exists('F-stop', 'fStop'),
+            ...exists('ISO', 'iso'),
+            ...exists('Shutter Speed', 'shutterSpeed'),
+            ...exists('Focal Length', 'focalLength'),
+            // ...exists('Lense Make', 'lenseMake'),
+            ...exists('Lense Model', 'lenseModel'),
+            // ...exists('Camera Make', 'cameraMake'),
+            ...exists('Camera Model', 'cameraModel'),
+          ]
+        );
       }
     }
 

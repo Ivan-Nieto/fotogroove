@@ -12,9 +12,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexShrink: 0,
     whiteSpace: 'nowrap',
   },
-  drawerHeader: {
+  toggleIcon: {
+    width: '100%',
     display: 'flex',
     alignItems: 'center',
+    paddingTop: '30px',
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
@@ -22,13 +24,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.grey[100],
   },
   drawerOpen: {
-    width: '240px',
+    width: 'auto',
     borderRight: `2px solid ${theme.palette.grey[800]}`,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
     overflowX: 'hidden',
+    '&::-webkit-scrollbar': { display: 'none', width: '0px' },
   },
   drawerClose: {
     transition: theme.transitions.create('width', {
@@ -61,11 +64,7 @@ const Drawer = ({
   const classes = useStyles(theme);
 
   const toggleDrawer = (event: React.KeyboardEvent | React.MouseEvent) => {
-    if (
-      event.type === 'keydown' &&
-      ((event as React.KeyboardEvent).key === 'Tab' ||
-        (event as React.KeyboardEvent).key === 'Shift')
-    ) {
+    if (event.type === 'keydown' && ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')) {
       return;
     }
 
@@ -90,14 +89,8 @@ const Drawer = ({
       }}
     >
       {children}
-      <div className={classes.drawerHeader}>
-        <IconButton onClick={toggleDrawer}>
-          {open ? (
-            <ChevronLeftIcon color='secondary' />
-          ) : (
-            <ChevronRightIcon color='secondary' />
-          )}
-        </IconButton>
+      <div className={classes.toggleIcon}>
+        <IconButton onClick={toggleDrawer}>{open ? <ChevronLeftIcon color='secondary' /> : <ChevronRightIcon color='secondary' />}</IconButton>
       </div>
     </MuDrawer>
   );
