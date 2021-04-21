@@ -92,9 +92,9 @@ const ProfileDropdown = () => {
       onClick: pushHistory('/gallery'),
     },
     {
-      label: 'My Collections',
+      label: 'My Lists',
       icon: <CollectionsBookmarkIcon color='secondary' />,
-      onClick: pushHistory('/collections'),
+      onClick: pushHistory('/lists'),
     },
     {
       label: 'Sign Out',
@@ -129,11 +129,7 @@ const ProfileDropdown = () => {
       >
         <Paper className={classes.paper}>
           <ClickAwayListener onClickAway={closeDropdown}>
-            <MenuList
-              autoFocusItem={open}
-              id='menu-list-grow'
-              onKeyDown={handleListKeyDown}
-            >
+            <MenuList autoFocusItem={open} id='menu-list-grow' onKeyDown={handleListKeyDown}>
               {fields.map((e: any) => (
                 <MenuItem onClick={e.onClick} key={e.label}>
                   <ListItemIcon>{e.icon}</ListItemIcon>

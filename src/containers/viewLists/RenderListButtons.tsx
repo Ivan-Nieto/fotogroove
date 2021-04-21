@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
 
 import Drawer from '../../components/Drawer/Drawer';
-import RenderAddCollection from './RenderAddCollection';
+import RenderAddList from './RenderAddList';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -41,16 +41,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const RenderCollectionButtons = ({
-  collections,
+const RenderListButtons = ({
+  lists,
   uid,
-  addCollection,
-  activeCollection,
+  addList,
+  activeList,
 }: {
-  activeCollection: number;
-  addCollection: any;
+  activeList: number;
+  addList: any;
   uid: string;
-  collections: { name: string; onClick: () => void | undefined }[];
+  lists: { name: string; onClick: () => void | undefined }[];
 }) => {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
@@ -67,26 +67,26 @@ const RenderCollectionButtons = ({
       <List className={classes.root}>
         <ListItem className={classes.item}>
           <Typography variant='h5' className={classes.title}>
-            {open ? 'My Collections' : ''}
+            {open ? 'My Lists' : ''}
           </Typography>
         </ListItem>
         <Divider className={classes.divider} />
-        {collections.map((e: { name: string; onClick: () => void | undefined }, index: number) => (
+        {lists.map((e: { name: string; onClick: () => void | undefined }, index: number) => (
           <ListItem className={classes.classItem} button key={`${e.name}-${index}`} onClick={e.onClick}>
             <ListItemIcon>
               <CollectionsBookmarkIcon color='secondary' />
             </ListItemIcon>
             <ListItemText disableTypography>
-              <Typography className={activeCollection === index ? classes.active : classes.inactive} variant='body1'>
+              <Typography className={activeList === index ? classes.active : classes.inactive} variant='body1'>
                 {cutString(e.name, 18)}
               </Typography>
             </ListItemText>
           </ListItem>
         ))}
-        <RenderAddCollection addCollection={addCollection} uid={uid} open={open} />
+        <RenderAddList addList={addList} uid={uid} open={open} />
       </List>
     </Drawer>
   );
 };
 
-export default RenderCollectionButtons;
+export default RenderListButtons;

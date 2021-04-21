@@ -15,7 +15,7 @@ import Drawer from '../Drawer/Drawer';
 import RenderDescription from './RenderDescription';
 import RenderImageDetails from './RenderImageDetails';
 import RenderFavorite from './RenderFavorite';
-import RenderCollectionSelect from './RenderCollectionSelect';
+import RenderListSelect from './RenderListSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -74,7 +74,7 @@ const ImageDetails = ({ tags, image, author }: { author: Record<string, any>; im
         <Divider className={classes.divider} />
         {user?.isSignedIn && open && (
           <ListItem className={classes.item}>
-            <RenderCollectionSelect image={image} />
+            <RenderListSelect image={image} />
           </ListItem>
         )}
 

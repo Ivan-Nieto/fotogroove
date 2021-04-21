@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import useUser from '../../hooks/useUser';
 
 import { getImagesFromList } from '../../firebase/firestore/firestore';
-import RenderCollectionButtons from './RenderCollectionButtons';
+import RenderListButtons from './RenderListButtons';
 import RenderImageGallery from '../../components/RenderImageGallery/RenderImageGallery';
 
 const useStyles = makeStyles(() => ({
@@ -23,10 +23,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ViewCollections = () => {
+const ViewLists = () => {
   const classes = useStyles();
-  const [collections, setCollections]: any = useState([]);
-  const [activeCollection, setActiveCollection] = useState(0);
+  const [lists, setLists]: any = useState([]);
+  const [activeCollection, setActiveList] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const [images, setImages]: any = useState(false);
@@ -37,9 +37,9 @@ const ViewCollections = () => {
 
   const user = useUser();
 
-  const updateActiveCollection = (index: number) => {
+  const updateActiveList = (index: number) => {
     if (paginating || loading) return;
-    setActiveCollection(index);
+    setActiveList(index);
     setImages([]);
     setLastEntry(false);
     setEndReached(false);
@@ -51,18 +51,19 @@ const ViewCollections = () => {
     let mounted = true;
     const getCols = async () => {
       setLoading(true);
-      const newCollections =
-        user?.collections?.map((e: Record<string, any>, index: number) => ({
+
+      const newLists =
+        user?.lists?.map((e: Record<string, any>, index: number) => ({
           ...e,
-          onClick: () => updateActiveCollection(index),
+          onClick: () => updateActiveList(index),
         })) || [];
 
-      setCollections(newCollections || []);
+      setLists(newLists || []);
 
-      if (!newCollections || newCollections.length === 0) return;
+      if (!newLists || newLists.length === 0) return;
 
       setPaginating(true);
-      const images = await getImagesFromList(newCollections[0].images || []);
+      const images = await getImagesFromList(newLists[0].images || []);
       if (mounted) {
         setImages(images?.images || []);
         if (images?.images) setLastEntry(images?.images[images?.images?.length - 1]);
@@ -72,7 +73,7 @@ const ViewCollections = () => {
       if (mounted) setLoading(false);
     };
 
-    if (user?.isSignedIn && !loading && !paginating) getCols();
+    if (user?.isSignedIn && user?.lists && !loading && !paginating) getCols();
 
     return () => {
       mounted = false;
@@ -87,7 +88,7 @@ const ViewCollections = () => {
       if (!loading && !paginating && !endReached && mounted) {
         setPaginating(true);
         // Get new set of images
-        const newImgs = await getImagesFromList(collections[activeCollection].images);
+        const newImgs = await getImagesFromList(lists[activeCollection].images);
 
         if (!mounted) return;
 
@@ -105,7 +106,7 @@ const ViewCollections = () => {
       }
     };
 
-    if (collections[activeCollection] && collections[activeCollection].images?.length > 0) update();
+    if (lists[activeCollection] && lists[activeCollection].images?.length > 0) update();
     else {
       setImages([]);
       setEndReached(true);
@@ -118,13 +119,13 @@ const ViewCollections = () => {
   }, [reRunPagination]);
 
   const addCollection = (newCol: string) => {
-    setCollections(
-      collections.concat([
+    setLists(
+      lists.concat([
         {
           name: newCol,
           images: [],
           docId: '',
-          onCLick: () => updateActiveCollection(collections.length),
+          onCLick: () => updateActiveList(lists.length),
         },
       ])
     );
@@ -132,12 +133,10 @@ const ViewCollections = () => {
 
   return (
     <div className={classes.root}>
-      {collections.length > 0 && (
-        <RenderCollectionButtons activeCollection={activeCollection} addCollection={addCollection} uid={user.uid} collections={collections} />
-      )}
-      {!loading && <RenderImageGallery images={images} onEmptyMessage={paginating ? 'Loading...' : 'This collection is empty'} />}
+      {lists.length > 0 && <RenderListButtons activeList={activeCollection} addList={addCollection} uid={user.uid} lists={lists} />}
+      {!loading && <RenderImageGallery images={images} onEmptyMessage={paginating ? 'Loading...' : 'This list is empty'} />}
     </div>
   );
 };
 
-export default ViewCollections;
+export default ViewLists;

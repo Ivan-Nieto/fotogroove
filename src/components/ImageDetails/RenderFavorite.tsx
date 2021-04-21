@@ -11,18 +11,11 @@ const RenderFavorite = ({ user, image }: any) => {
   const [favorites, setFavorites] = React.useState([]);
 
   useEffect(() => {
-    if (
-      !image?.docId ||
-      user?.collections == null ||
-      user?.collections?.length === 0
-    )
-      return;
+    if (!image?.docId || user?.lists == null || user?.lists?.length === 0) return;
 
     // Check if user had favorites collection
-    const favoritesCollection = user?.collections.filter(
-      (e: { name: string }) => e.name === 'Favorites'
-    )[0];
-    if (favoritesCollection.length === 0) return;
+    const favoritesCollection = user?.lists.filter((e: { docId: string }) => e.docId === 'favorites')[0];
+    if (!favoritesCollection) return;
 
     // Check if current image is already favored by user
     if (favoritesCollection.images?.includes(image?.docId)) {
@@ -31,9 +24,7 @@ const RenderFavorite = ({ user, image }: any) => {
     setFavorites(favoritesCollection.images || []);
   }, [user, image]);
 
-  const updateFavoriteCounter = functions.httpsCallable(
-    'updateFavoriteCounter'
-  );
+  const updateFavoriteCounter = functions.httpsCallable('updateFavoriteCounter');
 
   const handleClick = async () => {
     const docId = image?.docId || '';
@@ -52,18 +43,9 @@ const RenderFavorite = ({ user, image }: any) => {
         newFavorites = newFavorites.filter((e) => e !== docId);
       }
 
-      const favoritesCollection = user?.collections?.filter(
-        (e: { name: string }) => e.name === 'Favorites'
-      )[0];
-
-      await firestore
-        .collection('users')
-        .doc(user?.uid)
-        .collection('collections')
-        .doc(favoritesCollection.docId || '')
-        .update({
-          images: newFavorites,
-        });
+      await firestore.collection('users').doc(user?.uid).collection('lists').doc('favorites').update({
+        images: newFavorites,
+      });
 
       // Update favorites counter
       updateFavoriteCounter({ increment: !alreadyFaved, docId }).catch();
@@ -77,12 +59,7 @@ const RenderFavorite = ({ user, image }: any) => {
   };
 
   return (
-    <Button
-      variant='outlined'
-      disabled={disabled}
-      onClick={handleClick}
-      startIcon={alreadyFaved ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-    >
+    <Button variant='outlined' disabled={disabled} onClick={handleClick} startIcon={alreadyFaved ? <FavoriteIcon /> : <FavoriteBorderIcon />}>
       {alreadyFaved ? 'Remove from Favorites' : 'Favorite'}
     </Button>
   );

@@ -9,7 +9,7 @@ import Input from '@material-ui/core/Input';
 
 import useUser from '../../hooks/useUser';
 
-import { addRemoveImageFromCollections } from '../../firebase/firestore/collections';
+import { addRemoveImageFromLists } from '../../firebase/firestore/lists';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,7 +60,7 @@ interface Image {
   name: string;
 }
 
-const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
+const RenderListSelect = ({ image }: { image?: Record<string, any> }) => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const user = useUser();
@@ -70,11 +70,11 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
   const [activeCollections, setActiveCollections]: [Image[], any] = useState([]);
 
   useEffect(() => {
-    if (!user.isSignedIn || !user.collections || user.collections?.length === 0 || !image || !image.docId) return;
+    if (!user.isSignedIn || !user.lists || user.lists?.length === 0 || !image || !image.docId) return;
 
     // Find out what collections this image belongs too
 
-    const currCollections: Image[] = user?.collections?.filter((e: Image) => e.name !== 'Favorites') || [];
+    const currCollections: Image[] = user?.lists?.filter((e: Image) => e.docId !== 'favorites') || [];
     const imageId = image?.docId || '';
 
     const belongsTo: Image[] = currCollections.filter((e: Image) => e.images?.includes(imageId)) || [];
@@ -95,24 +95,24 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
 
     const alreadyInArr = activeCollections.filter((e) => e.docId === value).length > 0;
 
-    const removeFromCollections = alreadyInArr ? [value] : [];
-    const addToCollections = !alreadyInArr ? [value] : [];
+    const removeFromLists = alreadyInArr ? [value] : [];
+    const addToLists = !alreadyInArr ? [value] : [];
 
     // Create new collection
-    let updatedCollections = [];
+    let updatedLists = [];
     if (alreadyInArr) {
-      updatedCollections = activeCollections.filter((e) => e.docId !== value);
+      updatedLists = activeCollections.filter((e) => e.docId !== value);
     } else {
-      updatedCollections = activeCollections.concat([collections.filter((e) => e.docId === value)[0]]);
+      updatedLists = activeCollections.concat([collections.filter((e) => e.docId === value)[0]]);
     }
 
-    setActiveCollections(updatedCollections);
+    setActiveCollections(updatedLists);
 
     // Update firestore
-    if (user?.uid && image?.docId && (removeFromCollections.length > 0 || addToCollections.length > 0)) {
-      await addRemoveImageFromCollections(user.uid, image?.docId || '', {
-        addToCollections,
-        removeFromCollections,
+    if (user?.uid && image?.docId && (removeFromLists.length > 0 || addToLists.length > 0)) {
+      await addRemoveImageFromLists(user.uid, image?.docId || '', {
+        addToLists,
+        removeFromLists,
       });
     }
 
@@ -133,19 +133,19 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
   return (
     <div className={classes.root}>
       <FormControl className={classes.formControl}>
-        <InputLabel id='collection-select-label'>Add To Collection</InputLabel>
+        <InputLabel id='list-select-label'>Add To List</InputLabel>
         <Select
-          labelId='collection-select-label'
-          id='collection-select'
+          labelId='list-select-label'
+          id='list-select'
           multiple
           disabled={disabled}
           value={activeCollections}
           onChange={handleChange}
-          input={<Input id='collection-render-input' className={classes.input} />}
+          input={<Input id='list-render-input' className={classes.input} />}
           renderValue={(selected: any) => (
             <div className={classes.chips}>
               {selected.map((value: any, index: number) => (
-                <Chip key={`chip-${value.docId}-${index}`} label={cutString(value.name, 18)} className={classes.chip} />
+                <Chip key={`chip-${value.docId}-${index}`} label={cutString(value.name || '', 18)} className={classes.chip} />
               ))}
             </div>
           )}
@@ -162,4 +162,4 @@ const RenderCollectionSelect = ({ image }: { image?: Record<string, any> }) => {
   );
 };
 
-export default RenderCollectionSelect;
+export default RenderListSelect;

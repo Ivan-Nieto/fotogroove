@@ -22,28 +22,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const RenderAddCollection = ({
-  uid,
-  open,
-  addCollection,
-}: {
-  addCollection: any;
-  uid: string;
-  open: boolean;
-}) => {
+const RenderAddList = ({ uid, open, addList }: { addList: any; uid: string; open: boolean }) => {
   const theme = useTheme();
   const { root, input, content, btn } = useStyles(theme);
-  const [collectionName, setCollectionName] = useState('');
+  const [listName, setListName] = useState('');
   const [disabled, setDisabled] = useState(false);
   const [error, setError] = useState(false);
 
   const handleChangeDescription = (event: any) => {
-    setCollectionName(event.target.value || '');
+    setListName(event.target.value || '');
     setError(false);
   };
 
   const handleAddCollection = async () => {
-    if (collectionName === '') {
+    if (listName === '') {
       setError(true);
       return;
     }
@@ -52,18 +44,18 @@ const RenderAddCollection = ({
     await firestore
       .collection('users')
       .doc(uid)
-      .collection('collections')
+      .collection('lists')
       .add({
-        name: collectionName,
+        name: listName,
         images: [],
         protected: false,
       })
       .then(() => {
-        addCollection(collectionName);
+        addList(listName);
       })
       .catch(() => {});
 
-    setCollectionName('');
+    setListName('');
     setDisabled(false);
   };
 
@@ -71,21 +63,9 @@ const RenderAddCollection = ({
     <ListItem className={root}>
       {open && (
         <div className={content}>
-          <Input
-            error={error}
-            type='text'
-            value={collectionName || ''}
-            className={input}
-            label='New Collection Name'
-            onChange={handleChangeDescription}
-          />
-          <Button
-            size='small'
-            className={btn}
-            disabled={disabled}
-            onClick={handleAddCollection}
-          >
-            Add Collection
+          <Input error={error} type='text' value={listName || ''} className={input} label='New List Name' onChange={handleChangeDescription} />
+          <Button size='small' className={btn} disabled={disabled} onClick={handleAddCollection}>
+            Add List
           </Button>
         </div>
       )}
@@ -93,4 +73,4 @@ const RenderAddCollection = ({
   );
 };
 
-export default RenderAddCollection;
+export default RenderAddList;
