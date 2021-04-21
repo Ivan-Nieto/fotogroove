@@ -13,7 +13,7 @@ const accessUserDb = (obs$: Observer<firebase.firestore.QuerySnapshot>, uid: str
   firestore.collection('users').doc(uid).collection('lists').onSnapshot(obs$);
 
 const getQueryData = (userDoc: firebase.firestore.QuerySnapshot) =>
-  !userDoc.empty ? userDoc.docs.map((e) => ({ ...e.data(), docId: e.id })) : [];
+  !userDoc.empty ? userDoc.docs.filter((e) => Object.keys(e.data() || {}).length > 0).map((e) => ({ ...e.data(), docId: e.id })) : [];
 
 const useSyncUserLists = () => {
   const user = useUser();

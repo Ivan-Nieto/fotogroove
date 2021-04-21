@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import useUser from '../../hooks/useUser';
 
 import { getImagesFromList } from '../../firebase/firestore/firestore';
-import RenderListButtons from './RenderListButtons';
+import RenderCollectionButtons from './RenderCollectionButton';
 import RenderImageGallery from '../../components/RenderImageGallery/RenderImageGallery';
 
 const useStyles = makeStyles(() => ({
@@ -53,7 +53,7 @@ const ViewLists = () => {
       setLoading(true);
 
       const newLists =
-        user?.lists?.map((e: Record<string, any>, index: number) => ({
+        user?.collections?.map((e: Record<string, any>, index: number) => ({
           ...e,
           onClick: () => updateActiveList(index),
         })) || [];
@@ -73,7 +73,7 @@ const ViewLists = () => {
       if (mounted) setLoading(false);
     };
 
-    if (user?.isSignedIn && user?.lists && !loading && !paginating) getCols();
+    if (user?.isSignedIn && user?.collections && !loading && !paginating) getCols();
 
     return () => {
       mounted = false;
@@ -133,8 +133,8 @@ const ViewLists = () => {
 
   return (
     <div className={classes.root}>
-      <RenderListButtons activeList={activeCollection} addList={addCollection} uid={user.uid} lists={lists} />
-      {!loading && <RenderImageGallery images={images} onEmptyMessage={paginating ? 'Loading...' : 'This list is empty'} />}
+      <RenderCollectionButtons activeList={activeCollection} addList={addCollection} uid={user.uid} lists={lists} />
+      {!loading && <RenderImageGallery images={images} onEmptyMessage={paginating ? 'Loading...' : 'This collection is empty'} />}
     </div>
   );
 };

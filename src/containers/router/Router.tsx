@@ -13,6 +13,7 @@ import BrokenLink from '../../components/BrokenLink/BrokenLink';
 import Loader from '../../components/loader/Loader';
 import Footer from '../../components/Footer/Footer';
 import ViewLists from '../viewLists/ViewLists';
+import ViewCollections from '../viewCollections/ViewCollections';
 import ViewByTag from '../viewByTag/ViewByTag';
 import MyGallery from '../myGallery/MyGallery';
 import Notifications from '../notifications/Notifications';
@@ -75,6 +76,7 @@ const Router = () => {
             <Route exact path='/view-image' component={ViewImage} />
             <Route exact path='/register' component={withNav(Registration)} />
             <Route exact path='/lists' component={withNav(ViewLists)} />
+            <Route exact path='/collections' component={withNav(ViewCollections)} />
             <Route exact path='/search' component={withNav(ViewByTag)} />
             <Route component={BrokenLink} />
           </Switch>

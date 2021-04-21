@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
 
 import Drawer from '../../components/Drawer/Drawer';
-import RenderAddList from './RenderAddList';
+import RenderAddCollection from './RenderAddCollection';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -67,7 +67,7 @@ const RenderListButtons = ({
       <List className={classes.root}>
         <ListItem className={classes.item}>
           <Typography variant='h5' className={classes.title}>
-            {open ? 'My Lists' : ''}
+            {open ? 'My Collections' : ''}
           </Typography>
         </ListItem>
         <Divider className={classes.divider} />
@@ -83,7 +83,7 @@ const RenderListButtons = ({
             </ListItemText>
           </ListItem>
         ))}
-        <RenderAddList addList={addList} uid={uid} open={open} />
+        <RenderAddCollection addList={addList} uid={uid} open={open} />
       </List>
     </Drawer>
   );

@@ -9,18 +9,11 @@ import useSync from './useSync';
 import { firestore } from '../../firebase/init';
 import { useFormContext } from '../Context';
 
-const accessUserDb = (
-  obs$: Observer<firebase.firestore.QuerySnapshot>,
-  uid: string
-) =>
-  firestore
-    .collection('users')
-    .doc(uid)
-    .collection('collections')
-    .onSnapshot(obs$);
+const accessUserDb = (obs$: Observer<firebase.firestore.QuerySnapshot>, uid: string) =>
+  firestore.collection('users').doc(uid).collection('collections').onSnapshot(obs$);
 
 const getQueryData = (userDoc: firebase.firestore.QuerySnapshot) =>
-  !userDoc.empty ? userDoc.docs.map((e) => ({ ...e.data(), docId: e.id })) : [];
+  !userDoc.empty ? userDoc.docs.filter((e) => Object.keys(e.data() || {}).length > 0).map((e) => ({ ...e.data(), docId: e.id })) : [];
 
 const useSyncUserCollections = () => {
   const user = useUser();
@@ -28,10 +21,7 @@ const useSyncUserCollections = () => {
   const done = useSync('collections');
 
   useEffect(() => {
-    if (
-      !user.isSignedIn ||
-      (user.collections && user.collections?.length !== 0)
-    ) {
+    if (!user.isSignedIn || (user.collections && user.collections?.length !== 0)) {
       done();
       return;
     }
