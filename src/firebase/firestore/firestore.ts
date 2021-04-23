@@ -120,3 +120,23 @@ export const getUserFavorites = async (uid: string): Promise<string[]> => {
     return [];
   }
 };
+
+export const getUserCollections = async (
+  uid: string
+): Promise<{ empty: boolean; collections?: Array<{ [key: string]: any; docId: string }>; error: boolean }> => {
+  return await firestore
+    .collection('users')
+    .doc(uid)
+    .collection('collections')
+    .get()
+    .then((snapshot) => {
+      if (snapshot.empty) return { error: false, empty: true };
+
+      const collections = snapshot.docs.map((e) => ({ ...e.data(), docId: e.id }));
+
+      return { empty: false, error: false, collections };
+    })
+    .catch(() => {
+      return { empty: false, error: true };
+    });
+};

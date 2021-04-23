@@ -28,6 +28,14 @@ const RenderAddList = ({ uid, open, addList }: { addList: any; uid: string; open
   const [listName, setListName] = useState('');
   const [disabled, setDisabled] = useState(false);
   const [error, setError] = useState(false);
+  const ref = React.useRef(false);
+
+  React.useEffect(
+    () => () => {
+      ref.current = true;
+    },
+    []
+  );
 
   const handleChangeDescription = (event: any) => {
     setListName(event.target.value || '');
@@ -55,6 +63,7 @@ const RenderAddList = ({ uid, open, addList }: { addList: any; uid: string; open
       })
       .catch(() => {});
 
+    if (ref.current) return;
     setListName('');
     setDisabled(false);
   };

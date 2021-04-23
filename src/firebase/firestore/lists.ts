@@ -1,10 +1,11 @@
 import { firestore } from '../init';
 import firebase from 'firebase/app';
 
-export const addRemoveImageFromLists = async (
+export const addRemove = async (
   userUid: string,
   imageUid: string,
-  { addToLists, removeFromLists }: { addToLists?: string[]; removeFromLists?: string[] }
+  { addToLists, removeFromLists }: { addToLists?: string[]; removeFromLists?: string[] },
+  col: string
 ): Promise<{
   error: boolean;
 }> => {
@@ -13,7 +14,7 @@ export const addRemoveImageFromLists = async (
       error: false,
     };
 
-  const dbRef = firestore.collection('users').doc(userUid).collection('lists');
+  const dbRef = firestore.collection('users').doc(userUid).collection(col);
 
   // Create update queries
   const batch = firestore.batch();
@@ -40,4 +41,22 @@ export const addRemoveImageFromLists = async (
       error: true,
     };
   }
+};
+
+export const addRemoveImageFromCollection = (
+  userUid: string,
+  imageUid: string,
+  { addToLists, removeFromLists }: { addToLists?: string[]; removeFromLists?: string[] }
+) => {
+  return addRemove(userUid, imageUid, { addToLists, removeFromLists }, 'collections');
+};
+
+export const addRemoveImageFromLists = async (
+  userUid: string,
+  imageUid: string,
+  { addToLists, removeFromLists }: { addToLists?: string[]; removeFromLists?: string[] }
+): Promise<{
+  error: boolean;
+}> => {
+  return addRemove(userUid, imageUid, { addToLists, removeFromLists }, 'lists');
 };

@@ -14,6 +14,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { useHistory } from 'react-router-dom';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
+import ListIcon from '@material-ui/icons/List';
 
 import useUser from '../../hooks/useUser';
 
@@ -92,8 +93,13 @@ const ProfileDropdown = () => {
       onClick: pushHistory('/gallery'),
     },
     {
-      label: 'My Lists',
+      label: 'My Collections',
       icon: <CollectionsBookmarkIcon color='secondary' />,
+      onClick: pushHistory('/collections'),
+    },
+    {
+      label: 'My Lists',
+      icon: <ListIcon color='secondary' />,
       onClick: pushHistory('/lists'),
     },
     {

@@ -7,7 +7,8 @@ import useQuery from '../../hooks/useQuery';
 
 import Gallery from '../gallery/Gallery';
 import Carousel from '../../components/Carousel/Carousel';
-import { getImagesFromList, getDownloadURL, getUserFavorites } from '../../firebase/firestore/firestore';
+import { getImagesFromList, getDownloadURL, getUserFavorites, getUserCollections } from '../../firebase/firestore/firestore';
+import RenderUserCollections from './RenderUserCollections';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -24,6 +25,7 @@ const MyGallery = () => {
   const [featured, setFeatured] = useState<{ id?: string; src: string }[]>([]);
   const [querying, setQuerying] = useState(false);
   const [account, setAccount] = useState<undefined | string>();
+  const [collections, setCollections] = useState([]);
   const ref = React.useRef<any>(null);
 
   // Set querying to false after 3 seconds
@@ -50,6 +52,18 @@ const MyGallery = () => {
       if (!Boolean(acc)) setAccount(user?.uid);
     }
 
+    const getCollections = async () => {
+      let cols: any = [];
+      if (Boolean(acc)) {
+        const response = await getUserCollections(acc);
+        cols = !response?.empty && !response.error ? response.collections : [];
+      } else {
+        cols = user?.collections || [];
+      }
+
+      if (mount) setCollections(cols);
+    };
+
     const getImgs = async () => {
       setQuerying(true);
 
@@ -57,6 +71,8 @@ const MyGallery = () => {
       let targetFeatured = [];
       if (Boolean(acc)) targetFeatured = await getUserFavorites(acc);
       else targetFeatured = user?.userDoc?.featured || [];
+
+      getCollections();
 
       if (!mount || targetFeatured.length === 0) {
         if (mount) setQuerying(false);
@@ -74,6 +90,7 @@ const MyGallery = () => {
         src: string;
         id?: string;
       }
+
       const promisi =
         images?.map(
           async (e: any): Promise<ImgReturn> => {
@@ -111,6 +128,7 @@ const MyGallery = () => {
       {Boolean(account) && !querying && (
         <>
           {featured.length > 0 && <Carousel images={featured} />}
+          {collections.length > 0 && <RenderUserCollections account={account || ''} collections={collections} />}
           {account && Boolean(account) && <Gallery targetAccount={account} />}
         </>
       )}

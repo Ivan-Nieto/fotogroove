@@ -15,6 +15,7 @@ import Drawer from '../Drawer/Drawer';
 import RenderDescription from './RenderDescription';
 import RenderImageDetails from './RenderImageDetails';
 import RenderFavorite from './RenderFavorite';
+import RenderCollectionSelect from './RenderCollectionSelect';
 import RenderListSelect from './RenderListSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -75,6 +76,12 @@ const ImageDetails = ({ tags, image, author }: { author: Record<string, any>; im
         {user?.isSignedIn && open && (
           <ListItem className={classes.item}>
             <RenderListSelect image={image} />
+          </ListItem>
+        )}
+
+        {user?.isSignedIn && open && (
+          <ListItem className={classes.item}>
+            <RenderCollectionSelect image={image} />
           </ListItem>
         )}
 
