@@ -10,6 +10,9 @@ import { firestore } from '../../firebase/init';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.palette.grey[100],
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   input: {
     backgroundColor: theme.palette.grey[100],
@@ -26,15 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const RenderDescription = ({
-  image,
-  ownsImage,
-  open,
-}: {
-  open: boolean;
-  ownsImage: boolean;
-  image?: Record<string, any>;
-}) => {
+const RenderDescription = ({ image, ownsImage, open }: { open: boolean; ownsImage: boolean; image?: Record<string, any> }) => {
   const theme = useTheme();
   const { root, input, content, btn, notchedOutline } = useStyles(theme);
   const [description, setDescription] = useState(image?.description);
@@ -77,9 +72,7 @@ const RenderDescription = ({
                 value={description || ''}
                 className={input}
                 multiline
-                {...(description === ''
-                  ? { label: 'Click to add description' }
-                  : {})}
+                {...(description === '' ? { label: 'Click to add description' } : {})}
                 onChange={handleChangeDescription}
                 onClick={() => setUpdateDescription(true)}
                 InputProps={{
@@ -90,12 +83,7 @@ const RenderDescription = ({
                 rowsMax={10}
               />
               {updateDescription && (
-                <Button
-                  size='small'
-                  className={btn}
-                  disabled={disabled}
-                  onClick={handleUpdateDescription}
-                >
+                <Button size='small' className={btn} disabled={disabled} onClick={handleUpdateDescription}>
                   Update
                 </Button>
               )}

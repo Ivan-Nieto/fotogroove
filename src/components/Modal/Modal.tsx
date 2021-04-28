@@ -23,6 +23,12 @@ const useStyles = makeStyles(() =>
   })
 );
 
+interface Modal {
+  children?: any;
+  open: boolean;
+  setOpen: () => void | undefined;
+}
+
 const Modal = ({ children, open, setOpen }: any) => {
   const classes = useStyles();
 
