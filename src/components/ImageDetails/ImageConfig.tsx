@@ -1,6 +1,5 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import firebase from 'firebase/app';
 import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import Modal from '../Modal/Modal';

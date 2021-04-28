@@ -23,13 +23,13 @@ const useStyles = makeStyles(() =>
   })
 );
 
-interface Modal {
+interface ModalProps {
   children?: any;
   open: boolean;
-  setOpen: () => void | undefined;
+  setOpen: (...args: any) => void | undefined;
 }
 
-const Modal = ({ children, open, setOpen }: any) => {
+const Modal = ({ children, open, setOpen }: ModalProps) => {
   const classes = useStyles();
 
   const style = useSpring({
