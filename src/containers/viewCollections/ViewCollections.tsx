@@ -6,6 +6,7 @@ import useUser from '../../hooks/useUser';
 import { getImagesFromList } from '../../firebase/firestore/firestore';
 import RenderCollectionButtons from './RenderCollectionButton';
 import RenderImageGallery from '../../components/RenderImageGallery/RenderImageGallery';
+import RenderCollectionEdit from './RenderCollectionEdit';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -33,7 +34,7 @@ const ViewLists = () => {
   const [lastEntry, setLastEntry]: any = useState(false);
   const [paginating, setPaginating] = useState(false);
   const [endReached, setEndReached] = useState(false);
-  const [reRunPagination, setReRunPagination] = useState(0);
+  const [reRunPagination, setReRunPagination] = useState(-1);
 
   const user = useUser();
 
@@ -51,7 +52,6 @@ const ViewLists = () => {
     let mounted = true;
     const getCols = async () => {
       setLoading(true);
-
       const newLists =
         user?.collections?.map((e: Record<string, any>, index: number) => ({
           ...e,
@@ -84,6 +84,9 @@ const ViewLists = () => {
   // Paginate
   useEffect(() => {
     let mounted = true;
+
+    if (reRunPagination === -1) return;
+
     const update = async () => {
       if (!loading && !paginating && !endReached && mounted) {
         setPaginating(true);
@@ -134,7 +137,12 @@ const ViewLists = () => {
   return (
     <div className={classes.root}>
       <RenderCollectionButtons activeList={activeCollection} addList={addCollection} uid={user.uid} lists={lists} />
-      {!loading && <RenderImageGallery images={images} onEmptyMessage={paginating ? 'Loading...' : 'This collection is empty'} />}
+      {!loading && (
+        <>
+          <RenderImageGallery images={images} onEmptyMessage={paginating ? 'Loading...' : 'This collection is empty'} />
+          <RenderCollectionEdit activeCollection={lists[activeCollection]} images={images} user={user} />
+        </>
+      )}
     </div>
   );
 };
