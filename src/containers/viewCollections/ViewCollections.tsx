@@ -134,13 +134,31 @@ const ViewLists = () => {
     );
   };
 
+  const updateCollection = (config: Record<string, any>) => {
+    const newLists = lists;
+    newLists[activeCollection] = { ...lists[activeCollection], ...config };
+    setLists(newLists);
+  };
+
+  const removeCollection = () => {
+    const newList = lists;
+    newList.splice(activeCollection, 1);
+    setLists(newList);
+  };
+
   return (
     <div className={classes.root}>
       <RenderCollectionButtons activeList={activeCollection} addList={addCollection} uid={user.uid} lists={lists} />
       {!loading && (
         <>
           <RenderImageGallery images={images} onEmptyMessage={paginating ? 'Loading...' : 'This collection is empty'} />
-          <RenderCollectionEdit activeCollection={lists[activeCollection]} images={images} user={user} />
+          <RenderCollectionEdit
+            removeCollection={removeCollection}
+            updateCollection={updateCollection}
+            activeCollection={lists[activeCollection]}
+            images={images}
+            user={user}
+          />
         </>
       )}
     </div>

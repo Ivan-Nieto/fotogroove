@@ -43,38 +43,38 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const RenderCollectionEdit = ({ activeCollection, user, updateCollection, removeCollection }: any) => {
+const RenderListEdit = ({ activeList, user, updateList, removeList }: any) => {
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const [disabled, setDisabled] = useState(false);
-  const [name, setName] = useState(activeCollection?.name || '');
+  const [name, setName] = useState(activeList?.name || '');
 
   const classes = useStyles();
   const notify = useNotify();
 
   React.useEffect(() => {
-    setName(activeCollection?.name || '');
-  }, [activeCollection]);
+    setName(activeList?.name || '');
+  }, [activeList]);
 
   const clean = () => [setOpen, setEdit, setDisabled].map((e) => e(false));
 
   const del = async () => {
     setDisabled(true);
-    if (!Boolean(activeCollection?.docId) || !Boolean(user?.isSignedIn) || !Boolean(user?.uid)) return clean();
+    if (!Boolean(activeList?.docId) || !Boolean(user?.isSignedIn) || !Boolean(user?.uid)) return clean();
 
     await firebase
       .firestore()
       .collection('users')
       .doc(user.uid)
-      .collection('collections')
-      .doc(activeCollection.docId)
+      .collection('lists')
+      .doc(activeList.docId)
       .delete()
       .then(() => {
-        removeCollection();
-        notify({ content: `Collection deleted`, severity: 'success' });
+        removeList();
+        notify({ content: `List deleted`, severity: 'success' });
       })
       .catch(() => {
-        notify({ content: `Failed to delete collection`, severity: 'error' });
+        notify({ content: `Failed to delete list`, severity: 'error' });
       });
 
     clean();
@@ -83,11 +83,11 @@ const RenderCollectionEdit = ({ activeCollection, user, updateCollection, remove
   const update = async () => {
     setDisabled(true);
     if (
-      !Boolean(activeCollection?.docId) ||
+      !Boolean(activeList?.docId) ||
       !Boolean(user?.isSignedIn) ||
       !Boolean(user?.uid) ||
       !Boolean(name?.trim()) ||
-      name?.trim() === activeCollection?.name
+      name?.trim() === activeList?.name
     )
       return clean();
 
@@ -96,17 +96,17 @@ const RenderCollectionEdit = ({ activeCollection, user, updateCollection, remove
       .firestore()
       .collection('users')
       .doc(user.uid)
-      .collection('collections')
-      .doc(activeCollection.docId)
+      .collection('lists')
+      .doc(activeList.docId)
       .update({
         name: name?.trim(),
       })
       .then(() => {
-        updateCollection({ name: name?.trim() });
-        notify({ content: `Collection updated`, severity: 'success' });
+        updateList({ name: name?.trim() });
+        notify({ content: `List updated`, severity: 'success' });
       })
       .catch(() => {
-        notify({ content: `Failed to update collection`, severity: 'error' });
+        notify({ content: `Failed to update list`, severity: 'error' });
       });
 
     clean();
@@ -114,7 +114,7 @@ const RenderCollectionEdit = ({ activeCollection, user, updateCollection, remove
 
   const actions: Action[] = [
     {
-      name: 'Delete Collection',
+      name: 'Delete List',
       icon: <DeleteIcon className={classes.delete} />,
       onClick: () => setOpen(true),
     },
@@ -131,7 +131,7 @@ const RenderCollectionEdit = ({ activeCollection, user, updateCollection, remove
       <Modal open={open} setOpen={setOpen}>
         <div className={classes.modal}>
           <Typography className={classes.title} variant='h4'>
-            Are you sure you want to delete {activeCollection?.name ? <strong>{activeCollection?.name}</strong> : 'this collection'}?
+            Are you sure you want to delete {activeList?.name ? <strong>{activeList?.name}</strong> : 'this list'}?
           </Typography>
           <div className={classes.buttons}>
             <Button disabled={disabled} onClick={del} variant='outlined' color='inherit' className={classes.delete}>
@@ -145,13 +145,7 @@ const RenderCollectionEdit = ({ activeCollection, user, updateCollection, remove
       </Modal>
       <Modal open={edit} setOpen={setEdit}>
         <div className={classes.modal}>
-          <Input
-            className={classes.title}
-            onChange={(event: any) => setName(event.target.value)}
-            type='text'
-            label='Collection Name'
-            value={name}
-          />
+          <Input className={classes.title} onChange={(event: any) => setName(event.target.value)} type='text' label='List Name' value={name} />
           <div className={classes.buttons}>
             <Button disabled={disabled} onClick={update} variant='outlined' color='inherit' className={classes.success}>
               Update
@@ -166,4 +160,4 @@ const RenderCollectionEdit = ({ activeCollection, user, updateCollection, remove
   );
 };
 
-export default RenderCollectionEdit;
+export default RenderListEdit;

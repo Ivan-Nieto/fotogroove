@@ -5,6 +5,7 @@ import { useSpring, animated as a } from 'react-spring';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 
+import { useNotifyContext } from '../../notificationsContext/Context';
 import { Notification } from '../../notificationsContext/initialValues';
 
 const useStyles = makeStyles(() => ({
@@ -35,6 +36,7 @@ const useStyles = makeStyles(() => ({
 
 const NotificationAlert = (props: Notification) => {
   const classes = useStyles();
+  const { dispatch } = useNotifyContext();
   const [close, setClose] = useState(false);
   const ref = useRef<any>();
   const refInterval = useRef<any>();
@@ -49,6 +51,10 @@ const NotificationAlert = (props: Notification) => {
     const exitAnimationProps = {
       from: { opacity: 1, transform: 'translate3d(0px,0,0)' },
       to: { opacity: 0, transform: 'translate3d(80px,0,0)' },
+      onRest: () => {
+        // Remove notification
+        dispatch({ type: 'REMOVE_NOTIFICATION', value: props.id });
+      },
     };
 
     if (close) {

@@ -6,6 +6,7 @@ import useUser from '../../hooks/useUser';
 import { getImagesFromList } from '../../firebase/firestore/firestore';
 import RenderListButtons from './RenderListButtons';
 import RenderImageGallery from '../../components/RenderImageGallery/RenderImageGallery';
+import RenderListEdit from './RenderListEdit';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles(() => ({
 const ViewLists = () => {
   const classes = useStyles();
   const [lists, setLists]: any = useState([]);
-  const [activeCollection, setActiveList] = useState(0);
+  const [activeList, setActiveList] = useState(0);
   const [loading, setLoading] = useState(false);
 
   const [images, setImages]: any = useState(false);
@@ -88,7 +89,7 @@ const ViewLists = () => {
       if (!loading && !paginating && !endReached && mounted) {
         setPaginating(true);
         // Get new set of images
-        const newImgs = await getImagesFromList(lists[activeCollection].images);
+        const newImgs = await getImagesFromList(lists[activeList].images);
 
         if (!mounted) return;
 
@@ -106,7 +107,7 @@ const ViewLists = () => {
       }
     };
 
-    if (lists[activeCollection] && lists[activeCollection].images?.length > 0) update();
+    if (lists[activeList] && lists[activeList].images?.length > 0) update();
     else {
       setImages([]);
       setEndReached(true);
@@ -125,16 +126,35 @@ const ViewLists = () => {
           name: newCol,
           images: [],
           docId: '',
-          onCLick: () => updateActiveList(lists.length),
+          onCLick: () => updateActiveList(lists.length - 1),
         },
       ])
     );
   };
 
+  const updateList = (config: Record<string, any>) => {
+    const newLists = lists;
+    newLists[activeList] = { ...lists[activeList], ...config };
+    setLists(newLists);
+  };
+
+  const removeList = () => {
+    const newList = lists;
+    newList.splice(activeList, 1);
+    setLists(newList);
+  };
+
   return (
     <div className={classes.root}>
-      <RenderListButtons activeList={activeCollection} addList={addCollection} uid={user.uid} lists={lists} />
-      {!loading && <RenderImageGallery images={images} onEmptyMessage={paginating ? 'Loading...' : 'This list is empty'} />}
+      <RenderListButtons activeList={activeList} addList={addCollection} uid={user.uid} lists={lists} />
+      {!loading && (
+        <>
+          <RenderImageGallery images={images} onEmptyMessage={paginating ? 'Loading...' : 'This list is empty'} />
+          {lists[activeList] && lists[activeList].docId !== 'favorites' && (
+            <RenderListEdit removeList={removeList} updateList={updateList} activeList={lists[activeList]} user={user} />
+          )}
+        </>
+      )}
     </div>
   );
 };
