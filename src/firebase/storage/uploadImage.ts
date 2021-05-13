@@ -1,5 +1,5 @@
-import { storage } from "../init";
-import cuid from "cuid";
+import { storage } from '../init';
+import cuid from 'cuid';
 
 const uploadImage = async (
   image: any,
@@ -14,9 +14,11 @@ const uploadImage = async (
   const ref = storage.ref(`images/${userId}/${id}`).child(fileID);
   const uploadTask = ref.put(image);
 
-  uploadTask.on("state_changed", handleProgress, handleError, () => {
+  uploadTask.on('state_changed', handleProgress, handleError, () => {
     handleComplete();
   });
+
+  return id;
 };
 
 export default uploadImage;

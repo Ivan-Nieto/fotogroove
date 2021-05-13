@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { Theme, makeStyles, useTheme } from '@material-ui/core/styles';
-import { useHistory } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 
 import useUser from '../../hooks/useUser';
 
-import LoadingBar from '../../components/Loading/LoadingBar';
 import DropZone from '../../components/DropZone/DropZone';
-import uploadImage from '../../firebase/storage/uploadImage';
+import ImageUploadPreview from '../../components/ImageUploadPreview/ImageUploadPreview';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -53,64 +51,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Upload = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const history = useHistory();
   const user = useUser();
-  const [uploading, setUploading] = useState(false);
-  const [fileProgress, setFileProgress] = useState({});
-  const [progress, setProgress] = useState(0);
+  const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState(false);
-
-  const handleProgress = (index: string) => (snapshot: any) => {
-    const newFileProgress: any = {
-      ...fileProgress,
-      [index]: {
-        total: snapshot.totalBytes,
-        transferred: snapshot.bytesTransferred,
-      },
-    };
-
-    const total =
-      Object.keys(newFileProgress).reduce(
-        (accumulator: any, currentValue: any) =>
-          accumulator + newFileProgress[currentValue].total,
-        0
-      ) || 1;
-
-    const transferred =
-      Object.keys(newFileProgress).reduce(
-        (accumulator: any, currentValue: any) =>
-          accumulator + newFileProgress[currentValue].transferred,
-        0
-      ) || 0;
-
-    setProgress((transferred / total) * 100);
-  };
 
   const handleError = () => {
     setError(true);
   };
 
-  const handleComplete = () => {
-    setUploading(false);
-    history.push('/');
-  };
-
   const handleFile = (event: any) => {
-    setUploading(true);
-
-    const userID = user?.uid;
-    const tempObj: any = {};
-    event?.forEach((e: any, index: number) => {
-      tempObj[`img_${index}`] = { total: 0, transferred: 0 };
-      uploadImage(
-        e,
-        userID,
-        handleProgress(`img_${index}`),
-        handleComplete,
-        handleError
-      );
-    });
-    setFileProgress(tempObj);
+    setFiles(event);
   };
 
   return (
@@ -119,13 +69,11 @@ const Upload = () => {
         <Typography variant='h5'>Uploader</Typography>
       </div>
       <div className={classes.dropZone}>
-        <DropZone
-          onDrop={handleFile}
-          message="Drag 'n' drop image here, or click to select files"
-          error={error}
-        />
+        <DropZone onDrop={handleFile} message="Drag 'n' drop image here, or click to select files" error={error} />
       </div>
-      <div>{uploading && <LoadingBar progress={progress} />}</div>
+      {files.map((e: File, index: number) => {
+        return <ImageUploadPreview key={`${e.name}-${index}`} file={e} handleError={handleError} userId={user?.uid} />;
+      })}
     </div>
   );
 };

@@ -1,15 +1,10 @@
-import React from "react";
-import {
-  makeStyles,
-  createStyles,
-  withStyles,
-  Theme,
-} from "@material-ui/core/styles";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import React from 'react';
+import { makeStyles, createStyles, withStyles, Theme } from '@material-ui/core/styles';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 const useStyles = makeStyles({
   root: {
-    width: "100%",
+    width: '100%',
   },
 });
 
@@ -29,16 +24,10 @@ const CustomProgress = withStyles((theme: Theme) =>
   })
 )(LinearProgress);
 
-const LoadingBar = ({ progress }: { progress: number }) => {
+const LoadingBar = ({ progress, className }: { className?: string; progress: number }) => {
   const classes = useStyles();
 
-  return (
-    <CustomProgress
-      className={classes.root}
-      variant="determinate"
-      value={progress}
-    />
-  );
+  return <CustomProgress className={`${className || ''} ${classes.root}`} variant='determinate' value={progress} />;
 };
 
 export default LoadingBar;
