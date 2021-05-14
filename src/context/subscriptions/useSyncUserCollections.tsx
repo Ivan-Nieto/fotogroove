@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Subject, Observer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import firebase from 'firebase/app';
+import _ from 'lodash';
 
 import useUser from '../../hooks/useUser';
 import useSync from './useSync';
@@ -17,7 +18,7 @@ const getQueryData = (userDoc: firebase.firestore.QuerySnapshot) =>
 
 const useSyncUserCollections = () => {
   const user = useUser();
-  const { dispatch } = useFormContext();
+  const { dispatch, state } = useFormContext();
   const done = useSync('collections');
 
   useEffect(() => {
@@ -30,7 +31,7 @@ const useSyncUserCollections = () => {
     const unsubscribe = accessUserDb(userData$, user?.uid);
 
     userData$.pipe(map(getQueryData)).subscribe((data) => {
-      dispatch({ type: 'UPDATE_USER_COLLECTIONS', value: data });
+      if (!_.isEqual(state?.user?.collections, data) && data && data.length !== 0) dispatch({ type: 'UPDATE_USER_COLLECTIONS', value: data });
       done();
     });
 

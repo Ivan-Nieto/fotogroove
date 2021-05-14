@@ -27,7 +27,7 @@ export const getDownloadUrls = async (docs: any) => {
     });
   });
   await Promise.allSettled(promises);
-  return images || [];
+  return images.filter((e: any) => Boolean(e?.thumbUrl?.landscape)) || [];
 };
 
 export const runImageQuery = async (query: any) => {

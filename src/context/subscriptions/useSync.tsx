@@ -6,7 +6,7 @@ const useSync = (id: string) => {
   const [finished, setFinished] = useState(false);
   const [run, setRun] = useState(0);
   const [firstRun, setFirstRun] = useState(true);
-  const { dispatch } = useFormContext();
+  const { dispatch, state } = useFormContext();
 
   useEffect(() => {
     let mount = true;
@@ -15,11 +15,13 @@ const useSync = (id: string) => {
       return;
     }
 
-    if (finished) return;
-
     if (!mount) return;
 
+    if (finished) return;
     setFinished(true);
+
+    if (state?.sync?.done || !state?.sync?.syncing[id]) return;
+
     dispatch({
       type: 'REMOVE_SYNC',
       value: { id },

@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
+import _ from 'lodash';
 
 import { firestore } from '../../firebase/init';
 import { useFormContext } from '../Context';
 import useSync from './useSync';
 
 const useSyncTags = () => {
-  const { dispatch } = useFormContext();
+  const { dispatch, state } = useFormContext();
   const done = useSync('tags');
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const useSyncTags = () => {
         });
 
         if (mounted) {
-          dispatch({ type: 'UPDATE_TAGS', value: tags });
+          if (!_.isEqual(state?.tags, tags) && tags && tags.length !== 0) dispatch({ type: 'UPDATE_TAGS', value: tags });
           done();
         }
       } catch (error) {}

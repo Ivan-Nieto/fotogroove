@@ -10,9 +10,11 @@ import ImageUploadPreview from '../../components/ImageUploadPreview/ImageUploadP
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     height: '100%',
-    maxWidth: '800px',
     margin: 'auto',
     width: '100%',
+
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   dropZone: {
     textAlign: 'center',
@@ -25,26 +27,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: '20px',
     paddingBottom: '20px',
   },
-  inputs: {
-    padding: '20px',
-    margin: 'auto',
+  content: {
+    width: '100%',
+  },
+  item: {
+    minWidth: '100%',
 
-    backgroundColor: theme.palette.grey[100],
-    borderRadius: '10px',
-  },
-  input: {
-    textAlign: 'center',
-    margin: 'auto',
-    padding: '20px',
-  },
-  halfInput: {
-    display: 'inline-block',
-    padding: '20px',
-    width: 'calc(50% - 40px)',
-  },
-  button: {
-    padding: '20px',
-    textAlign: 'end',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }));
 
@@ -71,9 +62,13 @@ const Upload = () => {
       <div className={classes.dropZone}>
         <DropZone onDrop={handleFile} message="Drag 'n' drop image here, or click to select files" error={error} />
       </div>
-      {files.map((e: File, index: number) => {
-        return <ImageUploadPreview key={`${e.name}-${index}`} file={e} handleError={handleError} userId={user?.uid} />;
-      })}
+      <div className={classes.content}>
+        {files.map((e: File, index: number) => (
+          <div className={classes.item}>
+            <ImageUploadPreview key={`${e.name}-${index}`} file={e} handleError={handleError} userId={user?.uid} />;
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

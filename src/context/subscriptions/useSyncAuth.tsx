@@ -4,12 +4,13 @@ import firebase from 'firebase/app';
 import { auth } from '../../firebase/init';
 import { user as userInitialState } from '../initialValues';
 import { useFormContext } from '../Context';
+import _ from 'lodash';
 
 import useSync from './useSync';
 
 const useSyncAuth = () => {
   const [user, setUser]: any = useState(userInitialState);
-  const { dispatch } = useFormContext();
+  const { dispatch, state } = useFormContext();
   const done = useSync('auth');
 
   useEffect(() => {
@@ -21,11 +22,11 @@ const useSyncAuth = () => {
       if (usr && mounted) {
         // User is signed in.
         setUser(usr);
-        dispatch({ type: 'SIGN_IN', value: usr });
+        if (!_.isEqual(state?.user, usr)) dispatch({ type: 'SIGN_IN', value: usr });
       } else if (mounted) {
         // No user is signed in.
         setUser(false);
-        dispatch({ type: 'SIGN_OUT', value: userInitialState });
+        if (!_.isEqual(state?.user, usr)) dispatch({ type: 'SIGN_OUT', value: userInitialState });
       }
     });
 

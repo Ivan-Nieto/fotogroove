@@ -69,9 +69,7 @@ const usePagination = (
     const getData = async () => {
       let newData;
       setPaginating(true);
-
       const lastEntryEmpty = Object.keys(lastEntry).length === 0;
-
       if (!lastEntryEmpty) {
         newData = await dbRef.startAfter(...orderByFields.map((e) => lastEntry[e])).get();
       } else {

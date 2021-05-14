@@ -56,10 +56,16 @@ const RenderImageDetails = ({ image, author, open }: { open: boolean; image?: Re
       newItems.push(`Views: ${image?.views && image.views > 0 ? image.views : 1}`);
       newItems.push(`Favorites: ${image?.favorites || 0}`);
 
+      const cutString = (str: string, maxLength: number) => {
+        const temp = str?.toString();
+        if (temp.length > maxLength && maxLength > 3) return `${temp.substr(0, maxLength - 3)}...`;
+        return temp;
+      };
+
       // Add all metadata from image
       if (notEmpty(image?.metadata)) {
         const exists = (key: string, field: string): Array<string> =>
-          Boolean(image?.metadata[field]) ? [`${key}: ${image?.metadata[field]}`] : [];
+          Boolean(image?.metadata[field]) ? [cutString(`${key}: ${image?.metadata[field]}`, 40)] : [];
 
         newItems.push(
           ...[

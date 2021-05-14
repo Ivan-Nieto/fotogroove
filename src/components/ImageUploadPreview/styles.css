@@ -1,5 +1,6 @@
 .root {
   width: calc(100% - 20px);
+  max-width: 1000px;
   padding: 20px 10px;
   display: flex;
 }

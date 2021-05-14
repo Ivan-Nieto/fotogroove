@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 
-import { useFormContext } from '../../context/Context';
+import useContext from '../../hooks/useContext';
 
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Upload from '../upload/Upload';
@@ -45,17 +45,29 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Router = () => {
   const theme = useTheme();
   const { color, navBar, content, routes } = useStyles(theme);
-  const { state } = useFormContext();
+  const { state } = useContext((state: any) => state?.sync?.done);
 
-  const withNav = (Page: any) => () => {
+  const WithNav = ({ Page }: any) => {
+    const [render, setRender] = React.useState(false);
+    const ref = React.useRef<any>();
+
+    React.useEffect(() => {
+      if (ref.current) return;
+      ref.current = setTimeout(() => {
+        setRender(true);
+      }, 300);
+
+      return () => {
+        if (ref.current) clearTimeout(ref.current);
+      };
+    }, []);
+
     return (
       <>
         <div className={navBar}>
           <NavigationBar />
         </div>
-        <div className={content}>
-          <Page />
-        </div>
+        <div className={content}>{render && <Page />}</div>
       </>
     );
   };
@@ -71,15 +83,15 @@ const Router = () => {
         )}
         {state?.sync?.done && (
           <Switch>
-            <Route exact path='/' component={withNav(WelcomePage)} />
-            <Route exact path='/gallery' component={withNav(MyGallery)} />
-            <Route exact path='/upload' component={withNav(Upload)} />
+            <Route exact path='/' component={() => <WithNav Page={WelcomePage} />} />
+            <Route exact path='/gallery' component={() => <WithNav Page={MyGallery} />} />
+            <Route exact path='/upload' component={() => <WithNav Page={Upload} />} />
             <Route exact path='/view-image' component={ViewImage} />
-            <Route exact path='/register' component={withNav(Registration)} />
-            <Route exact path='/lists' component={withNav(ViewLists)} />
-            <Route exact path='/collections' component={withNav(ViewCollections)} />
-            <Route exact path='/collection' component={withNav(ViewCollection)} />
-            <Route exact path='/search' component={withNav(ViewByTag)} />
+            <Route exact path='/register' component={() => <WithNav Page={Registration} />} />
+            <Route exact path='/lists' component={() => <WithNav Page={ViewLists} />} />
+            <Route exact path='/collections' component={() => <WithNav Page={ViewCollections} />} />
+            <Route exact path='/collection' component={() => <WithNav Page={ViewCollection} />} />
+            <Route exact path='/search' component={() => <WithNav Page={ViewByTag} />} />
             <Route component={BrokenLink} />
           </Switch>
         )}
@@ -88,5 +100,7 @@ const Router = () => {
     </div>
   );
 };
+
+// Router.whyDidYouRender = true;
 
 export default Router;

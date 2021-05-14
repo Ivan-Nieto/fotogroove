@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Subject, Observer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import firebase from 'firebase/app';
+import _ from 'lodash';
 
 import useUser from '../../hooks/useUser';
 
@@ -9,17 +10,13 @@ import { firestore } from '../../firebase/init';
 import { useFormContext } from '../Context';
 import useSync from './useSync';
 
-const accessUserDb = (
-  obs$: Observer<firebase.firestore.DocumentData>,
-  uid: string
-) => firestore.collection('users').doc(uid).onSnapshot(obs$);
+const accessUserDb = (obs$: Observer<firebase.firestore.DocumentData>, uid: string) => firestore.collection('users').doc(uid).onSnapshot(obs$);
 
-const getUserData = (userDoc: firebase.firestore.DocumentData) =>
-  userDoc.exists ? { ...userDoc.data() } : {};
+const getUserData = (userDoc: firebase.firestore.DocumentData) => (userDoc.exists ? { ...userDoc.data() } : {});
 
 const useSyncUserDoc = () => {
   const user = useUser();
-  const { dispatch } = useFormContext();
+  const { dispatch, state } = useFormContext();
   const done = useSync('userDoc');
 
   useEffect(() => {
@@ -32,7 +29,7 @@ const useSyncUserDoc = () => {
 
     userData$.pipe(map(getUserData)).subscribe(
       (data) => {
-        dispatch({ type: 'UPDATE_USER', value: data });
+        if (!_.isEqual(state?.user, data) && data && Object.keys(data).length !== 0) dispatch({ type: 'UPDATE_USER', value: data });
         done();
       },
       () => {
