@@ -29,4 +29,3 @@ When viewing an image if the user is signed in they can add said image to one of
 # Collections
 Collections allow users to group their images into similar collections and display their various collections in their gallery page. 
 ![Collection View](https://firebasestorage.googleapis.com/v0/b/photogruve.appspot.com/o/public%2FFotogroove-collection-view.png?alt=media&token=4787ce25-e114-4630-8f2e-d4e1fe833132?raw=true)
-
