@@ -28,6 +28,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  containerLarge: {
+    width: '680px',
+    height: '400px',
+
+    overflow: 'hidden',
+    willChange: 'transform',
+    display: 'flex',
+
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  containerSmall: {
+    width: '510px',
+    height: '300px',
+
+    overflow: 'hidden',
+    willChange: 'transform',
+    display: 'flex',
+
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   overlay: {
     display: 'flex',
 
@@ -102,7 +124,7 @@ const DisplayImage = ({ size, image }: DisplayImageProps) => {
   };
 
   return (
-    <div className={classes.container} onMouseMove={mouseOver} onMouseLeave={mouseLeave}>
+    <div className={size === 'small' ? classes.containerSmall : classes.containerLarge} onMouseMove={mouseOver} onMouseLeave={mouseLeave}>
       {loaded && (
         <a.div className={classes.overlay} style={overlayProps}>
           <ImageOverlayTop image={image} ownsImage={Boolean(ownsImage)} user={user} />
@@ -114,8 +136,6 @@ const DisplayImage = ({ size, image }: DisplayImageProps) => {
         alt={image?.description || ''}
         onLoad={() => setLoaded(true)}
         src={url}
-        width={size === 'small' ? 300 : 680}
-        height={size === 'small' ? 200 : 400}
         className={classes.card}
         // @ts-ignore
         style={{ transform: props?.xys?.interpolate(trans) }}
