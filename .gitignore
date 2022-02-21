@@ -4,12 +4,17 @@
 /node_modules
 /.pnp
 .pnp.js
+/v2/node_modules
+/v2/.pnp
+/v2/.pnp.js
 
 # testing
+/v2/coverage
 /coverage
 
 # production
 /build
+/v2/build
 
 # misc
 .DS_Store
@@ -18,6 +23,11 @@
 .env.test.local
 .env.production.local
 .eslintcache
+/v2/.DS_Store
+/v2/.env.local
+/v2/.env.development.local
+/v2/.env.test.local
+/v2/.env.production.local
 
 npm-debug.log*
 yarn-debug.log*
@@ -25,3 +35,9 @@ yarn-error.log*
 .eslintcache
 debug.log
 yarn.log
+/v2/npm-debug.log*
+/v2/yarn-debug.log*
+/v2/yarn-error.log*
+/v2/.eslintcache
+/v2/debug.log
+/v2/yarn.log
